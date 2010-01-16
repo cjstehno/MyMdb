@@ -10,8 +10,8 @@ class Actor {
     static hasMany = [movies:Movie]
     
     static constraints = {
-        firstName(size:0..25)
-		middleName(validator:{ return(it == null || (it.size() >= 0 && it.size() < 25) ) })
-        lastName(size:1..25)
+		firstName(validator:{ return it != null && (2..25).containsWithinBounds(it.size()) })
+		middleName(validator:{ return it == null || (0..25).containsWithinBounds(it.size()) })
+        lastName(validator:{ return it != null && (2..25).containsWithinBounds(it.size()) })
     }
 }
