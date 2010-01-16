@@ -23,78 +23,56 @@
                     <tbody>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="movie.id.label" default="Id" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: movieInstance, field: "id")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="movie.title.label" default="Title" /></td>
-                            
                             <td valign="top" class="value">${fieldValue(bean: movieInstance, field: "title")}</td>
-                            
                         </tr>
                     
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="movie.description.label" default="Description" /></td>
-                            
                             <td valign="top" class="value">${fieldValue(bean: movieInstance, field: "description")}</td>
-                            
                         </tr>
+						
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="movie.poster.label" default="Poster" /></td>
+                            <td valign="top" class="value"><img src="../poster/${movieInstance.id}"/></td>
+                        </tr>						
                     
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="movie.releaseYear.label" default="Release Year" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: movieInstance, field: "releaseYear")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="movie.lastUpdate.label" default="Last Update" /></td>
-                            
-                            <td valign="top" class="value"><g:formatDate date="${movieInstance?.lastUpdate}" /></td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="movie.dateCreated.label" default="Date Created" /></td>
-                            
-                            <td valign="top" class="value"><g:formatDate date="${movieInstance?.dateCreated}" /></td>
-                            
+                            <td valign="top" class="value">${movieInstance.releaseYear}</td>
                         </tr>
                     
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="movie.storage.label" default="Storage" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: movieInstance, field: "storage")}</td>
-                            
+                            <td valign="top" class="value">${movieInstance.storage.name}-${movieInstance.storage.index}</td>
                         </tr>
                     
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="movie.genres.label" default="Genres" /></td>
-                            
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
                                 <g:each in="${movieInstance.genres}" var="g">
-                                    <li><g:link controller="genre" action="show" id="${g.id}">${g?.encodeAsHTML()}</g:link></li>
+                                    <span class="genre-list-item">
+										<g:link controller="genre" action="show" id="${g.id}">${g?.name}</g:link>
+									</span>
                                 </g:each>
                                 </ul>
                             </td>
-                            
                         </tr>
                     
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="movie.actors.label" default="Actors" /></td>
-                            
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
                                 <g:each in="${movieInstance.actors}" var="a">
-                                    <li><g:link controller="actor" action="show" id="${a.id}">${a?.encodeAsHTML()}</g:link></li>
+                                    <span class="actor-list-item">
+										<g:link controller="actor" action="show" id="${a.id}">
+											${a?.firstName} ${a?.middleName} ${a?.lastName}
+										</g:link>
+									</span>
                                 </g:each>
                                 </ul>
                             </td>
-                            
                         </tr>
                     
                     </tbody>

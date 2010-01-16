@@ -9,6 +9,17 @@ class MovieController {
     def index = {
         redirect(action: "list", params: params)
     }
+	
+	def poster = {
+        def movieInstance = Movie.get(params.id)
+        if (!movieInstance) {
+			response.sendError(404,"${message(code:'default.not.found.message', args:[message(code:'movie.label', default:'Movie'), params.id])}")
+        } else {
+            response.outputStream.withStream {
+				it << movieInstance.poster
+			}
+        }
+	}
 
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
@@ -61,12 +72,23 @@ class MovieController {
                 def version = params.version.toLong()
                 if (movieInstance.version > version) {
                     
-                    movieInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'movie.label', default: 'Movie')] as Object[], "Another user has updated this Movie while you were editing")
+                    movieInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code:'movie.label', default:'Movie')] as Object[], "Another user has updated this Movie while you were editing")
                     render(view: "edit", model: [movieInstance: movieInstance])
                     return
                 }
             }
+			
+			// protect the exting image data
+			def posterHolder = null
+			if(params.poster.bytes.length == 0){
+				posterHolder = movieInstance.poster
+			}
+			
             movieInstance.properties = params
+			if(posterHolder){
+				movieInstance.poster = posterHolder
+			}
+			
             if (!movieInstance.hasErrors() && movieInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"
                 redirect(action: "show", id: movieInstance.id)

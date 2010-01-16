@@ -24,7 +24,7 @@
 					<g:renderErrors bean="${movieInstance}" as="list" />
 				</div>
             </g:hasErrors>
-            <g:form action="save" method="post" >
+            <g:form action="save" method="post" enctype="multipart/form-data">
                 <div class="dialog">
                     <table>
                         <tbody>
@@ -46,6 +46,15 @@
                                     <g:textArea name="description" cols="40" rows="5" value="${movieInstance?.description}" />
                                 </td>
                             </tr>
+							
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="poster">Poster</label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'poster', 'errors')}">
+                                    <input type="file" id="poster" name="poster" />
+                                </td>
+                            </tr>							
                         
                             <tr class="prop">
                                 <td valign="top" class="name">

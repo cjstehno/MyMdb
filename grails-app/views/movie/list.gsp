@@ -21,37 +21,39 @@
                 <table>
                     <thead>
                         <tr>
-                        
-                            <g:sortableColumn property="id" title="${message(code: 'movie.id.label', default: 'Id')}" />
-                        
+							<th>Storage</th>
                             <g:sortableColumn property="title" title="${message(code: 'movie.title.label', default: 'Title')}" />
-                        
+							<th>Poster</th>
                             <g:sortableColumn property="description" title="${message(code: 'movie.description.label', default: 'Description')}" />
-                        
+							<th>Genres</th>
+							<th>Actors</th>
                             <g:sortableColumn property="releaseYear" title="${message(code: 'movie.releaseYear.label', default: 'Release Year')}" />
-                        
-                            <g:sortableColumn property="lastUpdate" title="${message(code: 'movie.lastUpdate.label', default: 'Last Update')}" />
-                        
-                            <g:sortableColumn property="dateCreated" title="${message(code: 'movie.dateCreated.label', default: 'Date Created')}" />
-                        
                         </tr>
                     </thead>
                     <tbody>
                     <g:each in="${movieInstanceList}" status="i" var="movieInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                        
-                            <td><g:link action="show" id="${movieInstance.id}">${fieldValue(bean: movieInstance, field: "id")}</g:link></td>
-                        
-                            <td>${fieldValue(bean: movieInstance, field: "title")}</td>
-                        
+							<td>${movieInstance.storage.name}-${movieInstance.storage.index}</td>
+                            <td><g:link action="show" id="${movieInstance.id}">${fieldValue(bean: movieInstance, field: "title")}</g:link></td>
+							<td><img src="poster/${movieInstance.id}" width="100" /></td>
                             <td>${fieldValue(bean: movieInstance, field: "description")}</td>
-                        
-                            <td>${fieldValue(bean: movieInstance, field: "releaseYear")}</td>
-                        
-                            <td><g:formatDate date="${movieInstance.lastUpdate}" /></td>
-                        
-                            <td><g:formatDate date="${movieInstance.dateCreated}" /></td>
-                        
+							<td>
+								<g:each in="${movieInstance.genres}" var="g">
+                                    <span>
+										<g:link controller="genre" action="show" id="${g.id}">${g?.name}</g:link>
+									</span>
+								</g:each>
+							</td>
+							<td>
+								<g:each in="${movieInstance.actors}" var="a">
+                                    <span>
+										<g:link controller="actor" action="show" id="${a.id}">
+											${a?.firstName} ${a?.middleName} ${a?.lastName}
+										</g:link>
+									</span>
+								</g:each>
+							</td>
+                            <td>${movieInstance.releaseYear}</td>
                         </tr>
                     </g:each>
                     </tbody>

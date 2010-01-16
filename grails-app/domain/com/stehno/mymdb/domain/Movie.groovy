@@ -8,6 +8,7 @@ class Movie implements Taggable {
     String description
     int releaseYear
 	Storage storage
+	byte[] poster
     
 	static searchable = true
     static hasMany = [genres:Genre, actors:Actor]

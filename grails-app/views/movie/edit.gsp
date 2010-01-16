@@ -1,5 +1,8 @@
 
 <%@ page import="com.stehno.mymdb.domain.Movie" %>
+<%@ page import="com.stehno.mymdb.domain.Genre" %>
+<%@ page import="com.stehno.mymdb.domain.Actor" %>
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -23,7 +26,7 @@
                 <g:renderErrors bean="${movieInstance}" as="list" />
             </div>
             </g:hasErrors>
-            <g:form method="post" >
+            <g:form method="post" enctype="multipart/form-data">
                 <g:hiddenField name="id" value="${movieInstance?.id}" />
                 <g:hiddenField name="version" value="${movieInstance?.version}" />
                 <div class="dialog">
@@ -47,6 +50,16 @@
                                     <g:textArea name="description" cols="40" rows="5" value="${movieInstance?.description}" />
                                 </td>
                             </tr>
+							
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="poster">Poster</label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'poster', 'errors')}">
+									<div><img src="poster/${movieInstance.id}" /></div>
+									<input type="file" id="poster" name="poster" />
+                                </td>
+                            </tr>								
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
@@ -59,48 +72,39 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="lastUpdate"><g:message code="movie.lastUpdate.label" default="Last Update" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'lastUpdate', 'errors')}">
-                                    <g:datePicker name="lastUpdate" precision="day" value="${movieInstance?.lastUpdate}" noSelection="['': '']" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="dateCreated"><g:message code="movie.dateCreated.label" default="Date Created" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'dateCreated', 'errors')}">
-                                    <g:datePicker name="dateCreated" precision="day" value="${movieInstance?.dateCreated}" noSelection="['': '']" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
                                   <label for="storage"><g:message code="movie.storage.label" default="Storage" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'storage', 'errors')}">
-                                    
+									Box: <input type="text" id="storage.name" name="storage.name" value="${movieInstance?.storage?.name}" size="4" />
+									Index: <input type="text" id="storage.index" name="storage.index" value="${movieInstance?.storage?.index}" size="4" />
                                 </td>
                             </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="genres"><g:message code="movie.genres.label" default="Genres" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'genres', 'errors')}">
-                                    <g:select name="genres" from="${com.stehno.mymdb.domain.Genre.list()}" multiple="yes" optionKey="id" size="5" value="${movieInstance?.genres}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="actors"><g:message code="movie.actors.label" default="Actors" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'actors', 'errors')}">
-                                    <g:select name="actors" from="${com.stehno.mymdb.domain.Actor.list()}" multiple="yes" optionKey="id" size="5" value="${movieInstance?.actors}" />
-                                </td>
-                            </tr>
+							
+							<tr class="prop">
+								<td valign="top" class="name">
+									<label for="genres"><g:message code="movie.genres.label" default="Genres" /></label>
+								</td>
+								<td valign="top" class="value ${hasErrors(bean:movieInstance,field:'genres','errors')}">
+									<g:each var="genre" in="${Genre.list()}">
+										<div class="genre-list-item">
+											<label><input type="checkbox" name="genres" value="${genre.id}" <g:if test="${movieInstance?.genres?.contains(genre)}">checked</g:if>/> ${genre.name}</label>
+										</div>
+									</g:each>
+								</td>
+							</tr>
+
+							<tr class="prop">
+								<td valign="top" class="name">
+									<label for="actors"><g:message code="movie.actors.label" default="Actors" /></label>
+								</td>
+								<td valign="top" class="value ${hasErrors(bean:movieInstance,field:'actors','errors')}">
+									<g:each var="actor" in="${Actor.list()}">
+										<div class="actor-list-item">
+											<label><input type="checkbox" name="actors" value="${actor.id}" <g:if test="${movieInstance?.actors?.contains(actor)}">checked</g:if>/> ${actor.firstName} ${actor.middleName} ${actor.lastName}</label>
+										</div>
+									</g:each>
+								</td>
+							</tr> 								
                         
                         </tbody>
                     </table>
