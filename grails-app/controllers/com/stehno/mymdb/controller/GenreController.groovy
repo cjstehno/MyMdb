@@ -4,5 +4,5 @@ import com.stehno.mymdb.domain.Genre
 
 class GenreController {
 
-    def scaffold = Genre
+   def scaffold = Genre
 }
