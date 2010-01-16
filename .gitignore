@@ -1,0 +1,16 @@
+# .gitignore mymdb
+
+/web-app/WEB-INF
+
+.classpath
+.project
+.settings
+/*.launch
+/*.tmproj
+
+stacktrace.log
+/test/reports
+
+/target
+
+*.war
