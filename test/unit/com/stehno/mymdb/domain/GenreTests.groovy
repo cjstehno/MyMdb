@@ -3,15 +3,22 @@ package com.stehno.mymdb.domain
 import grails.test.*
 
 class GenreTests extends GrailsUnitTestCase {
-    protected void setUp() {
-        super.setUp()
+
+    void testValidation_valid() {
+		def genre = new Genre(name:'Testing')
+		mockForConstraintsTests Genre.class, [ genre ]
+		
+		if( !genre.validate() ) fail 'Genre did not pass validation!'
     }
 
-    protected void tearDown() {
-        super.tearDown()
-    }
-
-    void testSomething() {
-
-    }
+    void testValidation_invalid_name() {
+		def genre = new Genre()
+		mockForConstraintsTests Genre.class, [ genre ]
+		
+		if(genre.validate()){
+			fail 'Genre passed validation with invalid state!'
+		} else {
+			assertLength 1, genre.errors
+		}
+    }	
 }
