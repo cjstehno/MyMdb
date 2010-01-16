@@ -21,16 +21,11 @@ class BootStrap {
 		new Genre(name:'Porn').save()
 		
 		new Actor(firstName:'Michael', middleName:'J',lastName:'Fox').save()
-		new Actor(firstName:'Kurt',lastName:'Russel').save()
-		new Actor(firstName:'Adam',lastName:'Sandler').save()
-		new Actor(firstName:'Marlon',lastName:'Brando').save()
-		new Actor(firstName:'Jack',lastName:'Nicolson').save()
-		new Actor(firstName:'Alec',lastName:'Baldwin').save()
-		
-		new Storage(name:'A', index:1).save()
-		new Storage(name:'A', index:2).save()
-		new Storage(name:'B', index:1).save()
-		
+		new Actor(firstName:'Kurt',    middleName:'', lastName:'Russel').save()
+		new Actor(firstName:'Adam',    middleName:'', lastName:'Sandler').save()
+		new Actor(firstName:'Marlon',  middleName:'', lastName:'Brando').save()
+		new Actor(firstName:'Jack',    middleName:'', lastName:'Nicolson').save()
+		new Actor(firstName:'Alec',    middleName:'', lastName:'Baldwin').save()
      }
 
      def destroy = {
