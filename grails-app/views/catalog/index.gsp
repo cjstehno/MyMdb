@@ -5,33 +5,18 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="layout" content="main" />
+        <meta name="layout" content="catalogs" />
         <title>Catalog</title>
-		<style type="text/css">
-			.sub-section {
-				margin-left:20px;
-				margin-top: 10px;
-				margin-bottom: 10px;
-			}
-			
-			.listings {
-				margin-left: 10px;
-				margin-top: 5px;
-				margin-bottom: 5px;
-			}
-		</style>
     </head>
     <body>
-        <div class="nav">
-            <span class="menuButton"><a class="home" href="${createLink(uri: '/')}">Home</a></span>
-            <span class="menuButton"><g:link class="create" controller="movie" action="list">Manage Movies</g:link></span>
-        </div>
         <div class="body">
             <h1>Catalog</h1>
             <div>
 				<h2>Search</h2>
 				<div class="sub-section">
-					Query: <input type="text" /><button>Search</button>
+					<form action="search" method="post">
+					Query: <input type="text" name="q" /><button>Search</button>
+					</form>
 				</div>
 				
 				<h2>Views</h2>

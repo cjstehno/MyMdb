@@ -3,13 +3,28 @@ package com.stehno.mymdb.controller
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Storage
 
+import org.compass.core.engine.SearchEngineQueryParseException
+
 class CatalogController {
+
+	def searchableService
 
     def index = {
 		[
 			storageBoxes:Movie.executeQuery("select distinct m.storage.name from Movie m"),
 			releaseYears:Movie.executeQuery("select distinct m.releaseYear from Movie m")
 		]
+	}
+	
+	def search = {
+        if (!params.q?.trim()) {
+            return [:]
+        }
+        try {
+            return [searchResult: searchableService.search(params.q, params)]
+        } catch (SearchEngineQueryParseException ex) {
+            return [parseException: true]
+        }
 	}
 	
 	def title = {

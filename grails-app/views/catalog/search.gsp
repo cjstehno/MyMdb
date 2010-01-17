@@ -5,27 +5,24 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="catalogs" />
-        <title>Catalog: Movies By Actor</title>
+        <title>Catalog: Search</title>
     </head>
     <body>
         <div class="body">
-            <h1>Movies By Actor</h1>
+            <h1>Search</h1>
 			
 			<div class="listings">
-				<g:each in="${Actor.list()}" var="actor">
-					| <a href="actor?actor=${actor.id}">${actor.firstName} ${actor.middleName} ${actor.lastName}</a>
-				</g:each> |
+				<form action="search" method="post">
+				Query: <input type="text" name="q" value="${params.q?.trim()}" /><button>Search</button>
+				</form>
 			</div>		
 			
             <div class="list">
 				<table>
-					<g:render template="movie" collection="${movieInstanceList}" />
+					<g:render template="movie" collection="${searchResult?.results}" />
 				</table>
             </div>
 			
-            <div class="paginateButtons">
-                <g:paginate total="${movieInstanceTotal}" />
-            </div>
         </div>
     </body>
 </html>
