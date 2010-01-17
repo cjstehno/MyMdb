@@ -2,6 +2,7 @@
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Storage
+import com.stehno.mymdb.domain.Movie
 
 class BootStrap {
 
