@@ -1,6 +1,6 @@
 <tr class="movie-listing">
-	<td class="poster"><img src="../movie/poster/${it.id}" width="125" /></td>
-	<td class="info">
+	<td class="poster" valign="top"><img src="../movie/poster/${it.id}" width="125" /></td>
+	<td class="info" valign="top">
 		<div class="title">${fieldValue(bean:it, field:'title')}</div>
 		<div class="detail">
 			<span class="label">Released:</span> ${it.releaseYear}

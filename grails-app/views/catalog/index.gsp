@@ -64,7 +64,7 @@
 				<div class="sub-section">
 					<h3>Printable Catalog</h3>
 					<div class="listings">
-						Print
+						<g:link controller="catalog" action="catalog">Print</g:link>
 					</div>
 
 					<h3>Printable Box Book</h3>

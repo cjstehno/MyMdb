@@ -2,6 +2,8 @@ package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Storage
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Actor
 
 import org.compass.core.engine.SearchEngineQueryParseException
 
@@ -70,7 +72,7 @@ class CatalogController {
 		if( params.box ){
 			movies = Movie.findAll("from Movie m where m.storage.name = :box order by m.title desc", [box:params.box])
 		} else {
-			movies = Movie.findAll("from Movie m order by m.storage.name desc, m.title desc");
+			movies = Movie.findAll("from Movie m order by m.storage.name desc, m.title desc")
 		}
 		
 		def boxes = Movie.executeQuery("select distinct m.storage.name from Movie m")
@@ -85,11 +87,20 @@ class CatalogController {
 		if( params.year ){
 			movies = Movie.findAll("from Movie m where m.releaseYear = :year order by m.title desc", [year:params.year.toInteger()])
 		} else {
-			movies = Movie.findAll("from Movie m order by m.releaseYear desc, m.title desc");
+			movies = Movie.findAll("from Movie m order by m.releaseYear desc, m.title desc")
 		}
 		
 		def years = Movie.executeQuery("select distinct m.releaseYear from Movie m")
 		
 		[movieInstanceList:movies, movieInstanceTotal:movies.size(), releaseYears:years]
+	}
+	
+	def catalog = {
+		def mainListing = Movie.list([sort:'title',order:'asc'])
+		def byBox = Movie.findAll("from Movie m order by m.storage.name asc, m.storage.index asc")
+		def activeGenres = Genre.findAll('from Genre g where size(g.movies) > 0 order by g.name asc')
+		def activeActors = Actor.findAll('from Actor a where size(a.movies) > 0 order by a.lastName asc, a.firstName asc, a.middleName asc')
+		
+		[moviesByTitle:mainListing, moviesByBox:byBox, genres:activeGenres, actors:activeActors]
 	}
 }
