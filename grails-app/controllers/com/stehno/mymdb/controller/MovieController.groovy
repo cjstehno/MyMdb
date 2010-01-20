@@ -1,7 +1,9 @@
 package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.domain.Movie
+import org.codehaus.groovy.grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_ADMIN'])
 class MovieController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]

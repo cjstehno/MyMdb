@@ -83,3 +83,5 @@ log4j = {
 
 grails.taggable.preserve.case = true
      
+
+//log4j.logger.org.springframework.security='off,stdout'

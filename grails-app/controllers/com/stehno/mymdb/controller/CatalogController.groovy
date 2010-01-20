@@ -6,7 +6,9 @@ import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
 
 import org.compass.core.engine.SearchEngineQueryParseException
+import org.codehaus.groovy.grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_ADMIN'])
 class CatalogController {
 
 	def searchableService
