@@ -3,10 +3,13 @@ import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Storage
 import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.Role
+import com.stehno.mymdb.domain.User
 
 class BootStrap {
-
-     def init = { servletContext ->
+	def authenticateService
+	
+    def init = { servletContext ->
 		
 		// security bootstrapping
 		if( User.count() == 0 ){
@@ -22,8 +25,7 @@ class BootStrap {
 			admin.save()
 		}
 		
-     }
+    }
 
-     def destroy = {
-     }
+    def destroy = {}
 } 
