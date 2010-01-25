@@ -12,7 +12,7 @@
 			<span class="label">Genres:</span>
 			<g:each in="${it.genres}" var="g">
 				<span>
-					<g:link controller="genre" action="show" id="${g.id}">${g?.name}</g:link>
+					<g:link controller="catalog" action="genre" id="${g.id}">${g?.name}</g:link>
 				</span>
 			</g:each>
 		</div>
@@ -20,7 +20,7 @@
 			<span class="label">Actors:</span>
 			<g:each in="${it.actors}" var="a">
 				<span>
-					<g:link controller="actor" action="show" id="${a.id}">
+					<g:link controller="catalog" action="actor" id="${a.id}">
 						${a?.firstName} ${a?.middleName} ${a?.lastName}
 					</g:link>
 				</span>
