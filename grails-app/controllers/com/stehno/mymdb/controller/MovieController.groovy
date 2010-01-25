@@ -36,6 +36,10 @@ class MovieController {
 
     def save = {
         def movieInstance = new Movie(params)
+		if(movieInstance.storage){
+			movieInstance.storage.name = movieInstance.storage.name.toUpperCase()
+		}
+		
         if (movieInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"
             redirect(action: "show", id: movieInstance.id)
@@ -90,6 +94,10 @@ class MovieController {
 			if(posterHolder){
 				movieInstance.poster = posterHolder
 			}
+			
+			if(movieInstance.storage){
+				movieInstance.storage.name = movieInstance.storage.name.toUpperCase()
+			}			
 			
             if (!movieInstance.hasErrors() && movieInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"

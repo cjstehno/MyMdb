@@ -11,7 +11,6 @@
     </head>
     <body>
         <div class="nav">
-            <span class="menuButton"><a class="home" href="${createLink(uri: '/')}">Home</a></span>
             <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
         </div>
         <div class="body">
@@ -34,7 +33,7 @@
                                     <label for="title"><g:message code="movie.title.label" default="Title" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'title', 'errors')}">
-                                    <g:textField name="title" maxlength="100" value="${movieInstance?.title}" />
+                                    <g:textField name="title" maxlength="100" style="width:50%;" value="${movieInstance?.title}" />
                                 </td>
                             </tr>
                         
@@ -43,7 +42,7 @@
                                     <label for="description"><g:message code="movie.description.label" default="Description" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'description', 'errors')}">
-                                    <g:textArea name="description" cols="40" rows="5" value="${movieInstance?.description}" />
+                                    <g:textArea name="description" cols="40" rows="5" style="width:100%;" value="${movieInstance?.description}" />
                                 </td>
                             </tr>
 							

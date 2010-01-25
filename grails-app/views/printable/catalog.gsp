@@ -17,7 +17,7 @@
 			<table>
 				<g:each in="${moviesByTitle}" var="mov">
 					<tr class="movie-listing">
-						<td class="poster" valign="top"><img src="../movie/poster/${mov.id}" width="125" /></td>
+						<td class="poster" valign="top" width="130"><img src="../movie/poster/${mov.id}" width="125" /></td>
 						<td class="info" valign="top">
 							<div class="title">${fieldValue(bean:mov, field:'title')}</div>
 							<div class="detail">

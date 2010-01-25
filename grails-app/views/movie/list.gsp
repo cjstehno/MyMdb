@@ -9,7 +9,6 @@
     </head>
     <body>
         <div class="nav">
-            <span class="menuButton"><a class="home" href="${createLink(uri: '/')}">Home</a></span>
             <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
         </div>
         <div class="body">
@@ -28,6 +27,7 @@
 							<th>Genres</th>
 							<th>Actors</th>
                             <g:sortableColumn property="releaseYear" title="${message(code: 'movie.releaseYear.label', default: 'Release Year')}" />
+							<th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,6 +54,7 @@
 								</g:each>
 							</td>
                             <td>${movieInstance.releaseYear}</td>
+							<td><g:link controller="movie" action="edit" id="${movieInstance.id}">Edit</g:link></td>
                         </tr>
                     </g:each>
                     </tbody>
