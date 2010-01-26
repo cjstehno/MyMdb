@@ -6,6 +6,6 @@ class Storage {
 	int index
 	
 	static constraints = {
-		index(unique:'name',range:1..120)
+		index(range:1..120)
 	}
 }

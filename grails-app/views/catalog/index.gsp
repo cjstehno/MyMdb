@@ -23,9 +23,9 @@
 				<div class="sub-section">
 					<h3>Movies by Title</h3>
 					<div class="listings">
-						<a href="title">All</a>
-						<g:each in="${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.chars}" var="letter">
-							| <a href="title?letter=${letter}">${letter}</a>
+						<g:link controller="catalog" action="title">All</g:link>
+						<g:each in="${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.chars}" var="val">
+							| <g:link controller="catalog" action="title" params="[letter:val]">${val}</g:link>
 						</g:each>
 					</div>
 					
