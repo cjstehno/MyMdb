@@ -1,5 +1,4 @@
 <%@ page import="com.stehno.mymdb.domain.Movie" %>
-<%@ page import="com.stehno.mymdb.domain.Genre" %>
 <%@ page import="com.stehno.mymdb.domain.Actor" %>
 
 <html>
@@ -69,7 +68,7 @@
 									<label for="genres">Genres:</label>
 								</td>
 								<td valign="top" class="value ${hasErrors(bean:movieInstance,field:'genres','errors')}">
-									<g:each var="genre" in="${Genre.list()}">
+									<g:each var="genre" in="${genres}">
 										<div class="genre-list-item">
 											<label><input type="checkbox" name="genres" value="${genre.id}" <g:if test="${movieInstance?.genres?.contains(genre)}">checked</g:if>/> ${genre.name}</label>
 										</div>
@@ -82,9 +81,9 @@
 									<label for="actors">Actors:</label>
 								</td>
 								<td valign="top" class="value ${hasErrors(bean:movieInstance,field:'actors','errors')}">
-									<g:each var="actor" in="${Actor.list()}">
+									<g:each var="actor" in="${actors}">
 										<div class="actor-list-item">
-											<label><input type="checkbox" name="actors" value="${actor.id}" <g:if test="${movieInstance?.actors?.contains(actor)}">checked</g:if>/> ${actor.firstName} ${actor.middleName} ${actor.lastName}</label>
+											<label><input type="checkbox" name="actors" value="${actor.id}" <g:if test="${movieInstance?.actors?.contains(actor)}">checked</g:if>/> ${actor.lastName}, ${actor.firstName} ${actor.middleName}</label>
 										</div>
 									</g:each>
 								</td>

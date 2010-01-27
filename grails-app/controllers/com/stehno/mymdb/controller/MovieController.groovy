@@ -1,6 +1,9 @@
 package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Actor
+
 import org.codehaus.groovy.grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_ADMIN'])
@@ -35,7 +38,7 @@ class MovieController {
     def create = {
         def movieInstance = new Movie()
         movieInstance.properties = params
-        return [movieInstance: movieInstance]
+        return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), actors:Actor.list([sort:'lastName',order:'asc'])]
     }
 
     def save = {
