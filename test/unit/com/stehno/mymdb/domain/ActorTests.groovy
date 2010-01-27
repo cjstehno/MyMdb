@@ -7,20 +7,26 @@ class ActorTests extends GrailsUnitTestCase {
     void testValidation_valid() {
 		assertTrue actor(firstName:'Larry',middleName:'Q',lastName:'Stooge').validate()
     }
+	
+	void testValidation_single_name_actor(){
+		def actor = new Actor(firstName:'',middleName:'',lastName:'Cher')
+		mockForConstraintsTests Actor.class, [ actor ]	
+		assertTrue actor.validate()
+	}
 
 	void testValidation_firstName_missing() {
-		def actor = actor(middleName:'Q',lastName:'Stooge')
-		assertInvalidWithOneError actor
+		def actor = actor(firstName:'',middleName:'Q',lastName:'Stooge')
+		assertTrue actor.validate()
     }
 
 	void testValidation_firstName_empty() {
 		def actor = actor(firstName:'',middleName:'Q',lastName:'Stooge')
-		assertInvalidWithOneError actor
+		assertTrue actor.validate()
     }
 
 	void testValidation_firstName_too_short() {
 		def actor = actor(firstName:'x',middleName:'Q',lastName:'Stooge')
-		assertInvalidWithOneError actor
+		assertTrue actor.validate()
     }
 
 	void testValidation_firstName_too_long() {
@@ -58,9 +64,9 @@ class ActorTests extends GrailsUnitTestCase {
 		assertInvalidWithOneError actor
     }
 
-	void testValidation_lastName_too_short() {
+	void testValidation_lastName_short() {
 		def actor = actor(firstName:'Larry',middleName:'Q',lastName:'x')
-		assertInvalidWithOneError actor
+		assertTrue actor.validate()
     }
 
 	void testValidation_lastName_too_long() {
