@@ -17,8 +17,12 @@ class MovieController {
         if (!movieInstance) {
 			response.sendError(404,"${message(code:'default.not.found.message', args:[message(code:'movie.label', default:'Movie'), params.id])}")
         } else {
-            response.outputStream.withStream {
-				it << movieInstance.poster
+			if( movieInstance.poster == null || movieInstance.poster.size() == 0 ){
+				response.sendRedirect "${request.contextPath}/images/nocover.jpg"
+			} else {
+				response.outputStream.withStream {
+					it << movieInstance.poster
+				}
 			}
         }
 	}
