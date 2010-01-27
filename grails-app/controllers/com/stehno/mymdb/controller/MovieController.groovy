@@ -74,7 +74,7 @@ class MovieController {
             redirect(action: "list")
         }
         else {
-            return [movieInstance: movieInstance]
+            return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), actors:Actor.list([sort:'lastName',order:'asc'])]
         }
     }
 

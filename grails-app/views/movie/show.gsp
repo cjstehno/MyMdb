@@ -66,7 +66,7 @@
                                 <g:each in="${movieInstance.actors}" var="a">
                                     <span class="actor-list-item">
 										<g:link controller="actor" action="show" id="${a.id}">
-											${a?.firstName} ${a?.middleName} ${a?.lastName}
+											${a?.lastName}, ${a?.firstName} ${a?.middleName}
 										</g:link>
 									</span>
                                 </g:each>
