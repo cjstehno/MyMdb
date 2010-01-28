@@ -67,16 +67,6 @@
                                 </td>
                             </tr>
                         
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="storage"><g:message code="movie.storage.label" default="Storage" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'storage', 'errors')}">
-									Box: <input type="text" id="storage.name" name="storage.name" value="${movieInstance?.storage?.name}" size="4" />
-									Index: <input type="text" id="storage.index" name="storage.index" value="${movieInstance?.storage?.index}" size="4" />
-                                </td>
-                            </tr>
-							
 							<tr class="prop">
 								<td valign="top" class="name">
 									<label for="genres"><g:message code="movie.genres.label" default="Genres" /></label>
@@ -92,16 +82,37 @@
 
 							<tr class="prop">
 								<td valign="top" class="name">
-									<label for="actors"><g:message code="movie.actors.label" default="Actors" /></label>
+									<label for="actors">Actors:</label>
 								</td>
 								<td valign="top" class="value ${hasErrors(bean:movieInstance,field:'actors','errors')}">
-									<g:each var="actor" in="${actors}">
-										<div class="actor-list-item">
-											<label><input type="checkbox" name="actors" value="${actor.id}" <g:if test="${movieInstance?.actors?.contains(actor)}">checked</g:if>/> ${actor.lastName}, ${actor.firstName} ${actor.middleName}</label>
-										</div>
-									</g:each>
+									<div id="actor-tabs">
+										<ul>
+											<g:each in="${tabRange}" var="t">
+												<li><a href="#tab${t}">${t*30 + 1}-${t*30 + 30}</a></li>
+											</g:each>
+										</ul>
+										<g:each in="${tabs}" var="tab" status="t">
+											<div id="tab${t}" style="height:160px;">
+												<g:each var="actor" in="${tab}">
+													<div class="actor-list-item">
+														<label><input type="checkbox" name="actors" value="${actor.id}" <g:if test="${movieInstance?.actors?.contains(actor)}">checked</g:if>/> ${actor.lastName}, ${actor.firstName} ${actor.middleName}</label>
+													</div>
+												</g:each>
+											</div>
+										</g:each>
+									</div>
 								</td>
-							</tr> 								
+							</tr> 	
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="storage"><g:message code="movie.storage.label" default="Storage" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'storage', 'errors')}">
+									Box: <input type="text" id="storage.name" name="storage.name" value="${movieInstance?.storage?.name}" size="4" />
+									Index: <input type="text" id="storage.index" name="storage.index" value="${movieInstance?.storage?.index}" size="4" />
+                                </td>
+                            </tr>							
                         
                         </tbody>
                     </table>

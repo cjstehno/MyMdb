@@ -38,8 +38,26 @@ class MovieController {
     def create = {
         def movieInstance = new Movie()
         movieInstance.properties = params
-        return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), actors:Actor.list([sort:'lastName',order:'asc'])]
+		
+		def actorList = Actor.list([sort:'lastName',order:'asc'])
+		def tabSets = tabbify(actorList, 30)
+		
+        return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), tabRange:(0..<tabSets.size()), tabs:tabSets]
     }
+	
+	def tabbify( theList, groupCnt ){
+		def tabCount = (int)(theList.size() / groupCnt)
+		tabCount = (theList.size() % groupCnt) > 0 ? tabCount+1 : tabCount
+		
+		def tabSets = []
+		tabCount.times {
+			def end = (it*groupCnt+(groupCnt-1)) >= theList.size() ? theList.size()-1 : (it*groupCnt+(groupCnt-1))
+			def sub = theList[it*groupCnt..end]
+			tabSets.add sub
+		}
+		
+		return tabSets
+	}
 
     def save = {
         def movieInstance = new Movie(params)
@@ -74,7 +92,8 @@ class MovieController {
             redirect(action: "list")
         }
         else {
-            return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), actors:Actor.list([sort:'lastName',order:'asc'])]
+			def tabSet = tabbify( Actor.list([sort:'lastName',order:'asc']) ,30)
+            return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), tabRange:(0..<tabSet.size()), tabs:tabSet]
         }
     }
 
