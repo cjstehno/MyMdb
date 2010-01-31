@@ -19,4 +19,21 @@ class PrintableController {
 		
 		[moviesByTitle:mainListing, moviesByBox:byBox, genres:activeGenres, actors:activeActors]
 	}
+	
+	def drawer = {
+		def moviesInBox = Movie.findAll("from Movie m where m.storage.name=:storage order by m.storage.index asc",[storage:params.box])
+		
+		def boxSlots = [:]
+		moviesInBox.each { m ->
+			def idx = m.storage.index
+			def coll = boxSlots[idx]
+			if( coll == null ){
+				coll = []
+				boxSlots.put idx, coll
+			}
+			coll << m
+		}
+		
+		[slots:boxSlots,name:params.box]
+	}
 }

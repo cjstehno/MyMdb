@@ -10,7 +10,6 @@ class BootStrap {
 	def authenticateService
 	
     def init = { servletContext ->
-		
 		// security bootstrapping
 		if( User.count() == 0 ){
 			def role = new Role(authority:'ROLE_ADMIN', description:'Admin role').save()
@@ -24,7 +23,6 @@ class BootStrap {
 			admin.addToAuthorities(role)
 			admin.save()
 		}
-		
     }
 
     def destroy = {}

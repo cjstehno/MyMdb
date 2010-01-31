@@ -75,10 +75,11 @@ class ImportService {
 	}
 	
 	def getFirstElement(elt, name){
-		elt.getElementsByTagName(name).item(0)
+		def nodes = elt.getElementsByTagName(name)
+		return nodes.length > 0 ? nodes.item(0) : null
 	}
 
 	def getFirstElementText(elt, name){
-		getFirstElement(elt,name).textContent.trim()
+		getFirstElement(elt,name)?.textContent?.trim()
 	}	
 }

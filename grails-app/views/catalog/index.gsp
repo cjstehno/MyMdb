@@ -69,17 +69,15 @@
 
 					<h3>Printable Box Book</h3>
 					<div class="listings">
-						All
-						<g:each in="${Storage.list()}" var="storage">
-							| ${storage.name}
+						<g:each in="${storageBoxes}" var="storage">
+							<g:link controller="printable" action="book" params="[box:storage]">${storage}</g:link>,
 						</g:each>
 					</div>	
 
 					<h3>Printable Box Drawer</h3>
 					<div class="listings">
-						All
-						<g:each in="${Storage.list()}" var="storage">
-							| ${storage.name}
+						<g:each in="${storageBoxes}" var="storage">
+							<g:link controller="printable" action="drawer" params="[box:storage]">${storage}</g:link>,
 						</g:each>
 					</div>	
 				</div>

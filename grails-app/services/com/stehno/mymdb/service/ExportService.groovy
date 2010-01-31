@@ -27,21 +27,6 @@ class ExportService {
 		}
 	}
 	
-	def importData(stream){
-		def catalog = new XmlParser().parse(stream)
-		
-		def genreCnt = 0
-		
-		catalog.genres.genre.iterator.each {
-			genreCnt++;
-		}
-		
-		def actorCnt = catalog.actors.actor.size() 
-		def movieCnt = catalog.movies.movie.size() 
-		
-		[genres:genreCnt, actors:actorCnt, movies:movieCnt]
-	}
-	
 	private export_collection(builder,coll,exporter){
 		coll.each {
 			exporter(builder,it)
