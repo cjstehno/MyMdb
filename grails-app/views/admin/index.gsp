@@ -23,6 +23,12 @@
 						<button>Submit</button>
 					</g:form>
 				</li>
+				<li>
+					<g:form controller="admin" action="batchAdd" method="post" enctype="multipart/form-data">
+						Batch Add: <input type="file" name="data"/>
+						<button>Submit</button>
+					</g:form>
+				</li>				
 			</ul>
 			
 		</div>

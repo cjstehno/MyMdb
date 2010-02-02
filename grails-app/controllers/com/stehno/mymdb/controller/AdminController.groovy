@@ -24,4 +24,12 @@ class AdminController {
 		
 		[genres:results.importedGenres.values(), actors:results.importedActors.values(), movies:results.importedMovies.values()]
 	}
+	
+	def batchAdd = {
+		def results = [:]
+		
+		results = importService.batchAdd( params.data.inputStream.text )
+		
+		[movies:results.importedMovies]
+	}	
 }

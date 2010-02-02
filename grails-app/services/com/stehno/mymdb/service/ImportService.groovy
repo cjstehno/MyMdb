@@ -13,6 +13,104 @@ import org.w3c.dom.Node
 class ImportService {
 
 	boolean transactional = true
+	
+	def batchAdd( text ){
+		def movies = []
+		def currentMovie = null
+		
+		def handlers = [
+			't':{ line ->
+				currentMovie = new Movie(title:lineContent(line))
+			},
+			
+			'y':{ line ->
+				currentMovie.releaseYear = lineContent(line).toInteger()
+			},
+			
+			'g':{ line ->
+				currentMovie.addToGenres( genreForName( lineContent(line) ) )
+			},
+			
+			'a':{ line ->
+				currentMovie.addToActors( actorForName( lineContent(line) ) )
+			},
+			
+			'd':{ line ->
+				currentMovie.description = lineContent(line)
+			},
+			
+			'p':{ line ->
+				currentMovie.poster = importPoster(lineContent(line))
+			},
+			
+			's':{ line ->
+				def sparts = lineContent(line).split(',')
+				currentMovie.storage = new Storage(name:sparts[0], index:sparts[1].toInteger())
+			},
+			
+			'=':{ line ->
+				movies << currentMovie.save()
+			}
+		]			
+		
+        text.eachLine { line ->
+            if( line != null && line.size() > 0 ){
+                def handler = handlers[line[0]]
+                if(handler) handler(line)
+            }
+        }
+		
+		[importedMovies:movies]
+    }
+	
+	def actorForName( fullname ){
+		def actor = null
+		def actname = fullname.split(' ')
+		if( actname.size() == 1 ){
+			def act = Actor.findByLastName( actname[0] )
+			if( !act ){
+				act = new Actor(firstName:'', middleName:'', lastName:actname[0]).save()
+			}
+			actor = act
+			
+		} else if( actname.size() == 2 ){
+			def act = Actor.findByFirstNameAndLastName(actname[0],actname[1])
+			if( !act ){
+				act = new Actor(firstName:actname[0], middleName:'', lastName:actname[1]).save()
+			}
+			actor = act
+			
+		} else if( actname.size() == 3 ){
+			def act = Actor.findWhere(firstName:actname[0],middleName:actname[1],lastName:actname[2])
+			if( !act ){
+				act = new Actor(firstName:actname[0], middleName:actname[1], lastName:actname[2]).save()
+			}
+			actor = act			
+		}	
+		actor
+	}
+	
+	def genreForName( name ){
+		def gen = Genre.findByName( name )
+		if( !gen ){
+			gen = new Genre(name:name).save()
+		}
+		gen
+	}
+
+    def lineContent( line ){
+        line.substring(line.indexOf(':')+1).trim()
+    }
+	
+	def importPoster( url ){
+		def data = []
+		new URL(url).withInputStream {
+			it.each { b ->
+				data << b
+			}
+		}
+		data.toArray(new byte[0])
+	}
 
 	def importData( instream ){
 		def doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(instream)
