@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="body">
-            <h1>Movies By Release Year</h1>
+            <h1>Movies By Release Year: ${theYear}</h1>
 			
 			<div class="listings">
 				<a href="year">All</a>

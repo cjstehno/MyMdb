@@ -34,3 +34,8 @@ tr.movie-listing .info .detail {
 form[action='search'] > input {
 	width: 75%;
 }
+
+.actor-list-item {
+	float:left;
+	width:33%;
+}

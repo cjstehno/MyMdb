@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="body">
-            <h1>Movies By Title</h1>
+            <h1>Movies By Title: ${letter}</h1>
 			
 			<div class="listings">
 				<a href="title">All</a>

@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="body">
-            <h1>Movies By Release Genre</h1>
+            <h1>Movies By Release Genre: ${theGenre.name}</h1>
 			
 			<div class="listings">
 				<a href="genre">All</a>

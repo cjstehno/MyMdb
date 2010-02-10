@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="body">
-            <h1>Movies By Storage</h1>
+            <h1>Movies By Storage: ${theStorage}</h1>
 			
 			<div class="listings">
 				<a href="storage">All</a>

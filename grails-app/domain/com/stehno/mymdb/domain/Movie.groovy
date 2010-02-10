@@ -10,7 +10,6 @@ class Movie implements Taggable {
 	Storage storage
 	byte[] poster
     
-	static searchable = true
     static hasMany = [genres:Genre, actors:Actor]
 	static embedded = ['storage']
 	
