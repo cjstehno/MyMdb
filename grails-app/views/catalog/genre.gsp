@@ -12,9 +12,8 @@
             <h1>Movies By Release Genre: ${theGenre.name}</h1>
 			
 			<div class="listings">
-				<a href="genre">All</a>
-				<g:each in="${Genre.list()}" var="genre">
-					| <a href="genre?genre=${genre.id}">${genre.name}</a>
+				<g:each in="${Genre.list([sort:'name'])}" var="genre">
+					<g:link controller="catalog" action="genre" id="${genre.id}">${genre.name}</g:link>,
 				</g:each>
 			</div>
 			

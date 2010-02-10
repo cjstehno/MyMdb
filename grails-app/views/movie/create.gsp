@@ -84,7 +84,7 @@
 									<div id="actor-tabs">
 										<ul>
 											<g:each in="${tabRange}" var="t">
-												<li><a href="#tab${t}">${t*30 + 1}-${t*30 + 30}</a></li>
+												<li><a href="#tab${t}">${t+1}</a></li>
 											</g:each>
 										</ul>
 										<g:each in="${tabs}" var="tab" status="t">

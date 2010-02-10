@@ -25,15 +25,15 @@
 				<div class="sub-section">
 					<h3>Movies by Title</h3>
 					<div class="listings">
-						<g:link controller="catalog" action="title">All</g:link>
+						<g:link controller="catalog" action="title">All</g:link>,
 						<g:each in="${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.chars}" var="val">
-							| <g:link controller="catalog" action="title" params="[letter:val]">${val}</g:link>
+							<g:link controller="catalog" action="title" params="[letter:val]">${val}</g:link>,
 						</g:each>
 					</div>
 					
 					<h3>Movies by Genre</h3>
 					<div class="listings">
-						<g:each in="${Genre.list()}" var="genre">
+						<g:each in="${Genre.list([sort:'name'])}" var="genre">
 							<g:link controller="catalog" action="genre" id="${genre.id}">${genre.name}</g:link>,
 						</g:each>
 					</div>
@@ -43,7 +43,7 @@
 						<div id="actor-tabs">
 							<ul>
 								<g:each in="${(0..<actorTabs.size())}" var="t">
-									<li><a href="#tab${t}">${t*30 + 1}-${t*30 + 30}</a></li>
+									<li><a href="#tab${t}">${t+1}</a></li>
 								</g:each>
 							</ul>
 							<g:each in="${actorTabs}" var="tab" status="t">
@@ -79,7 +79,10 @@
 				<div class="sub-section">
 					<h3>Printable Catalog</h3>
 					<div class="listings">
-						<g:link controller="printable" action="catalog" target="_blank">Print</g:link>
+						<g:link controller="printable" action="titlesection" target="_blank">Titles Section</g:link>, 
+						<g:link controller="printable" action="genresection" target="_blank">Genre Section</g:link>, 
+						<g:link controller="printable" action="actorsection" target="_blank">Actors Section</g:link>,
+						<g:link controller="printable" action="storagesection" target="_blank">Storage Section</g:link>
 					</div>
 
 					<h3>Printable Box Book</h3>
