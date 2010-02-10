@@ -14,4 +14,8 @@ class Actor {
 		middleName(validator:{ it == null || (0..25).containsWithinBounds(it.size()) })
         lastName(validator:{ it != null && (1..25).containsWithinBounds(it.size()) })
     }
+	
+	static mapping = {
+		cache true
+	}	
 }

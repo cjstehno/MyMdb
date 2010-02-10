@@ -24,4 +24,8 @@ class Movie implements Taggable {
         dateCreated(nullable:true)
 		storage(nullable:true)
     }
+	
+	static mapping = {
+		cache true
+	}	
 }

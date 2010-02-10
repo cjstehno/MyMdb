@@ -10,4 +10,8 @@ class Genre {
     static constraints = {
         name(validator:{ return it != null && (2..10).containsWithinBounds(it.size()) })
     }
+	
+	static mapping = {
+		cache true
+	}
 }

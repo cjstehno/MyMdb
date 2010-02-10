@@ -27,5 +27,6 @@
 			</g:each>
 		</div>
 		<div class="detail">${fieldValue(bean:it, field:'description')}</div>
+		<div style="float:right;"><g:link controller="movie" action="edit" id="${it.id}">edit</g:link></div>
 	</td>
 </tr>

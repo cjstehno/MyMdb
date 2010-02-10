@@ -53,7 +53,7 @@
                                     <label for="poster">Poster</label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: movieInstance, field: 'poster', 'errors')}">
-									<div><img src="poster/${movieInstance.id}" /></div>
+									<div><img src="${request.contextPath}/movie/poster/${movieInstance.id}" /></div>
 									<input type="file" id="poster" name="poster" />
                                 </td>
                             </tr>								
