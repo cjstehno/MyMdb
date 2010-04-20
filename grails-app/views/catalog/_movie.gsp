@@ -1,5 +1,5 @@
 <tr class="movie-listing">
-	<td class="poster" valign="top"><img src="${request.contextPath}/movie/poster/${it.id}" width="125" /></td>
+	<td class="poster" valign="top"><img class="movie-poster" src="${request.contextPath}/movie/poster/${it.id}" width="125" /></td>
 	<td class="info" valign="top">
 		<div class="title">${fieldValue(bean:it, field:'title')}</div>
 		<div class="detail">

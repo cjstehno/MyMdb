@@ -18,6 +18,8 @@
         </div>
         <div class="body">
 			<g:layoutBody />
-        </div>		
+        </div>
+
+        <div id="poster-dialog">Loading...</div>
     </body>
 </html>
