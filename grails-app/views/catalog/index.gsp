@@ -72,7 +72,15 @@
 						<g:each in="${releaseYears}" var="yr">
 							<g:link controller="catalog" action="year" params="[year:yr]">${yr}</g:link>,
 						</g:each>
-					</div>						
+					</div>
+
+                    <h3>Movies by Tag</h3>
+					<div class="listings">
+						<g:link controller="catalog" action="tag">All</g:link>,
+						<g:each in="${movieTags}" var="t">
+							<g:link controller="catalog" action="tag" id="${t}">${t}</g:link>,
+						</g:each>
+					</div>
 				</div>
 				
 				<h2>Printables</h2>

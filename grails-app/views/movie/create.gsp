@@ -109,6 +109,15 @@
 									Index: <input type="text" id="storage.index" name="storage.index" value="${movieInstance?.storage?.index}" size="4" />
                                 </td>
                             </tr>
+
+                            <tr>
+                              <td valign="top" class="name">
+                                <label for="tags">Tags</label>
+                              </td>
+                              <td valign="top" class="value">
+                                <input type="text" id="tags" name="tags" value="" />
+                              </td>
+                            </tr>
                         
                         </tbody>
                     </table>

@@ -73,6 +73,11 @@
                                 </ul>
                             </td>
                         </tr>
+
+                        <tr>
+                          <td valign="top" class="name">Tags</td>
+                          <td valign="top" class="value">${movieInstance?.tags?.join(', ') }</td>
+                        </tr>
                     
                     </tbody>
                 </table>

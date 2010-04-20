@@ -112,7 +112,16 @@
 									Box: <input type="text" id="storage.name" name="storage.name" value="${movieInstance?.storage?.name}" size="4" />
 									Index: <input type="text" id="storage.index" name="storage.index" value="${movieInstance?.storage?.index}" size="4" />
                                 </td>
-                            </tr>							
+                            </tr>
+
+                            <tr>
+                              <td valign="top" class="name">
+                                <label for="tags">Tags</label>
+                              </td>
+                              <td valign="top" class="value">
+                                <input type="text" id="tags" name="tags" value="${movieInstance?.tags?.join(' ') }" />
+                              </td>
+                            </tr>
                         
                         </tbody>
                     </table>

@@ -64,12 +64,13 @@ class MovieController {
 		if(movieInstance.storage){
 			movieInstance.storage.name = movieInstance.storage.name.toUpperCase()
 		}
-		
+
         if (movieInstance.save(flush: true)) {
+            movieInstance.setTags( params.tags?.split().toList() )
+            
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"
             redirect(action: "show", id: movieInstance.id)
-        }
-        else {
+        } else {
             render(view: "create", model: [movieInstance: movieInstance])
         }
     }
@@ -126,6 +127,8 @@ class MovieController {
 			}			
 			
             if (!movieInstance.hasErrors() && movieInstance.save(flush: true)) {
+                movieInstance.setTags( params.tags?.split().toList() )
+                
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"
                 redirect(action: "show", id: movieInstance.id)
             }

@@ -26,6 +26,7 @@
                             <g:sortableColumn property="description" title="${message(code: 'movie.description.label', default: 'Description')}" />
 							<th>Genres</th>
 							<th>Actors</th>
+                            <th>Tags</th>
                             <g:sortableColumn property="releaseYear" title="${message(code: 'movie.releaseYear.label', default: 'Release Year')}" />
 							<th>&nbsp;</th>
                         </tr>
@@ -53,6 +54,7 @@
 									</span>
 								</g:each>
 							</td>
+                            <td>${movieInstance.tags?.join(', ')}</td>
                             <td>${movieInstance.releaseYear}</td>
 							<td><g:link controller="movie" action="edit" id="${movieInstance.id}">Edit</g:link></td>
                         </tr>

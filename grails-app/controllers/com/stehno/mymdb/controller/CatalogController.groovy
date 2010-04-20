@@ -17,6 +17,7 @@ class CatalogController {
 		[
 			storageBoxes:Movie.executeQuery("select distinct m.storage.name from Movie m"),
 			releaseYears:Movie.executeQuery("select distinct m.releaseYear from Movie m"),
+            movieTags:Movie.allTags,
 			actorTabs:tabSets
 		]
 	}
@@ -44,7 +45,7 @@ class CatalogController {
         
         [movieInstanceList:movies, movieInstanceTotal:movies.size(), letter:params.letter]
 	}
-	
+
 	def genre = {
 		params.max = Math.min(params.max ? params.int('max') : 20, 100)
 		
@@ -109,5 +110,18 @@ class CatalogController {
 		
 		[movieInstanceList:movies, movieInstanceTotal:movies.size(), releaseYears:years, theYear:params.year]
 	}
-	
+
+    def tag = {
+        params.max = Math.min(params.max ? params.int('max') : 20, 100)
+
+        def movies = null
+        if( params.id ){
+            movies = Movie.findAllByTag( params.id )
+        } else {
+            // TODO: group by tag
+            movies = Movie.list()
+        }
+
+        [movieInstanceList:movies, movieInstanceTotal:movies.size(), theTag:params.id, allTags:Movie.allTags]
+    }
 }

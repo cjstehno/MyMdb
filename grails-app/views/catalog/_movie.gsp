@@ -26,6 +26,11 @@
 				</span>
 			</g:each>
 		</div>
+        <div class="detail"><span class="label">Tags:</span>
+          <g:each in="${it.tags}" var="tag">
+            <span><g:link controller="catalog" action="tag" id="${tag}">${tag}</g:link>,</span>
+          </g:each>
+        </div>
 		<div class="detail">${fieldValue(bean:it, field:'description')}</div>
 		<div style="float:right;"><g:link controller="movie" action="edit" id="${it.id}">edit</g:link></div>
 	</td>
