@@ -2,9 +2,9 @@
 
 /web-app/WEB-INF
 
-.classpath
-.project
-.settings
+#.classpath
+#.project
+#.settings
 /*.launch
 /*.tmproj
 
