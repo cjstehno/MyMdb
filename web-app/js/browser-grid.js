@@ -51,7 +51,8 @@ function initializeGrid(){
 	
 	grid.on( 'rowclick', function(g,idx,evt){
 		var selectedMovie = g.store.getAt(idx);
-		Ext.Msg.alert('Status', 'You clicked: ' + selectedMovie.id + ", " + selectedMovie.data.ti);
+		browserWindow.setVisible( true );
+		//Ext.Msg.alert('Status', 'You clicked: ' + selectedMovie.id + ", " + selectedMovie.data.ti);
 	});
 	
 	return grid;

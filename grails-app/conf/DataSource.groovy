@@ -15,8 +15,10 @@ hibernate {
 environments {
 	development {
 		dataSource {
-			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			url = "jdbc:hsqldb:mem:devDB"
+			// dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+			// url = "jdbc:hsqldb:mem:devDB"
+			dbCreate = "update"
+			url = "jdbc:hsqldb:file:u:/hsql/mymdb/mymdb;shutdown=true"			
 		}
 	}
 	test {
@@ -28,7 +30,7 @@ environments {
 	production {
 		dataSource {
 			dbCreate = "update"
-			url = "jdbc:hsqldb:file:/hsql/mymdb/mymdb;shutdown=true"
+			url = "jdbc:hsqldb:file:u:/hsql/mymdb/mymdb;shutdown=true"
 		}
 	}
 }
