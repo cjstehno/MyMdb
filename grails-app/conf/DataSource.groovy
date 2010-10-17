@@ -1,8 +1,4 @@
 dataSource {
-	pooled = true
-	driverClassName = "org.hsqldb.jdbcDriver"
-	username = "sa"
-	password = ""
 }
 
 hibernate {
@@ -16,21 +12,28 @@ environments {
 	development {
 		dataSource {
 			// dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			// url = "jdbc:hsqldb:mem:devDB"
-			dbCreate = "update"
-			url = "jdbc:hsqldb:file:u:/hsql/mymdb/mymdb;shutdown=true"			
+			dbCreate = "create-drop"
+			url = "jdbc:hsqldb:mem:devDb"
+                        pooled = true
+                        driverClassName = "org.hsqldb.jdbcDriver"
+                        username = "sa"
+                        password = ""
 		}
 	}
 	test {
 		dataSource {
-			dbCreate = "update"
+			dbCreate = "create-drop"
 			url = "jdbc:hsqldb:mem:testDb"
+                        pooled = true
+                        driverClassName = "org.hsqldb.jdbcDriver"
+                        username = "sa"
+                        password = ""    
 		}
 	}
 	production {
 		dataSource {
 			dbCreate = "update"
-			url = "jdbc:hsqldb:file:u:/hsql/mymdb/mymdb;shutdown=true"
+			jndiName = "java:comp/env/jdbc/MyMdb"
 		}
 	}
 }
