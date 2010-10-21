@@ -16,26 +16,98 @@
 package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Actor
 
 class BrowserController {
 
     def index = { }
 	
     def titles = {
+        def results = Movie.executeQuery("select distinct(substring(m.title,1,1)) from Movie m")
+        render(contentType:"text/json") {
+            items = array {
+                for(r in results) {
+                    item cid:r, lbl:r
+                }
+            }
+        }
+    }
+
+    def releaseYears = {
+        def results = Movie.executeQuery("select distinct(m.releaseYear) from Movie m order by m.releaseYear asc")
+        render(contentType:"text/json") {
+            items = array {
+                for(r in results) {
+                    item cid:r, lbl:r
+                }
+            }
+        }
+    }
+
+    def storage = {
+        def results = Movie.executeQuery("select distinct(m.storage.name) from Movie m order by m.storage.name asc")
+        render(contentType:"text/json") {
+            items = array {
+                for(r in results) {
+                    item cid:r, lbl:r
+                }
+            }
+        }
     }
 
     def genres = {
+        def results = Genre.list( [sort:'name', order:'asc'] )
+        render(contentType:"text/json") {
+            items = array {
+                for(r in results) {
+                    item cid:r.id, lbl:r.name
+                }
+            }
+        }
+    }
+
+    def actors = {
+        def results = Actor.list( [sort:'lastName', order:'asc'] )
+        render(contentType:"text/json") {
+            items = array {
+                for(r in results) {
+                    item cid:r.id, lbl:"${r.lastName}, ${r.firstName} ${r.middleName}"
+                }
+            }
+        }
     }
 
     def list = {
-            def results = Movie.list( [sort:'title', order:'asc'] )
-            render(contentType:"text/json") {
-                    movies = array {
-                            for(r in results) {
-                                    movie mid:r.id, ti:r.title, yr:r.releaseYear, bx:"${r.storage.name}-${r.storage.index}"
-                            }
-                    }
-            }
+        def categoryId = params.cid
+        def results
+        switch(params.sid){
+            case 'title_store':
+                results = Movie.findAll("from Movie as m where substring(m.title,1,1)=? order by m.title", [categoryId])
+                break
+            case 'genre_store':
+                results = Movie.executeQuery("from Movie m where ? in elements(m.genres) order by m.title asc", [categoryId])
+                break
+            case 'actor_store':
+                results = Movie.executeQuery("from Movie m where ? in elements(m.actors) order by m.title asc", [categoryId])
+                break
+            case 'box_store':
+                results = Movie.findAll("from Movie m where m.storage.name=? order by m.title asc", [categoryId])
+                break
+            case 'year_store':
+                results = Movie.findAll("from Movie m where m.releaseYear=? order by m.title asc", [categoryId as Integer])
+                break
+            default:
+                results = Movie.list( [sort:'title', order:'asc'] )
+                break
+        }
 
+        render(contentType:"text/json") {
+            movies = array {
+                for(r in results) {
+                    movie mid:r.id, ti:r.title, yr:r.releaseYear, bx:"${r.storage.name}-${r.storage.index}"
+                }
+            }
+        }
     }
 }
