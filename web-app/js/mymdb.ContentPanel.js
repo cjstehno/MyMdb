@@ -1,4 +1,10 @@
 
+mymdb.MovieDetailsTab = Ext.extend( Ext.Panel, {
+    title:'Movie',
+    closable:true
+});
+Ext.reg('movietab', mymdb.MovieDetailsTab);
+
 mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
     id:'movieGridPanel',
     frame: true,
@@ -16,7 +22,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
         forceFit: true
     },
     colModel: new Ext.grid.ColumnModel({
-        defaults: { sortable: true },
+        defaults: {sortable: true},
         columns: [
             {header: 'Title', dataIndex: 'ti'},
             {header: 'Genres', dataIndex: 'genres', sortable:false},
@@ -33,13 +39,16 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
 
         this.on( 'rowclick', function(g,idx,evt){
             var selectedMovie = g.store.getAt(idx);
-            //browserWindow.setVisible( true );
-            Ext.Msg.alert('Status', 'You clicked: ' + selectedMovie.id + ", " + selectedMovie.data.ti);
+            var cmp = Ext.getCmp('contentPanel');
+            var newTab = new mymdb.MovieDetailsTab({ title:selectedMovie.data.ti, html:'The movie details will be here...' });
+            cmp.add(newTab);
+            cmp.activate(cmp.items.length-1);
         });
     }
 });
 
 mymdb.ContentPanel = Ext.extend( Ext.TabPanel, {
+    id:'contentPanel',
 	title:'Content',
 	activeTab:0,
     autoHeight:true,
@@ -54,19 +63,7 @@ mymdb.ContentPanel = Ext.extend( Ext.TabPanel, {
         });
 
         Ext.apply(this, {
-			items: [
-				movieGridTab,
-				{
-					title:'Something',
-					html:'This will be a grid of the results...',
-					closable:true
-				},
-				{
-					title:'More',
-					html:'This will be a grid of the results...',
-					closable:true
-				}
-			]
+			items: [ movieGridTab ]
         });
 
         mymdb.ContentPanel.superclass.initComponent.apply(this, arguments);
