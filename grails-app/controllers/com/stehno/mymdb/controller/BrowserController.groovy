@@ -110,4 +110,8 @@ class BrowserController {
             }
         }
     }
+
+    def about = {
+        
+    }
 }

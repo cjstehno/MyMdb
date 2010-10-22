@@ -12,6 +12,13 @@ mymdb.app = function() {
     // public space
     return {
         // public properties, e.g. strings to translate
+        openAboutAction: new Ext.Action({
+            itemId: 'openAbout',
+            text: 'About',
+            handler: function(){
+                new mymdb.AboutDialog();
+            }
+        }),
  
         // public methods
         init: function() {
@@ -30,12 +37,53 @@ mymdb.app = function() {
     };
 }();
 
+mymdb.AboutDialog = Ext.extend( Ext.Window ,{
+    autoShow:true,
+    closable:true,
+    initHidden:false,
+    modal:true,
+    width:600,
+    height:500,
+    title:'About My Movie Database',
+    layout:'fit',
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                {
+                    xtype:'tabpanel',
+                    activeTab:0,
+                    items:[
+                        {
+                            title:'Info',
+                            autoLoad:'browser/about',
+                            closable:false
+                        },
+                        {
+                            title:'Apache v2',
+                            autoLoad:'apache-lic.txt',
+                            autoScroll:true,
+                            closable:false
+                        },
+                                        {
+                            title:'GPL v3',
+                            autoLoad:'gpl-3.0.txt',
+                            autoScroll:true,
+                            closable:false
+                        }
+                    ]
+                }
+            ]
+        });
+        mymdb.AboutDialog.superclass.initComponent.apply(this, arguments);
+    }
+});
+
 mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	html: '<h1 class="x-panel-header">My Movie Database</h1>',
 	autoHeight: true,
 	border: false,
 	margins: '0 0 5 0',
-	bbar:[ { text:'foo', xtype:'button' } ]
+	bbar:[ { xtype:'tbfill' }, mymdb.app.openAboutAction ]
 });
 Ext.reg('headerpanel', mymdb.HeaderPanel);
 
