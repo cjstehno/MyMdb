@@ -111,7 +111,24 @@ class BrowserController {
         }
     }
 
-    def about = {
-        
+    def about = { }
+
+    def details = {
+        [ movieInstance:Movie.get( params.mid )]
     }
+
+	def poster = {
+        def movieInstance = Movie.get(params.id)
+        if (!movieInstance) {
+			response.sendError(404,"${message(code:'default.not.found.message', args:[message(code:'movie.label', default:'Movie'), params.id])}")
+        } else {
+			if( movieInstance.poster == null || movieInstance.poster.size() == 0 ){
+				response.sendRedirect "${request.contextPath}/images/nocover.jpg"
+			} else {
+				response.outputStream.withStream {
+					it << movieInstance.poster
+				}
+			}
+        }
+	}
 }

@@ -40,8 +40,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
         this.on( 'rowclick', function(g,idx,evt){
             var selectedMovie = g.store.getAt(idx);
             var cmp = Ext.getCmp('contentPanel');
-            var newTab = new mymdb.MovieDetailsTab({ title:selectedMovie.data.ti, html:'The movie details will be here...' });
-            cmp.add(newTab);
+            cmp.add( new mymdb.MovieDetailsTab({ title:selectedMovie.data.ti, autoLoad:'browser/details?mid=' + selectedMovie.data.mid }) );
             cmp.activate(cmp.items.length-1);
         });
     }
