@@ -67,6 +67,8 @@ log4j = {
 	       'org.hibernate',
            'net.sf.ehcache.hibernate'
 
+    error stdout:"StackTrace"
+
     warn   'org.mortbay.log'
 }
 
