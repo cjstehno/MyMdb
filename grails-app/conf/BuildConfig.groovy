@@ -1,3 +1,6 @@
+import groovy.xml.MarkupBuilder
+import groovy.util.ConfigSlurper
+
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir	= "target/test-reports"
@@ -28,4 +31,31 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.5'
     }
 
+}
+
+grails.war.resources = { stagingDir, args ->
+    def myConfig = new ConfigSlurper().parse(new File('mymdb-config.groovy').toURL())
+
+    // write the configured context.xml file for Tomcat
+    new File("${stagingDir}/META-INF/context.xml").withWriter { w->
+        w.write '<?xml version="1.0" encoding="UTF-8"?>\n'
+
+        new MarkupBuilder( w ).Context {
+            delegate.Resource(
+                name:myConfig.mymdb.jndi.dataSource.name,
+                auth:'Container',
+                type:'javax.sql.DataSource',
+                username:myConfig.mymdb.jndi.dataSource.user,
+                password:myConfig.mymdb.jndi.dataSource.pass,
+                driverClassName:myConfig.mymdb.jndi.dataSource.driver,
+                url:myConfig.mymdb.jndi.dataSource.url,
+
+                maxActive:myConfig.mymdb.jndi.dataSource.pool.maxActive,
+                maxIdle:myConfig.mymdb.jndi.dataSource.pool.maxIdle,
+                maxWait:myConfig.mymdb.jndi.dataSource.pool.maxWait,
+                removeAbandoned:myConfig.mymdb.jndi.dataSource.pool.removeAbandoned,
+                removeAbandonedTimeout:myConfig.mymdb.jndi.dataSource.pool.removeAbandonedTimeout
+            )
+        }
+    }
 }

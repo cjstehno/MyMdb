@@ -1,0 +1,21 @@
+// Sample configuration file for MyMdb
+
+mymdb {
+    jndi {
+        dataSource {
+            url="jdbc:mysql://localhost:3306/mymdb"
+            driver="com.mysql.jdbc.Driver"
+            name="jdbc/MyMdb"
+            user="username"
+            pass="password"
+
+            pool {
+                maxActive="10"
+                maxIdle="1"
+                maxWait="10000"
+                removeAbandoned="true"
+                removeAbandonedTimeout="60"
+            }
+        }
+    }
+}
