@@ -21,61 +21,28 @@ import com.stehno.mymdb.domain.Actor
 
 class BrowserController {
 
+    def movieService
+
     def index = { }
 	
     def titles = {
-        def results = Movie.executeQuery("select distinct(substring(m.title,1,1)) from Movie m")
-        render(contentType:"text/json") {
-            items = array {
-                for(r in results) {
-                    item cid:r, lbl:r
-                }
-            }
-        }
+        renderListAsJson movieService.findMovieTitleLetters().collect(identityCollector)
     }
 
     def releaseYears = {
-        def results = Movie.executeQuery("select distinct(m.releaseYear) from Movie m order by m.releaseYear asc")
-        render(contentType:"text/json") {
-            items = array {
-                for(r in results) {
-                    item cid:r, lbl:r
-                }
-            }
-        }
+        renderListAsJson movieService.findMovieReleaseYears().collect(identityCollector)
     }
 
     def storage = {
-        def results = Movie.executeQuery("select distinct(m.storage.name) from Movie m order by m.storage.name asc")
-        render(contentType:"text/json") {
-            items = array {
-                for(r in results) {
-                    item cid:r, lbl:r
-                }
-            }
-        }
+        renderListAsJson movieService.findMovieBoxes().collect(identityCollector)
     }
 
     def genres = {
-        def results = Genre.list( [sort:'name', order:'asc'] )
-        render(contentType:"text/json") {
-            items = array {
-                for(r in results) {
-                    item cid:r.id, lbl:r.name
-                }
-            }
-        }
+        renderListAsJson Genre.list( [sort:'name', order:'asc'] ).collect { [id:it.id, label:it.name] }
     }
 
     def actors = {
-        def results = Actor.list( [sort:'lastName', order:'asc'] )
-        render(contentType:"text/json") {
-            items = array {
-                for(r in results) {
-                    item cid:r.id, lbl:"${r.lastName}, ${r.firstName} ${r.middleName}"
-                }
-            }
-        }
+        renderListAsJson Actor.list( [sort:'lastName', order:'asc'] ).collect { [id:it.id, label:it.displayName] }
     }
 
     def list = {
@@ -83,19 +50,19 @@ class BrowserController {
         def results
         switch(params.sid){
             case 'title_store':
-                results = Movie.findAll("from Movie as m where substring(m.title,1,1)=? order by m.title", [categoryId])
+                results = movieService.findMoviesTitleStartingWith( categoryId )
                 break
             case 'genre_store':
-                results = Movie.executeQuery("from Movie m where ? in elements(m.genres) order by m.title asc", [categoryId])
+                results = movieService.findMoviesByGenre( categoryId )
                 break
             case 'actor_store':
-                results = Movie.executeQuery("from Movie m where ? in elements(m.actors) order by m.title asc", [categoryId])
+                results = movieService.findMoviesByActor( categoryId )
                 break
             case 'box_store':
-                results = Movie.findAll("from Movie m where m.storage.name=? order by m.title asc", [categoryId])
+                results = movieService.findMoviesForBox( categoryId )
                 break
             case 'year_store':
-                results = Movie.findAll("from Movie m where m.releaseYear=? order by m.title asc", [categoryId as Integer])
+                results = Movie.findAllByReleaseYear( year as Integer, [sort:'title', order:'asc'] )
                 break
             default:
                 results = Movie.list( [sort:'title', order:'asc'] )
@@ -105,30 +72,33 @@ class BrowserController {
         render(contentType:"text/json") {
             movies = array {
                 for(r in results) {
-                    movie mid:r.id, ti:r.title, yr:r.releaseYear, bx:"${r.storage.name}-${r.storage.index}"
+                    movie mid:r.id, ti:r.title, yr:r.releaseYear, bx:r.storageLabel
                 }
             }
         }
     }
 
-    def about = { }
+    def about = { /* just routes to view */ }
 
     def details = {
         [ movieInstance:Movie.get( params.mid )]
     }
 
-	def poster = {
-        def movieInstance = Movie.get(params.id)
-        if (!movieInstance) {
-			response.sendError(404,"${message(code:'default.not.found.message', args:[message(code:'movie.label', default:'Movie'), params.id])}")
-        } else {
-			if( movieInstance.poster == null || movieInstance.poster.size() == 0 ){
-				response.sendRedirect "${request.contextPath}/images/nocover.jpg"
-			} else {
-				response.outputStream.withStream {
-					it << movieInstance.poster
-				}
-			}
+    /**
+     *  Closure used in collect methods to transfor item into map with
+     *  both the id and label set to the original object value.
+     */
+    private def identityCollector = {
+        [id:it, label:it]
+    }
+
+    private def renderListAsJson( list ){
+        render(contentType:"text/json") {
+            items = array {
+                for(r in list) {
+                    item cid:r.id, lbl:r.label
+                }
+            }
         }
-	}
+    }
 }

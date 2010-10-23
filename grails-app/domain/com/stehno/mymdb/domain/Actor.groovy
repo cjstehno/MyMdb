@@ -32,5 +32,15 @@ class Actor {
 	
 	static mapping = {
 		cache true
-	}	
+	}
+
+    static transients = ['displayName', 'fullName']
+
+    def getDisplayName(){
+        "$lastName, $firstName $middleName"
+    }
+
+    def getFullName(){
+        "$firstName $middleName $lastName"
+    }
 }

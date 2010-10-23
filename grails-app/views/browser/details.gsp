@@ -1,6 +1,6 @@
 
 <div>
-  <img src="browser/poster/${movieInstance.id}" style="float:left;margin:5px;border:1px solid gray;" />
+  <img src='<g:createLink controller="poster" action="image" params="[id:movieInstance.id]" />' style="float:left;margin:5px;border:1px solid gray;" />
 
   <h1 style="border-bottom:1px solid gray;">${fieldValue(bean: movieInstance, field: "title")} (${movieInstance.releaseYear})</h1>
   <div><b>Box:</b> ${movieInstance.storage.name}-${movieInstance.storage.index}</div>

@@ -42,5 +42,11 @@ class Movie implements Taggable {
 	
 	static mapping = {
 		cache true
-	}	
+	}
+
+    static transients = ['storageLabel']
+
+    def getStorageLabel(){
+        "${storage.name}-${storage.index}"
+    }
 }

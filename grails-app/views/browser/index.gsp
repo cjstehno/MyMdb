@@ -1,8 +1,6 @@
 <html>
   <head>
-    <script type="text/javascript">
-        var resourceBase = '<g:resource dir="" absolute="true"/>';
-    </script>
+    <meta name="layout" content="browser" />
     <g:javascript library="mymdb.app" />
     <g:javascript library="mymdb.DetailsPanel" />
     <g:javascript library="mymdb.ContentPanel" />
