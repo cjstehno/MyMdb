@@ -62,7 +62,7 @@ class BrowserController {
                 results = movieService.findMoviesForBox( categoryId )
                 break
             case 'year_store':
-                results = Movie.findAllByReleaseYear( year as Integer, [sort:'title', order:'asc'] )
+                results = Movie.findAllByReleaseYear( categoryId as Integer, [sort:'title', order:'asc'] )
                 break
             default:
                 results = Movie.list( [sort:'title', order:'asc'] )

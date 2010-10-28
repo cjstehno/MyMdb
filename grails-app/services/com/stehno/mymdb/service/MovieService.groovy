@@ -38,7 +38,7 @@ class MovieService {
     }
 
     def findMoviesTitleStartingWith( letter ){
-        Movie.findAll("from Movie as m where substring(m.title,1,1)=? order by m.title", [letter])
+        Movie.findAll("from Movie as m where substring(m.title,1,1)=? order by m.title asc", [letter])
     }
     
     def findMoviesByGenre( genreId ){
