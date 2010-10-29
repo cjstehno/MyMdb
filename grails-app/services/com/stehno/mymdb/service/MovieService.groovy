@@ -16,6 +16,8 @@
 package com.stehno.mymdb.service
 
 import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Actor
 
 class MovieService {
 
@@ -34,19 +36,21 @@ class MovieService {
      * title.
      */
     def findMovieTitleLetters(){
-        Movie.executeQuery("select distinct(substring(m.title,1,1)) from Movie m")
+        Movie.executeQuery("select distinct(substring(upper(m.title),1,1)) from Movie m")
     }
 
     def findMoviesTitleStartingWith( letter ){
-        Movie.findAll("from Movie as m where substring(m.title,1,1)=? order by m.title asc", [letter])
+        Movie.findAll("from Movie as m where substring(upper(m.title),1,1)=? order by m.title asc", [letter.toUpperCase()])
     }
     
     def findMoviesByGenre( genreId ){
-        Movie.executeQuery("from Movie m where ? in elements(m.genres) order by m.title asc", [genreId])
+        def genre = Genre.get( genreId )
+        genre ? (genre.movies as List).sort( titleComparator ) : []
     }
 
     def findMoviesByActor( actorId ){
-        Movie.executeQuery("from Movie m where ? in elements(m.actors) order by m.title asc", [actorId])
+        def actor = Actor.get( actorId )
+        actor ? (actor.movies as List).sort( titleComparator ) : []
     }
 
     def findMovieReleaseYears(){
@@ -60,4 +64,6 @@ class MovieService {
     def findMoviesForBox( boxName ){
         Movie.findAll("from Movie m where m.storage.name=? order by m.title asc", [boxName])
     }
+
+    private static def titleComparator = { a,b -> a.title <=> b.title } as Comparator
 }
