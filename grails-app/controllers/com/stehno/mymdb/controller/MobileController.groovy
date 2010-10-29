@@ -33,19 +33,26 @@ class MobileController {
         [listItems:categories]
     }
 
-    def title = {
-        def letter = params.id
-        def items = movieService.findMoviesTitleStartingWith( letter ).collect {
-            [ label:it.title, category:'movie', id:it.id ]
-        }
-        render( view:'index', model:[listItems:items, categoryName:"Titles:$letter"] )
-    }
-
     def titles = {
         def items = movieService.findMovieTitleLetters().collect {
             [ label:it, category:'title', id:it ]
         }
         render( view:'index', model:[listItems:items, categoryName:"Titles:"] )
+    }
+
+    def title = {
+        def letter = params.id
+        def items = movieService.findMoviesTitleStartingWith( letter ).collect {
+            [ label:it.title, category:'movie', id:it.id ]
+        }
+        render( view:'index', model:[listItems:items, categoryName:"Titles: $letter"] )
+    }
+
+    def genres = {
+        def items = Genre.list( [sort:'name', order:'asc'] ).collect {
+            [ label:it.name, category:'genre', id:it.id ]
+        }
+        render( view:'index', model:[listItems:items, categoryName:"Genres:"] )
     }
 
     def genre = {
@@ -56,11 +63,11 @@ class MobileController {
         render( view:'index', model:[listItems:items, categoryName:"Genres: ${Genre.get(genreId).name}"] )
     }
 
-    def genres = {
-        def items = Genre.list( [sort:'name', order:'asc'] ).collect {
-            [ label:it.name, category:'genre', id:it.id ]
+    def actors = {
+        def items = Actor.list( [sort:'lastName', order:'asc'] ).collect {
+            [ label:"${it.lastName}, ${it.firstName} ${it.middleName}", category:'actor', id:it.id ]
         }
-        render( view:'index', model:[listItems:items, categoryName:"Genres:"] )
+        render( view:'index', model:[listItems:items, categoryName:"Actors:"] )
     }
 
     def actor = {
@@ -71,11 +78,11 @@ class MobileController {
         render( view:'index', model:[listItems:items, categoryName:"Actors: ${Actor.get(actorId).displayName}"] )
     }
 
-    def actors = {
-        def items = Actor.list( [sort:'lastName', order:'asc'] ).collect {
-            [ label:"${it.lastName}, ${it.firstName} ${it.middleName}", category:'actor', id:it.id ]
+    def years = {
+        def items = movieService.findMovieReleaseYears().collect {
+            [ label:it, category:'year', id:it ]
         }
-        render( view:'index', model:[listItems:items, categoryName:"Actors:"] )
+        render( view:'index', model:[listItems:items, categoryName:"Release Years:"] )
     }
 
     def year = {
@@ -86,11 +93,11 @@ class MobileController {
         render( view:'index', model:[listItems:items, categoryName:"Release Years: ${year}"] )
     }
 
-    def years = {
-        def items = movieService.findMovieReleaseYears().collect {
-            [ label:it, category:'year', id:it ]
+    def boxes = {
+        def items = movieService.findMovieBoxes().collect {
+            [ label:it, category:'box', id:it ]
         }
-        render( view:'index', model:[listItems:items, categoryName:"Release Years:"] )
+        render( view:'index', model:[listItems:items, categoryName:"Storage:"] )
     }
 
     def box = {
@@ -99,13 +106,6 @@ class MobileController {
             [ label:it.title, category:'movie', id:it.id ]
         }
         render( view:'index', model:[listItems:items, categoryName:"Storage: ${box}"] )
-    }
-
-    def boxes = {
-        def items = movieService.findMovieBoxes().collect {
-            [ label:it, category:'box', id:it ]
-        }
-        render( view:'index', model:[listItems:items, categoryName:"Storage:"] )
     }
 
     def movie = {
