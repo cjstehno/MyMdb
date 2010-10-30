@@ -23,7 +23,7 @@ class BrowserController {
 
     def movieService
 
-    def index = { }
+    def index = { /* just routes to view */ }
 	
     def titles = {
         renderListAsJson movieService.findMovieTitleLetters().collect(identityCollector)

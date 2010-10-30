@@ -15,9 +15,14 @@ mymdb.app = function() {
         openAboutAction: new Ext.Action({
             itemId: 'openAbout',
             text: 'About',
-            handler: function(){
-                new mymdb.AboutDialog();
-            }
+            iconCls:'icon-about',
+            handler: function(){ new mymdb.AboutDialog(); }
+        }),
+
+        openGenreManagerAction: new Ext.Action({
+            itemId:'openGenreManager',
+            text:'Genre Manager',
+            handler: function(){ new mymdb.GenreManagerDialog(); }
         }),
  
         // public methods
@@ -37,53 +42,16 @@ mymdb.app = function() {
     };
 }();
 
-mymdb.AboutDialog = Ext.extend( Ext.Window ,{
-    autoShow:true,
-    closable:true,
-    initHidden:false,
-    modal:true,
-    width:600,
-    height:500,
-    title:'About My Movie Database',
-    layout:'fit',
-    initComponent: function(){
-        Ext.apply(this, {
-            items:[
-                {
-                    xtype:'tabpanel',
-                    activeTab:0,
-                    items:[
-                        {
-                            title:'Info',
-                            autoLoad:'browser/about',
-                            closable:false
-                        },
-                        {
-                            title:'Apache v2',
-                            autoLoad:'apache-lic.txt',
-                            autoScroll:true,
-                            closable:false
-                        },
-                                        {
-                            title:'GPL v3',
-                            autoLoad:'gpl-3.0.txt',
-                            autoScroll:true,
-                            closable:false
-                        }
-                    ]
-                }
-            ]
-        });
-        mymdb.AboutDialog.superclass.initComponent.apply(this, arguments);
-    }
-});
-
 mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	html: '<h1 class="x-panel-header">My Movie Database</h1>',
 	autoHeight: true,
 	border: false,
 	margins: '0 0 5 0',
-	bbar:[ { xtype:'tbfill' }, mymdb.app.openAboutAction ]
+	bbar:[
+        mymdb.app.openGenreManagerAction,
+        { xtype:'tbfill' },
+        mymdb.app.openAboutAction
+    ]
 });
 Ext.reg('headerpanel', mymdb.HeaderPanel);
 
