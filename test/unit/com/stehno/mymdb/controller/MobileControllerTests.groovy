@@ -3,6 +3,7 @@ package com.stehno.mymdb.controller
 import grails.test.*
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.service.MovieService
 
 class MobileControllerTests extends ControllerUnitTestCase {
@@ -85,6 +86,46 @@ class MobileControllerTests extends ControllerUnitTestCase {
         controller.genre();
 
         assertResponse 'Genres: Comedy', movieList.collect { [label:it.title, category:'movie', id:it.id] }
+    }
+
+    void testActors(){
+        def actorList = [
+            new Actor(id:200, firstName:'Abe', middleName:'Bernard', lastName:'Ableman'),
+            new Actor(id:100, firstName:'John', middleName:'Quincy', lastName:'Public')
+        ]
+        mockDomain Actor, actorList
+
+        controller.actors();
+
+        assertResponse 'Actors:', actorList.collect {
+            [label:"${it.lastName}, ${it.firstName} ${it.middleName}", category:'actor', id:it.id]
+        }
+    }
+
+    void testActor(){
+        mockDomain Actor, [
+            new Actor(id:200, firstName:'Abe', middleName:'Bernard', lastName:'Ableman'),
+            new Actor(id:100, firstName:'John', middleName:'Quincy', lastName:'Public')
+        ]
+
+        def movieList = [
+            new Movie(id:100, title:'Chicago'),
+            new Movie(id:200, title:'Cars'),
+            new Movie(id:300, title:'Candaian Bacon'),
+        ]
+        def movieService = [
+            findMoviesByActor:{ a->
+                assertEquals 200, a
+                movieList
+            }
+        ] as MovieService
+
+        controller.movieService = movieService
+        controller.params.id = 200
+
+        controller.actor();
+
+        assertResponse 'Actors: Ableman, Abe Bernard', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
     void testMovie(){
