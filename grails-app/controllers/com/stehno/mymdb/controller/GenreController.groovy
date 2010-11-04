@@ -20,6 +20,8 @@ import com.stehno.mymdb.domain.Genre
 
 class GenreController {
 
+    def messageSource
+    
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index = {
@@ -40,6 +42,28 @@ class GenreController {
                 }
             }
         }
+    }
+
+    def jsave = {
+        def genreInstance = new Genre(params)
+        def outp = [:]
+
+        if (genreInstance.save(flush: true)) {
+            outp.success = true
+        } else {
+            outp.success = false
+        }
+
+        if( genreInstance.hasErrors()){
+            outp.success = false
+
+            outp.errors = [:]
+            genreInstance.errors.fieldErrors.each {
+                outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+            }
+        }
+
+        render outp as JSON
     }
 
     def create = {

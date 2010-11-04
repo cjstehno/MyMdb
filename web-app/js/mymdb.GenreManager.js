@@ -88,12 +88,14 @@ mymdb.GenreManagerPanel = Ext.extend( Ext.Panel, {
 Ext.reg('genremanagerpanel', mymdb.GenreManagerPanel);
 
 mymdb.GenreDialog = Ext.extend( Ext.Window ,{
+    id:'genreFormDialog',
     autoShow:true,
     closable:true,
+    resizable:false,
     initHidden:false,
     modal:true,
-    width:200,
-    height:200,
+    width:250,
+    height:110,
     title:'Genre',
     layout:'fit',
     initComponent: function(){
@@ -104,7 +106,60 @@ mymdb.GenreDialog = Ext.extend( Ext.Window ,{
     }
 });
 
-mymdb.GenreFormPanel = Ext.extend( Ext.Panel, {
-    html:'This will be an editor form'
+mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
+    labelWidth:50,
+    frame:false,
+    bodyStyle:'padding:5px 5px 0',
+    defaultType: 'textfield',
+    initComponent: function(){
+        var formPanel = this;
+
+        Ext.apply(this, {
+            items: [
+                {
+                    fieldLabel: 'Name',
+                    name: 'name',
+                    allowBlank:false,
+                    minLength:1,
+                    maxLength:40
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Save',
+                    handler:function(b,e){
+                        formPanel.getForm().submit({
+                            clientValidation: true,
+                            url: 'genre/jsave',
+                            method:'POST',
+                            success: function(form, action) {
+                               Ext.Msg.alert('Success', 'Genre added successfully', function(){
+                                   Ext.getCmp('genreFormDialog').hide();
+                                   // FIXME: reload the genre manager dialog list
+                               });
+                            },
+                            failure: function(form, action) {
+                                switch (action.failureType) {
+                                    case Ext.form.Action.CLIENT_INVALID:
+                                        Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
+                                        break;
+                                    case Ext.form.Action.CONNECT_FAILURE:
+                                        Ext.Msg.alert('Failure', 'Ajax communication failed');
+                                        break;
+                                    default:
+                                       //Ext.Msg.alert('Failure', action.result.msg);
+                                       break;
+                               }
+                            }
+                        });
+                    }
+                },
+                {
+                    text: 'Cancel'
+                }
+            ]
+        });
+        mymdb.GenreFormPanel.superclass.initComponent.apply(this, arguments);
+    }
 });
 Ext.reg('genreformpanel', mymdb.GenreFormPanel);
