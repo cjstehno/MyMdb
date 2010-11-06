@@ -34,14 +34,10 @@ class GenreController {
     }
 
     def all = {
-        def genres = Genre.list( sort:'name', order:'asc' )
-        render(contentType:"text/json") {
-            items = array {
-                for(g in genres) {
-                    item cid:g.id, lbl:g.name, cnt:g.movies.size()
-                }
-            }
+        def genres = Genre.list( sort:'name', order:'asc' ).collect {
+            [id:it.id, label:it.name, count:it.movies?.size()]
         }
+        render( [items:genres] as JSON )
     }
 
     def jsave = {
@@ -61,6 +57,29 @@ class GenreController {
             genreInstance.errors.fieldErrors.each {
                 outp.errors[it.field] = messageSource.getMessage( it, request.locale)
             }
+        }
+
+        render outp as JSON
+    }
+
+    def jdelete = {
+        def genreInstance = Genre.get(params.id)
+
+        def outp = [:]
+
+        if (genreInstance) {
+            try {
+                genreInstance.delete(flush: true)
+                outp.success = true
+
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                outp.success = false
+                outp.errors = ['general': "${message(code: 'default.not.deleted.message', args: [message(code: 'genre.label', default: 'Genre'), params.id])}"]
+            }
+
+        } else {
+            outp.success = false
+            outp.errors = ['general': "${message(code: 'default.not.found.message', args: [message(code: 'genre.label', default: 'Genre'), params.id])}"]
         }
 
         render outp as JSON

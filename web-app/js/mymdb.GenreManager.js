@@ -26,11 +26,12 @@ mymdb.NewGenreActionFactory = function(xt){
 }
 
 mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
+    id:'genreListView',
 	emptyText: 'No Genres',
 	reserveScrollOffset: true,
 	hideHeaders:false,
 	multiSelect:false,
-	columns: [{header:'Genre', dataIndex:'lbl'}, {header:'# Movies',dataIndex:'cnt'}],
+	columns: [{header:'Genre', dataIndex:'label'}, {header:'# Movies',dataIndex:'count'}],
 
     initComponent: function(){
         mymdb.GenreListView.superclass.initComponent.apply(this, arguments);
@@ -43,23 +44,29 @@ mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
                     {
                         xtype:'menuitem',
                         text:'Edit',
-                        icon:'/mymdb/images/icons/edit.png'
+                        icon:'/mymdb/images/icons/edit.png',
+                        handler:function(b,e){
+                            var itemData = dataView.getStore().getAt( idx ).data;
+                            var genreDialog = mymdb.GenreDialog({ genre:{ id:itemData.id, name:itemData.label } });
+                        }
                     },
                     mymdb.NewGenreActionFactory('menuitem'),
                     {
                         xtype:'menuitem',
                         text:'Delete',
-                        icon:'/mymdb/images/icons/delete.png'
+                        icon:'/mymdb/images/icons/delete.png',
+                        handler:function(b,e){
+                            var itemData = dataView.getStore().getAt( idx ).data;
+                            Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.label + '"?', function(sel){
+                                if( sel == 'yes' ){
+                                    alert('delete: ' + itemData.id);
+                                }
+                            });
+                        }
                     }
                 ]
             });
             popup.showAt( evt.getXY() );
-
-//            var st = dataView.getStore();
-//            var storeId = st.storeId;
-//            var categoryId = st.getAt( idx ).data.cid;
-//            var gridStore = Ext.getCmp('movieGridPanel').getStore();
-//            gridStore.load({params:{ sid:storeId, cid:categoryId }});
 		} );
     }
 });
@@ -76,8 +83,8 @@ mymdb.GenreManagerPanel = Ext.extend( Ext.Panel, {
                         autoDestroy: true,
                         storeId: 'genre_manager_store',
                         root: 'items',
-                        idProperty: 'cid',
-                        fields: ['cid','lbl','cnt']
+                        idProperty: 'id',
+                        fields: ['id','label','count']
                     })
                 })
             ]
@@ -99,8 +106,9 @@ mymdb.GenreDialog = Ext.extend( Ext.Window ,{
     title:'Genre',
     layout:'fit',
     initComponent: function(){
+        alert(arguments.genre);
         Ext.apply(this, {
-            items:[ { xtype:'genreformpanel' } ]
+            items:[ new mymdb.GenreFormPanel() ]
         });
         mymdb.GenreDialog.superclass.initComponent.apply(this, arguments);
     }
@@ -135,7 +143,7 @@ mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Genre added successfully', function(){
                                    Ext.getCmp('genreFormDialog').hide();
-                                   // FIXME: reload the genre manager dialog list
+                                   Ext.getCmp('genreListView').getStore().load();
                                });
                             },
                             failure: function(form, action) {
@@ -155,7 +163,10 @@ mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                     }
                 },
                 {
-                    text: 'Cancel'
+                    text: 'Cancel',
+                    handler:function(b,e){
+                        Ext.getCmp('genreFormDialog').hide();
+                    }
                 }
             ]
         });

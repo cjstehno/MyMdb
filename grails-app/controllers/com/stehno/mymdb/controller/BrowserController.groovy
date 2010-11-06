@@ -15,6 +15,8 @@
  */
 package com.stehno.mymdb.controller
 
+import grails.converters.JSON
+
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
@@ -69,13 +71,12 @@ class BrowserController {
                 break
         }
 
-        render(contentType:"text/json") {
-            movies = array {
-                for(r in results) {
-                    movie mid:r.id, ti:r.title, yr:r.releaseYear, bx:r.storageLabel
-                }
-            }
+        def movieList = results.collect { m->
+            def movieGenres = m.genres.collect { g-> g.name }
+            [mid:m.id, ti:m.title, yr:m.releaseYear, bx:m.storageLabel, ge:movieGenres.sort().join(', ')]
         }
+
+        render( [movies:movieList] as JSON )
     }
 
     def about = { /* just routes to view */ }
@@ -93,12 +94,6 @@ class BrowserController {
     }
 
     private def renderListAsJson( list ){
-        render(contentType:"text/json") {
-            items = array {
-                for(r in list) {
-                    item cid:r.id, lbl:r.label
-                }
-            }
-        }
+        render ([items:list] as JSON)
     }
 }

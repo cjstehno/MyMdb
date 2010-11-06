@@ -4,7 +4,7 @@ mymdb.CategoryListView = Ext.extend( Ext.list.ListView, {
 	reserveScrollOffset: true,
 	hideHeaders:true,
 	multiSelect:false,		
-	columns: [{ header:'Title', dataIndex:'lbl' }],
+	columns: [{ header:'Title', dataIndex:'label' }],
 			
     initComponent: function(){
         mymdb.CategoryListView.superclass.initComponent.apply(this, arguments);
@@ -12,12 +12,26 @@ mymdb.CategoryListView = Ext.extend( Ext.list.ListView, {
 		this.on( 'click', function( dataView, idx, node, evt ){
             var st = dataView.getStore();
             var storeId = st.storeId;
-            var categoryId = st.getAt( idx ).data.cid;
+            var categoryId = st.getAt( idx ).data.id;
             var gridStore = Ext.getCmp('movieGridPanel').getStore();
             gridStore.load({params:{ sid:storeId, cid:categoryId }});
 		} );
     }
 });
+
+mymdb.CategoryListViewFactory = function(dataUrl,categoryId){
+    return new mymdb.CategoryListView({
+        store:new Ext.data.JsonStore({
+            url:dataUrl,
+            autoLoad: true,
+            autoDestroy: true,
+            storeId:categoryId,
+            root: 'items',
+            idProperty: 'id',
+            fields: ['id','label']
+        })
+    });
+};
 
 mymdb.CategoriesPanel = Ext.extend( Ext.Panel, {
 	collapsible:true,
@@ -40,83 +54,23 @@ mymdb.CategoriesPanel = Ext.extend( Ext.Panel, {
 			items: [
 				{ 
                     title:'Titles',
-                    items:[
-                        new mymdb.CategoryListView({
-                            store:new Ext.data.JsonStore({
-                                url:'browser/titles',
-                                autoLoad: true,
-                                autoDestroy: true,
-                                storeId: 'title_store',
-                                root: 'items',
-                                idProperty: 'cid',
-                                fields: ['cid','lbl']
-                            })
-                        })
-                    ]
+                    items:[ mymdb.CategoryListViewFactory('browser/titles','title_store') ]
                 },
 				{
                     title:'Genres',
-                    items:[
-                        new mymdb.CategoryListView({
-                            store:new Ext.data.JsonStore({
-                                url:'browser/genres',
-                                autoLoad: true,
-                                autoDestroy: true,
-                                storeId: 'genre_store',
-                                root: 'items',
-                                idProperty: 'cid',
-                                fields: ['cid','lbl']
-                            })
-                        })
-                    ]
+                    items:[ mymdb.CategoryListViewFactory('browser/genres', 'genre_store') ]
                 },
 				{
                     title:'Actors',
-                    items:[
-                        new mymdb.CategoryListView({
-                            store:new Ext.data.JsonStore({
-                                url:'browser/actors',
-                                autoLoad: true,
-                                autoDestroy: true,
-                                storeId: 'actor_store',
-                                root: 'items',
-                                idProperty: 'cid',
-                                fields: ['cid','lbl']
-                            })
-                        })
-                    ]
+                    items:[ mymdb.CategoryListViewFactory('browser/actors', 'actor_store') ]
                 },
 				{
                     title:'Release Years',
-                    items:[
-                        new mymdb.CategoryListView({
-                            store:new Ext.data.JsonStore({
-                                url:'browser/releaseYears',
-                                autoLoad: true,
-                                autoDestroy: true,
-                                storeId: 'year_store',
-                                root: 'items',
-                                idProperty: 'cid',
-                                fields: ['cid','lbl']
-                            })
-                        })
-                    ]
+                    items:[ mymdb.CategoryListViewFactory('browser/releaseYears', 'year_store') ]
                 },
 				{
                     title:'Storage',
-                    items:[
-                        new mymdb.CategoryListView({
-                            store:new Ext.data.JsonStore({
-                                url:'browser/storage',
-                                autoLoad: true,
-                                autoDestroy: true,
-                                storeId: 'box_store',
-                                root: 'items',
-                                idProperty: 'cid',
-                                fields: ['cid','lbl']
-                            })
-                        })
-                    ]
+                    items:[ mymdb.CategoryListViewFactory('browser/storage', 'box_store') ]
                 },
 				{ title:'Lists', html:'Not supported yet.' }
 			]

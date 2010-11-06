@@ -12,26 +12,29 @@ environments {
 	development {
 		dataSource {
 			// dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			dbCreate = "create-drop"
-			url = "jdbc:hsqldb:mem:devDb"
-                        pooled = true
-                        driverClassName = "org.hsqldb.jdbcDriver"
-                        username = "sa"
-                        password = ""
+			dbCreate = "update"
+            dialect = org.hibernate.dialect.HSQLDialect
+			url = "jdbc:hsqldb:/home/cjstehno/hsql/mymdb/mymdb"
+            pooled = true
+            driverClassName = "org.hsqldb.jdbcDriver"
+            username = "sa"
+            password = ""
 		}
 	}
 	test {
 		dataSource {
 			dbCreate = "create-drop"
-			url = "jdbc:hsqldb:mem:testDb"
-                        pooled = true
-                        driverClassName = "org.hsqldb.jdbcDriver"
-                        username = "sa"
-                        password = ""    
+			dialect = org.hibernate.dialect.HSQLDialect
+            url = "jdbc:hsqldb:mem:testDb"
+            pooled = true
+            driverClassName = "org.hsqldb.jdbcDriver"
+            username = "sa"
+            password = ""
 		}
 	}
 	production {
 		dataSource {
+            org.hibernate.dialect.MySQL5Dialect
 			dbCreate = "update"
 			jndiName = "java:comp/env/jdbc/MyMdb"
 		}

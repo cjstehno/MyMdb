@@ -15,7 +15,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
 		storeId: 'gridData',
 		root: 'movies',
 		idProperty: 'mid',
-		fields: ['mid','ti','yr','bx']
+		fields: ['mid','ti','yr','bx', 'ge']
 	}),
     sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
     viewConfig: {
@@ -25,7 +25,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
         defaults: {sortable: true},
         columns: [
             {header: 'Title', dataIndex: 'ti'},
-            {header: 'Genres', dataIndex: 'genres', sortable:false},
+            {header: 'Genres', dataIndex: 'ge', sortable:false},
             {header: 'Year', dataIndex: 'yr'},
             {header: 'Storage', dataIndex: 'bx'}
         ]

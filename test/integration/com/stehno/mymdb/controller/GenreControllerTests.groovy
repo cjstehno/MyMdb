@@ -12,8 +12,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         super.setUp()
 
         def genreList = [
-            new Genre(id:101, name:'Horror'),
-            new Genre(id:102, name:'Action')
+            new Genre(name:'Horror'),
+            new Genre(name:'Action')
         ]
         genreList*.save(flush:true)
 
@@ -25,13 +25,61 @@ class GenreControllerTests extends GrailsUnitTestCase {
 
         assertEquals 'application/json;charset=UTF-8', controller.response.contentType
 
-        String contentStr = controller.response.contentAsString
-        assertEquals '{"items":[{"cid":2,"lbl":"Action"},{"cid":1,"lbl":"Horror"}]}', contentStr
+        def jso = parseJsonResponse()
+        assertEquals 'Action', jso.items[0].label
+        assertEquals 'Horror', jso.items[1].label
+    }
 
-//        def jso = JSON.pase( contentStr ) -- FIXME: not sure why this does not work
+    void testJSave(){
+        controller.params.name = 'Testing'
+
+        controller.jsave()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNull jso.errors
+    }
+
+    void testJSave_NoName(){
+        controller.jsave()
+
+        def jso = parseJsonResponse()
+        assertFalse jso.success
+        assertNotNull jso.errors
+        assertEquals 1, jso.errors.size()
+        assertEquals 'Property [name] of class [class com.stehno.mymdb.domain.Genre] cannot be null', jso.errors.name
+    }
+
+    void testJDelete(){
+        controller.params.id = Genre.findByName('Action').id
+
+        controller.jdelete()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+
+        def genres = Genre.list()
+        assertEquals 1, genres.size()
+        assertEquals 'Horror', genres[0].name
+    }
+
+    void testJDelete_NotFound(){
+        controller.jdelete()
+
+        def jso = parseJsonResponse()
+        assertFalse jso.success
+        assertNotNull jso.errors
+        assertEquals 1, jso.errors.size()
+        assertEquals 'Genre not found with id null', jso.errors.general
+
+        assertEquals 2, Genre.list().size()
     }
 
     protected void tearDown() {
         super.tearDown()
+    }
+
+    private def parseJsonResponse(){
+        JSON.parse( new StringReader(controller.response.contentAsString) )
     }
 }
