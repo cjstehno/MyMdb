@@ -7,6 +7,7 @@ Ext.reg('movietab', mymdb.MovieDetailsTab);
 
 mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
     id:'movieGridPanel',
+    loadMask:true,
     frame: true,
     store: new Ext.data.JsonStore({
 		autoLoad: true,

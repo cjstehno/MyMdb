@@ -45,9 +45,18 @@ mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
                         xtype:'menuitem',
                         text:'Edit',
                         icon:'/mymdb/images/icons/edit.png',
-                        handler:function(b,e){
-                            var itemData = dataView.getStore().getAt( idx ).data;
-                            var genreDialog = mymdb.GenreDialog({ genre:{ id:itemData.id, name:itemData.label } });
+                        handler:function(){
+                            var genreId = dataView.getStore().getAt( idx ).data.id;
+                            var dialog = new mymdb.GenreDialog({autoShow:false});
+                            dialog.get(0).getForm().load({
+                                url: 'genre/jedit',
+                                params:{ id:genreId },
+                                method:'GET',
+                                failure: function(form, action) {
+                                    Ext.Msg.alert('Load Failure', action.result.errorMessage);
+                                }
+                            });
+                            dialog.show();
                         }
                     },
                     mymdb.NewGenreActionFactory('menuitem'),
@@ -59,7 +68,19 @@ mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
                             var itemData = dataView.getStore().getAt( idx ).data;
                             Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.label + '"?', function(sel){
                                 if( sel == 'yes' ){
-                                    alert('delete: ' + itemData.id);
+                                    Ext.Ajax.request({
+                                       url: 'genre/jdelete',
+                                       method:'POST',
+                                       params: { id:itemData.id },
+                                       success: function(resp,opts){
+                                           Ext.Msg.alert('Success','Genre successfully deleted.',function(){
+                                               Ext.getCmp('genreListView').getStore().load();
+                                           });
+                                       },
+                                       failure: function(resp,opts){
+                                           Ext.Msg.alert('Delete Failure','Unable to deleted selected genre.');
+                                       }
+                                    });
                                 }
                             });
                         }
@@ -106,9 +127,8 @@ mymdb.GenreDialog = Ext.extend( Ext.Window ,{
     title:'Genre',
     layout:'fit',
     initComponent: function(){
-        alert(arguments.genre);
         Ext.apply(this, {
-            items:[ new mymdb.GenreFormPanel() ]
+            items:[ {xtype:'genreformpanel'} ]
         });
         mymdb.GenreDialog.superclass.initComponent.apply(this, arguments);
     }
@@ -125,10 +145,18 @@ mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
         Ext.apply(this, {
             items: [
                 {
+                    name:'id',
+                    xtype:'hidden'
+                },
+                {
+                    name:'version',
+                    xtype:'hidden'
+                },
+                {
                     fieldLabel: 'Name',
                     name: 'name',
                     allowBlank:false,
-                    minLength:1,
+                    minLength:2,
                     maxLength:40
                 }
             ],
@@ -136,12 +164,14 @@ mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                 {
                     text: 'Save',
                     handler:function(b,e){
-                        formPanel.getForm().submit({
+                        var theForm = formPanel.getForm();
+                        var idValue = theForm.findField('id').getValue();
+                        theForm.submit({
                             clientValidation: true,
-                            url: 'genre/jsave',
+                            url: 'genre/' + ( idValue == null || idValue == '' ? 'jsave' : 'jupdate'),
                             method:'POST',
                             success: function(form, action) {
-                               Ext.Msg.alert('Success', 'Genre added successfully', function(){
+                               Ext.Msg.alert('Success', 'Genre saved successfully', function(){
                                    Ext.getCmp('genreFormDialog').hide();
                                    Ext.getCmp('genreListView').getStore().load();
                                });

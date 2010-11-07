@@ -40,15 +40,27 @@ class GenreController {
         render( [items:genres] as JSON )
     }
 
+    def jedit = {
+        def outp = [:]
+
+        def genreInstance = Genre.get(params.id)
+        if (!genreInstance){
+            outp.success = false
+            outp.errorMessage = "${message(code: 'default.not.found.message', args: [message(code: 'genre.label', default: 'Genre'), params.id])}"
+
+        } else {
+            outp.success = true
+            outp.data = [ id:genreInstance.id, name:genreInstance.name, version:genreInstance.version ]
+        }
+
+        render outp as JSON
+    }
+
     def jsave = {
         def genreInstance = new Genre(params)
         def outp = [:]
 
-        if (genreInstance.save(flush: true)) {
-            outp.success = true
-        } else {
-            outp.success = false
-        }
+        outp.success = genreInstance.save(flush:true) != null
 
         if( genreInstance.hasErrors()){
             outp.success = false
@@ -57,6 +69,41 @@ class GenreController {
             genreInstance.errors.fieldErrors.each {
                 outp.errors[it.field] = messageSource.getMessage( it, request.locale)
             }
+        }
+
+        render outp as JSON
+    }
+
+    def jupdate = {
+        def outp = [:]
+
+        def genreInstance = Genre.get(params.id)
+        if (genreInstance) {
+            if (params.version) {
+                def version = params.version.toLong()
+                if (genreInstance.version > version) {
+                    outp.success = false
+                    outp.errors = ['general':'Another user has updated this Genre while you were editing']
+            
+                    render outp as JSON
+                    return
+                }
+            }
+
+            genreInstance.properties = params
+            if (!genreInstance.hasErrors() && genreInstance.save(flush: true)) {
+                outp.success = true
+
+            } else {
+                outp.success = false
+                outp.errors = [:]
+                genreInstance.errors.fieldErrors.each {
+                    outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+                }
+            }
+        } else {
+            outp.success = false
+            outp.errors = ['general':"${message(code: 'default.not.found.message', args: [message(code: 'genre.label', default: 'Genre'), params.id])}"]
         }
 
         render outp as JSON

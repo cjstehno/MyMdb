@@ -50,6 +50,19 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Property [name] of class [class com.stehno.mymdb.domain.Genre] cannot be null', jso.errors.name
     }
 
+    void testJUpdate(){
+        def theGenre = Genre.findByName('Action')
+        controller.params.id = theGenre.id
+        controller.params.version = theGenre.version
+        controller.params.name = 'Excitement'
+
+        controller.jupdate()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNull jso.errors
+    }
+
     void testJDelete(){
         controller.params.id = Genre.findByName('Action').id
 
