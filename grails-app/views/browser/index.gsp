@@ -2,7 +2,9 @@
   <head>
     <meta name="layout" content="browser" />
     <style type="text/css">
-      .icon-about { background-image: url(../images/info.png) 0 6px no-repeat !important; }
+      .icon-about { background-image: url(/mymdb/images/icons/info.png)!important; }
+      .icon-genre { background-image: url(/mymdb/images/icons/film.png)!important; }
+      .icon-actor { background-image: url(/mymdb/images/icons/search_user.png)!important; }
     </style>
     <g:javascript library="mymdb.app" />
     <g:javascript library="mymdb.Dialogs" />

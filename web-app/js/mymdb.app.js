@@ -23,7 +23,15 @@ mymdb.app = function() {
         openGenreManagerAction: new Ext.Action({
             itemId:'openGenreManager',
             text:'Genre Manager',
+            iconCls:'icon-genre',
             handler: function(){ new mymdb.GenreManagerDialog(); }
+        }),
+
+        openActorManagerAction: new Ext.Action({
+            itemId:'openActorManager',
+            text:'Actor Manager',
+            iconCls:'icon-actor',
+            handler: function(){  }
         }),
  
         // public methods
@@ -50,6 +58,7 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	margins: '0 0 5 0',
 	bbar:[
         mymdb.app.openGenreManagerAction,
+        mymdb.app.openActorManagerAction,
         { xtype:'tbfill' },
         mymdb.app.openAboutAction
     ]

@@ -1,5 +1,6 @@
 mymdb.GenreManagerDialog = Ext.extend( Ext.Window ,{
     autoShow:true,
+    iconCls:'icon-genre',
     closable:true,
     initHidden:false,
     modal:true,
@@ -117,6 +118,7 @@ Ext.reg('genremanagerpanel', mymdb.GenreManagerPanel);
 
 mymdb.GenreDialog = Ext.extend( Ext.Window ,{
     id:'genreFormDialog',
+    iconCls:'icon-genre',
     autoShow:true,
     closable:true,
     resizable:false,

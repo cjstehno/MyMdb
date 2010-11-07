@@ -1,3 +1,6 @@
+<div style="float:left;width:40%;"><img src="images/popcorn-movie.jpg" style="width:200px;" /></div>
+
+<div style="float:right;width:60%;margin-top:20px;">
 <h1>My Movie Database</h1>
 
 <div>Version: ${grailsApplication.metadata['app.version']}</div>
@@ -10,3 +13,4 @@
 <p>MyMdb is a simple web-based DVD cataloging tool.</p>
 
 <div>Portions of this software are licensed under the Apache v2.0 and GPL v3.0 licenses. See other tabs for their content.</div>
+</div>

@@ -2,6 +2,7 @@
 
 mymdb.AboutDialog = Ext.extend( Ext.Window ,{
     autoShow:true,
+    iconCls:'icon-about',
     closable:true,
     initHidden:false,
     modal:true,
@@ -23,19 +24,19 @@ mymdb.AboutDialog = Ext.extend( Ext.Window ,{
                         },
                         {
                             title:'Apache v2',
-                            autoLoad:'apache-lic.txt',
+                            autoLoad:'apache-lic.html',
                             autoScroll:true,
                             closable:false
                         },
                         {
                             title:'GPL v3',
-                            autoLoad:'gpl-3.0.txt',
+                            autoLoad:'gpl-3.0.html',
                             autoScroll:true,
                             closable:false
                         },
                         {
                             title:'DryIcons Free',
-                            autoLoad:'dryicons-license.txt',
+                            autoLoad:'dryicons-license.html',
                             autoScroll:true,
                             closable:false
                         }
