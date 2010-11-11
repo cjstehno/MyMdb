@@ -1,7 +1,7 @@
 Ext.BLANK_IMAGE_URL = 'js/ext/resources/images/default/s.gif';
 Ext.QuickTips.init();
 
-Ext.namespace('mymdb');
+Ext.namespace('mymdb','mymdb.actor','mymdb.genre');
  
 mymdb.app = function() {
     // do NOT access DOM from here; elements don't exist yet
@@ -24,14 +24,14 @@ mymdb.app = function() {
             itemId:'openGenreManager',
             text:'Genre Manager',
             iconCls:'icon-genre',
-            handler: function(){ new mymdb.GenreManagerDialog(); }
+            handler: function(){ new mymdb.genre.GenreManagerDialog(); }
         }),
 
         openActorManagerAction: new Ext.Action({
             itemId:'openActorManager',
             text:'Actor Manager',
             iconCls:'icon-actor',
-            handler: function(){  }
+            handler: function(){ new mymdb.actor.ActorManagerDialog(); }
         }),
  
         // public methods

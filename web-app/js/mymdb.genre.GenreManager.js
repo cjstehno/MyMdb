@@ -1,4 +1,6 @@
-mymdb.GenreManagerDialog = Ext.extend( Ext.Window ,{
+// mymdb.genre
+
+mymdb.genre.GenreManagerDialog = Ext.extend( Ext.Window ,{
     autoShow:true,
     iconCls:'icon-genre',
     closable:true,
@@ -11,22 +13,36 @@ mymdb.GenreManagerDialog = Ext.extend( Ext.Window ,{
     initComponent: function(){
         Ext.apply(this, {
             items:[ { xtype:'genremanagerpanel' } ],
-            tbar:[ mymdb.NewGenreActionFactory('button'), ]
+            tbar:[ mymdb.genre.NewGenreActionFactory('button'), ]
         });
-        mymdb.GenreManagerDialog.superclass.initComponent.apply(this, arguments);
+        mymdb.genre.GenreManagerDialog.superclass.initComponent.apply(this, arguments);
     }
 });
 
-mymdb.NewGenreActionFactory = function(xt){
+mymdb.genre.NewGenreActionFactory = function(xt){
     return {
         xtype:xt,
         text:'New Genre',
         icon:'/mymdb/images/icons/add.png',
-        handler: function(){ new mymdb.GenreDialog(); }
+        handler: function(){ new mymdb.genre.GenreDialog(); }
     };
 }
 
-mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
+mymdb.genre.OpenGenreEditDialogHandler = function(dataView,idx){
+    var genreId = dataView.getStore().getAt( idx ).data.id;
+    var dialog = new mymdb.genre.GenreDialog({autoShow:false});
+    dialog.get(0).getForm().load({
+        url: 'genre/jedit',
+        params:{ id:genreId },
+        method:'GET',
+        failure: function(form, action) {
+            Ext.Msg.alert('Load Failure', action.result.errorMessage);
+        }
+    });
+    dialog.show();
+}
+
+mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
     id:'genreListView',
 	emptyText: 'No Genres',
 	reserveScrollOffset: true,
@@ -35,9 +51,13 @@ mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
 	columns: [{header:'Genre', dataIndex:'label'}, {header:'# Movies',dataIndex:'count'}],
 
     initComponent: function(){
-        mymdb.GenreListView.superclass.initComponent.apply(this, arguments);
+        mymdb.genre.GenreListView.superclass.initComponent.apply(this, arguments);
 
         Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
+
+        this.on( 'dblclick', function(dataView,idx,node,evt){
+            mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
+        });
 
 		this.on( 'contextmenu', function( dataView, idx, node, evt ){
             var popup = new Ext.menu.Menu({
@@ -47,20 +67,10 @@ mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
                         text:'Edit',
                         icon:'/mymdb/images/icons/edit.png',
                         handler:function(){
-                            var genreId = dataView.getStore().getAt( idx ).data.id;
-                            var dialog = new mymdb.GenreDialog({autoShow:false});
-                            dialog.get(0).getForm().load({
-                                url: 'genre/jedit',
-                                params:{ id:genreId },
-                                method:'GET',
-                                failure: function(form, action) {
-                                    Ext.Msg.alert('Load Failure', action.result.errorMessage);
-                                }
-                            });
-                            dialog.show();
+                            mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
                         }
                     },
-                    mymdb.NewGenreActionFactory('menuitem'),
+                    mymdb.genre.NewGenreActionFactory('menuitem'),
                     {
                         xtype:'menuitem',
                         text:'Delete',
@@ -93,12 +103,12 @@ mymdb.GenreListView = Ext.extend( Ext.list.ListView, {
     }
 });
 
-mymdb.GenreManagerPanel = Ext.extend( Ext.Panel, {
+mymdb.genre.GenreManagerPanel = Ext.extend( Ext.Panel, {
     autoScroll:true,
     initComponent: function(){
         Ext.apply(this, {
             items:[
-                new mymdb.GenreListView({
+                new mymdb.genre.GenreListView({
                     store:new Ext.data.JsonStore({
                         url:'genre/all',
                         autoLoad: true,
@@ -111,12 +121,12 @@ mymdb.GenreManagerPanel = Ext.extend( Ext.Panel, {
                 })
             ]
         });
-        mymdb.GenreManagerPanel.superclass.initComponent.apply(this, arguments);
+        mymdb.genre.GenreManagerPanel.superclass.initComponent.apply(this, arguments);
     }
 });
-Ext.reg('genremanagerpanel', mymdb.GenreManagerPanel);
+Ext.reg('genremanagerpanel', mymdb.genre.GenreManagerPanel);
 
-mymdb.GenreDialog = Ext.extend( Ext.Window ,{
+mymdb.genre.GenreDialog = Ext.extend( Ext.Window ,{
     id:'genreFormDialog',
     iconCls:'icon-genre',
     autoShow:true,
@@ -132,11 +142,11 @@ mymdb.GenreDialog = Ext.extend( Ext.Window ,{
         Ext.apply(this, {
             items:[ {xtype:'genreformpanel'} ]
         });
-        mymdb.GenreDialog.superclass.initComponent.apply(this, arguments);
+        mymdb.genre.GenreDialog.superclass.initComponent.apply(this, arguments);
     }
 });
 
-mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
+mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
     labelWidth:50,
     frame:false,
     bodyStyle:'padding:5px 5px 0',
@@ -174,7 +184,7 @@ mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Genre saved successfully', function(){
-                                   Ext.getCmp('genreFormDialog').hide();
+                                   Ext.getCmp('genreFormDialog').close();
                                    Ext.getCmp('genreListView').getStore().load();
                                });
                             },
@@ -197,12 +207,12 @@ mymdb.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                 {
                     text: 'Cancel',
                     handler:function(b,e){
-                        Ext.getCmp('genreFormDialog').hide();
+                        Ext.getCmp('genreFormDialog').close();
                     }
                 }
             ]
         });
-        mymdb.GenreFormPanel.superclass.initComponent.apply(this, arguments);
+        mymdb.genre.GenreFormPanel.superclass.initComponent.apply(this, arguments);
     }
 });
-Ext.reg('genreformpanel', mymdb.GenreFormPanel);
+Ext.reg('genreformpanel', mymdb.genre.GenreFormPanel);
