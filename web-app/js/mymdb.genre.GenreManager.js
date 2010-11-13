@@ -32,7 +32,7 @@ mymdb.genre.OpenGenreEditDialogHandler = function(dataView,idx){
     var genreId = dataView.getStore().getAt( idx ).data.id;
     var dialog = new mymdb.genre.GenreDialog({autoShow:false});
     dialog.get(0).getForm().load({
-        url: 'genre/jedit',
+        url: 'genre/edit',
         params:{ id:genreId },
         method:'GET',
         failure: function(form, action) {
@@ -80,7 +80,7 @@ mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
                             Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.label + '"?', function(sel){
                                 if( sel == 'yes' ){
                                     Ext.Ajax.request({
-                                       url: 'genre/jdelete',
+                                       url: 'genre/delete',
                                        method:'POST',
                                        params: { id:itemData.id },
                                        success: function(resp,opts){
@@ -110,7 +110,7 @@ mymdb.genre.GenreManagerPanel = Ext.extend( Ext.Panel, {
             items:[
                 new mymdb.genre.GenreListView({
                     store:new Ext.data.JsonStore({
-                        url:'genre/all',
+                        url:'genre/list',
                         autoLoad: true,
                         autoDestroy: true,
                         storeId: 'genre_manager_store',
@@ -180,7 +180,7 @@ mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                         var idValue = theForm.findField('id').getValue();
                         theForm.submit({
                             clientValidation: true,
-                            url: 'genre/' + ( idValue == null || idValue == '' ? 'jsave' : 'jupdate'),
+                            url: 'genre/' + ( idValue == null || idValue == '' ? 'save' : 'update'),
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Genre saved successfully', function(){

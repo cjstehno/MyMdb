@@ -20,8 +20,8 @@ class ActorControllerTests extends GrailsUnitTestCase {
         controller = new ActorController()
     }
 
-    void testAll(){
-        controller.all()
+    void testList(){
+        controller.list()
 
         assertEquals 'application/json;charset=UTF-8', controller.response.contentType
 
@@ -30,20 +30,20 @@ class ActorControllerTests extends GrailsUnitTestCase {
         assertEquals 'Stooge, Moe M', jso.items[1].label
     }
 
-    void testJSave(){
+    void testSave(){
         controller.params.firstName = 'Curley'
         controller.params.middleName = 'C'
         controller.params.lastName = 'Stooge'
 
-        controller.jsave()
+        controller.save()
 
         def jso = parseJsonResponse()
         assertTrue jso.success
         assertNull jso.errors
     }
 
-    void testJSave_NoName(){
-        controller.jsave()
+    void testSave_NoName(){
+        controller.save()
 
         def jso = parseJsonResponse()
         assertFalse jso.success
@@ -52,7 +52,7 @@ class ActorControllerTests extends GrailsUnitTestCase {
         assertEquals 'Property [lastName] of class [class com.stehno.mymdb.domain.Actor] cannot be null', jso.errors.lastName
     }
 
-    void testJUpdate(){
+    void testUpdate(){
         def theActor = Actor.findByMiddleName('M')
         controller.params.id = theActor.id
         controller.params.version = theActor.version
@@ -60,7 +60,7 @@ class ActorControllerTests extends GrailsUnitTestCase {
         controller.params.middleName = 'Clarence'
         controller.params.lastName = 'Stooger'
 
-        controller.jupdate()
+        controller.update()
 
         def jso = parseJsonResponse()
         assertTrue jso.success
@@ -70,7 +70,7 @@ class ActorControllerTests extends GrailsUnitTestCase {
     void testJDelete(){
         controller.params.id = Actor.findByMiddleName('M').id
 
-        controller.jdelete()
+        controller.delete()
 
         def jso = parseJsonResponse()
         assertTrue jso.success
@@ -80,8 +80,8 @@ class ActorControllerTests extends GrailsUnitTestCase {
         assertEquals 'Larry', actors[0].firstName
     }
 
-    void testJDelete_NotFound(){
-        controller.jdelete()
+    void testDelete_NotFound(){
+        controller.delete()
 
         def jso = parseJsonResponse()
         assertFalse jso.success

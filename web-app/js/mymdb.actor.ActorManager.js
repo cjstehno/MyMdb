@@ -35,7 +35,7 @@ mymdb.actor.ActorManagerPanel = Ext.extend( Ext.Panel, {
             items:[
                 new mymdb.actor.ActorListView({
                     store:new Ext.data.JsonStore({
-                        url:'actor/all',
+                        url:'actor/list',
                         autoLoad: true,
                         autoDestroy: true,
                         storeId: 'actor_manager_store',
@@ -55,7 +55,7 @@ mymdb.actor.OpenActorEditDialogHandler = function(dataView,idx){
     var actorId = dataView.getStore().getAt( idx ).data.id;
     var dialog = new mymdb.actor.ActorDialog({autoShow:false});
     dialog.get(0).getForm().load({
-        url: 'actor/jedit',
+        url: 'actor/edit',
         params:{ id:actorId },
         method:'GET',
         failure: function(form, action) {
@@ -103,7 +103,7 @@ mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
                             Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.label + '"?', function(sel){
                                 if( sel == 'yes' ){
                                     Ext.Ajax.request({
-                                       url: 'actor/jdelete',
+                                       url: 'actor/delete',
                                        method:'POST',
                                        params: { id:itemData.id },
                                        success: function(resp,opts){
@@ -183,7 +183,7 @@ mymdb.actor.ActorFormPanel = Ext.extend( Ext.FormPanel, {
                         var idValue = theForm.findField('id').getValue();
                         theForm.submit({
                             clientValidation: true,
-                            url: 'actor/' + ( idValue == null || idValue == '' ? 'jsave' : 'jupdate'),
+                            url: 'actor/' + ( idValue == null || idValue == '' ? 'save' : 'update'),
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Actor saved successfully', function(){

@@ -20,8 +20,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         controller = new GenreController()
     }
 
-    void testAll(){
-        controller.all()
+    void testList(){
+        controller.list()
 
         assertEquals 'application/json;charset=UTF-8', controller.response.contentType
 
@@ -30,18 +30,18 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Horror', jso.items[1].label
     }
 
-    void testJSave(){
+    void testSave(){
         controller.params.name = 'Testing'
 
-        controller.jsave()
+        controller.save()
 
         def jso = parseJsonResponse()
         assertTrue jso.success
         assertNull jso.errors
     }
 
-    void testJSave_NoName(){
-        controller.jsave()
+    void testSave_NoName(){
+        controller.save()
 
         def jso = parseJsonResponse()
         assertFalse jso.success
@@ -50,23 +50,23 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Property [name] of class [class com.stehno.mymdb.domain.Genre] cannot be null', jso.errors.name
     }
 
-    void testJUpdate(){
+    void testUpdate(){
         def theGenre = Genre.findByName('Action')
         controller.params.id = theGenre.id
         controller.params.version = theGenre.version
         controller.params.name = 'Excitement'
 
-        controller.jupdate()
+        controller.update()
 
         def jso = parseJsonResponse()
         assertTrue jso.success
         assertNull jso.errors
     }
 
-    void testJDelete(){
+    void testDelete(){
         controller.params.id = Genre.findByName('Action').id
 
-        controller.jdelete()
+        controller.delete()
 
         def jso = parseJsonResponse()
         assertTrue jso.success
@@ -76,8 +76,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Horror', genres[0].name
     }
 
-    void testJDelete_NotFound(){
-        controller.jdelete()
+    void testDelete_NotFound(){
+        controller.delete()
 
         def jso = parseJsonResponse()
         assertFalse jso.success
