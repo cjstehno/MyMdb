@@ -45,6 +45,7 @@ mymdb.genre.OpenGenreEditDialogHandler = function(dataView,idx){
 mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
     id:'genreListView',
 	emptyText: 'No Genres',
+	loadingText:'Loading...',
 	reserveScrollOffset: true,
 	hideHeaders:false,
 	multiSelect:false,

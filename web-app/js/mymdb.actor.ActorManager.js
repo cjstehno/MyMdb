@@ -69,6 +69,7 @@ mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
     id:'actorListView',
 	emptyText: 'No Actors',
 	reserveScrollOffset: true,
+	loadingText:'Loading...',
 	hideHeaders:false,
 	multiSelect:false,
 	columns: [{header:'Actor', dataIndex:'label'}, {header:'# Movies',dataIndex:'count'}],

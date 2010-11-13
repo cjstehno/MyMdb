@@ -1,7 +1,7 @@
 Ext.BLANK_IMAGE_URL = 'js/ext/resources/images/default/s.gif';
 Ext.QuickTips.init();
 
-Ext.namespace('mymdb','mymdb.actor','mymdb.genre');
+Ext.namespace('mymdb','mymdb.actor','mymdb.genre','mymdb.movie');
  
 mymdb.app = function() {
     // do NOT access DOM from here; elements don't exist yet
@@ -19,6 +19,13 @@ mymdb.app = function() {
             iconCls:'icon-about',
             handler: function(){ new mymdb.AboutDialog(); }
         }),
+        
+        openHelpAction: new Ext.Action({
+            itemId: 'openHelp',
+            text: 'Help',
+            iconCls:'icon-help',
+            handler: function(){ Ext.MessageBox.alert('Help','You are currently helpless.'); }
+        }),        
 
         openGenreManagerAction: new Ext.Action({
             itemId:'openGenreManager',
@@ -33,6 +40,13 @@ mymdb.app = function() {
             iconCls:'icon-actor',
             handler: function(){ new mymdb.actor.ActorManagerDialog(); }
         }),
+        
+        openNewMovieAction: new Ext.Action({
+            itemId:'openNewMovie',
+            text:'New Movie',
+            iconCls:'icon-add-movie',
+            handler: function(){ new mymdb.movie.MovieDialog(); }
+        }),        
  
         // public methods
         init: function() {
@@ -42,7 +56,6 @@ mymdb.app = function() {
 					{ region:'north', xtype:'headerpanel' },
 					{ region:'center', xtype:'contentpanel'},
 					{ region:'west', xtype:'categoriespanel', collapsible:true },
-					// { region:'east', xtype:'detailspanel', collapsible:true},
 					{ region:'south', xtype:'footerpanel' }
 				]
 			});		
@@ -59,8 +72,11 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	bbar:[
         mymdb.app.openGenreManagerAction,
         mymdb.app.openActorManagerAction,
+        { xtype:'tbseparator' },
+        mymdb.app.openNewMovieAction,
         { xtype:'tbfill' },
-        mymdb.app.openAboutAction
+        mymdb.app.openAboutAction,
+        mymdb.app.openHelpAction
     ]
 });
 Ext.reg('headerpanel', mymdb.HeaderPanel);
