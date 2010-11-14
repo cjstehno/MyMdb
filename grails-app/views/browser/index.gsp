@@ -8,6 +8,8 @@
       .icon-actor { background-image: url(/mymdb/images/icons/search_user.png)!important; }
       .icon-add-movie { background-image: url(/mymdb/images/icons/add.png)!important; }
       .icon-movie { background-image: url(/mymdb/images/icons/office_folders.png)!important; }
+
+      .x-list-selected {background-color: yellow; border: 1px solid gray;}
     </style>
     <g:javascript library="mymdb.app" />
     <g:javascript library="mymdb.Dialogs" />

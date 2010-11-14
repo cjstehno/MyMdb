@@ -93,7 +93,8 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
 					   },
 					   {
 						   xtype:'button',
-						   text:'Select Genres'
+						   text:'Select Genres',
+                           handler:function(){ new mymdb.movie.MovieGenreSelector(); }
 					   }
                 	]
                 },
@@ -150,3 +151,67 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
     }
 });
 Ext.reg('movieformpanel', mymdb.movie.MovieFormPanel);
+
+mymdb.movie.MovieGenreSelector = Ext.extend( Ext.Window ,{
+    autoShow:true,
+    iconCls:'icon-movie',
+    closable:true,
+    initHidden:false,
+    modal:true,
+    width:400,
+    height:300,
+    title:'Select Genres',
+    layout:'fit',
+    autoScroll:true,
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                new mymdb.movie.GenreSelectorListView({
+                    store:new Ext.data.JsonStore({
+                        url:'genre/list',
+                        autoLoad: true,
+                        autoDestroy: true,
+                        storeId: 'genre_selector_store',
+                        root: 'items',
+                        idProperty: 'id',
+                        fields: ['id','label']
+                    })
+                })
+            ],
+            tbar:[ mymdb.genre.NewGenreActionFactory('button'), ],
+            buttons:[
+                {
+                    text:'Ok'
+                },
+                {
+                    text:'Cancel'
+                }
+            ]
+        });
+        mymdb.movie.MovieGenreSelector.superclass.initComponent.apply(this, arguments);
+    }
+});
+
+mymdb.movie.GenreSelectorListView = Ext.extend( Ext.list.ListView, {
+    id:'genreListView',
+	emptyText: 'No Genres',
+	loadingText:'Loading...',
+	reserveScrollOffset: true,
+	hideHeaders:false,
+	multiSelect:true,
+	columns: [{header:'Genre', dataIndex:'label'}],
+
+    initComponent: function(){
+        mymdb.movie.GenreSelectorListView.superclass.initComponent.apply(this, arguments);
+
+//        Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
+
+//        this.on( 'dblclick', function(dataView,idx,node,evt){
+//            mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
+//        });
+
+//		this.on( 'contextmenu', function( dataView, idx, node, evt ){
+//            mymdb.genre.ContextPopupFactory(dataView,idx).showAt( evt.getXY() );
+//		} );
+    }
+});

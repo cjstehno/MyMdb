@@ -5,11 +5,8 @@ Ext.namespace('mymdb','mymdb.actor','mymdb.genre','mymdb.movie');
  
 mymdb.app = function() {
     // do NOT access DOM from here; elements don't exist yet
- 
     // private variables
- 
     // private functions
- 
     // public space
     return {
         // public properties, e.g. strings to translate

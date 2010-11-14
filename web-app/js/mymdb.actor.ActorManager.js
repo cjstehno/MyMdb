@@ -10,25 +10,6 @@ mymdb.actor.ActorManagerDialog = Ext.extend( Ext.Window ,{
     height:300,
     title:'Actor Manager',
     layout:'fit',
-    initComponent: function(){
-        Ext.apply(this, {
-            items:[ { xtype:'actormanagerpanel' } ],
-            tbar:[ mymdb.actor.NewActorActionFactory('button'), ]
-        });
-        mymdb.actor.ActorManagerDialog.superclass.initComponent.apply(this, arguments);
-    }
-});
-
-mymdb.actor.NewActorActionFactory = function(xt){
-    return {
-        xtype:xt,
-        text:'New Actor',
-        icon:'/mymdb/images/icons/add.png',
-        handler: function(){ new mymdb.actor.ActorDialog(); }
-    };
-}
-
-mymdb.actor.ActorManagerPanel = Ext.extend( Ext.Panel, {
     autoScroll:true,
     initComponent: function(){
         Ext.apply(this, {
@@ -44,12 +25,21 @@ mymdb.actor.ActorManagerPanel = Ext.extend( Ext.Panel, {
                         fields: ['id','label','count']
                     })
                 })
-            ]
+            ],
+            tbar:[ mymdb.actor.NewActorActionFactory('button'), ]
         });
-        mymdb.actor.ActorManagerPanel.superclass.initComponent.apply(this, arguments);
+        mymdb.actor.ActorManagerDialog.superclass.initComponent.apply(this, arguments);
     }
 });
-Ext.reg('actormanagerpanel', mymdb.actor.ActorManagerPanel);
+
+mymdb.actor.NewActorActionFactory = function(xt){
+    return {
+        xtype:xt,
+        text:'New Actor',
+        icon:'/mymdb/images/icons/add.png',
+        handler: function(){ new mymdb.actor.ActorDialog(); }
+    };
+}
 
 mymdb.actor.OpenActorEditDialogHandler = function(dataView,idx){
     var actorId = dataView.getStore().getAt( idx ).data.id;
