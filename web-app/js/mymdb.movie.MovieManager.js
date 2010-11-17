@@ -8,17 +8,44 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
     initHidden:false,
     modal:true,
     width:625,
-    height:650,
+    height:590,
     title:'New Movie',
     layout:'fit',
     initComponent: function(){
         Ext.apply(this, {
-        	tbar:[ { xtype:'button',text:'Fetch' }, { xtype:'tbfill' }, { xtype:'button',text:'Help' } ],
+        	tbar:[ 
+                { xtype:'button',text:'Fetch' }, 
+                { xtype:'tbfill' }, 
+                { xtype:'button',text:'Help', iconCls:'icon-help' } 
+            ],
             items:[ { xtype:'movieformpanel' } ],
         });
         mymdb.movie.MovieDialog.superclass.initComponent.apply(this, arguments);
     }	
 });
+
+mymdb.movie.MovieGenreLoader = function(){
+    var genreStore = new Ext.data.JsonStore({
+        url:'genre/list',
+        autoLoad: true,
+        autoDestroy: true,
+        storeId: 'movie_genre_store',
+        root: 'items',
+        idProperty: 'id',
+        fields: ['id','label']
+    });
+    
+    var genres = [];
+    
+    genreStore.on('load', function(store, recs, opts){
+        Ext.each( recs, function(rec){
+            alert(rec);
+            genres.push( { boxLabel:rec.label, name:'genre', value:rec.id } );            
+        });
+    });
+    
+    return genres;
+}
 
 mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
     labelWidth:100,
@@ -72,69 +99,62 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                 },
                 
                 {
-                	xtype:'fieldset',
-                	items:[
-					   {
-					   		xtype:'checkboxgroup',
-							fieldLabel:'Genres',
-							itemCls:'x-check-group-alt',
-							columns:4,
-							items:[
-								{boxLabel:'Horror', name:'cb-col-1'},
-								{boxLabel:'Action', name:'cb-col-2', checked: true},
-								{boxLabel:'Drama', name:'cb-cold-3'},
-								{boxLabel:'Comedy', name:'cb-colf-1'},
-								{boxLabel:'Porn', name:'cb-colg-2', checked: true},
-								{boxLabel:'Family', name:'cb-col-e3'},
-								{boxLabel:'Musical', name:'cb-cols-1'},
-								{boxLabel:'Indy', name:'cb-col-u2', checked: true},
-								{boxLabel:'Snuff', name:'cb-col-3d'}  						
-							]
-					   },
-					   {
-						   xtype:'button',
-						   text:'Select Genres',
-                           handler:function(){ new mymdb.movie.MovieGenreSelector(); }
-					   }
-                	]
-                },
-                
-                {
-                	xtype:'fieldset',
-                	items:[
-					   {
-					   		xtype:'checkboxgroup',
-							fieldLabel:'Actors',
-							itemCls:'x-check-group-alt',
-							columns:3,
-							items:[
-								{boxLabel:'Walken, Christoper', name:'xcb-col-1'},
-								{boxLabel:'Channing, Stockard', name:'xcb-col-2', checked: true},
-								{boxLabel:'Herman, Peewee', name:'xcb-cold-3'},
-								{boxLabel:'Murrow, Edward R.', name:'xcb-colf-1'},
-								{boxLabel:'Chabert, Lacy', name:'xcb-colg-2', checked: true},
-								{boxLabel:'Jackson, Sammuel L.', name:'xcb-col-e3'},
-								{boxLabel:'Bunker, Edith', name:'xcb-cols-1'},
-								{boxLabel:'Cher', name:'xcb-col-u2', checked: true},
-								{boxLabel:'Stooge, Curley M.', name:'xcb-col-3d'}  						
-							]
-					   },
-					   {
-						   xtype:'button',
-						   text:'Select Actors'
-					   }
-                	]
-                },
-                
-
-                       {
-                           xtype:'htmleditor',
-                           id:'desctiption',
-                           height:200,
-                           hideLabel:true,
-                           anchor:'100%'
-                       }                	       
-
+                    xtype:'tabpanel',
+                    height:375,
+                    activeItem:0,
+                    items:[
+                        {
+                            title:'Genres',
+                            bodyStyle:'padding:5px',
+                            autoScroll:true,
+                            items:[
+                                {
+                                    fieldLabel:'Genres',
+                                    itemCls:'x-check-group-alt',
+                                    columns:4,
+                                    items:mymdb.movie.MovieGenreLoader()
+                                }                         
+                            ]
+                        },
+                        {
+                            title:'Actors',
+                            bodyStyle:'padding:5px',
+                            autoScroll:true,
+                            items:[
+                               {
+                                    xtype:'checkboxgroup',
+                                    fieldLabel:'Actors',
+                                    itemCls:'x-check-group-alt',
+                                    columns:3,
+                                    items:[
+                                        {boxLabel:'Walken, Christoper', name:'xcb-col-1'},
+                                        {boxLabel:'Channing, Stockard', name:'xcb-col-2', checked: true},
+                                        {boxLabel:'Herman, Peewee', name:'xcb-cold-3'},
+                                        {boxLabel:'Murrow, Edward R.', name:'xcb-colf-1'},
+                                        {boxLabel:'Chabert, Lacy', name:'xcb-colg-2', checked: true},
+                                        {boxLabel:'Jackson, Sammuel L.', name:'xcb-col-e3'},
+                                        {boxLabel:'Bunker, Edith', name:'xcb-cols-1'},
+                                        {boxLabel:'Cher', name:'xcb-col-u2', checked: true},
+                                        {boxLabel:'Stooge, Curley M.', name:'xcb-col-3d'}                       
+                                    ]
+                               }
+                            ]
+                        },
+                        {
+                            title:'Description',
+                            items:[
+                               {
+                                   xtype:'htmleditor',
+                                   id:'desctiption',
+                                   height:347,
+                                   width:597,
+                                   hideLabel:true,
+                                   anchor:'100%'
+                               }                              
+                            ]
+                        }
+                    ]
+                }
             ],
             buttons: [
                 {
@@ -151,67 +171,3 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
     }
 });
 Ext.reg('movieformpanel', mymdb.movie.MovieFormPanel);
-
-mymdb.movie.MovieGenreSelector = Ext.extend( Ext.Window ,{
-    autoShow:true,
-    iconCls:'icon-movie',
-    closable:true,
-    initHidden:false,
-    modal:true,
-    width:400,
-    height:300,
-    title:'Select Genres',
-    layout:'fit',
-    autoScroll:true,
-    initComponent: function(){
-        Ext.apply(this, {
-            items:[
-                new mymdb.movie.GenreSelectorListView({
-                    store:new Ext.data.JsonStore({
-                        url:'genre/list',
-                        autoLoad: true,
-                        autoDestroy: true,
-                        storeId: 'genre_selector_store',
-                        root: 'items',
-                        idProperty: 'id',
-                        fields: ['id','label']
-                    })
-                })
-            ],
-            tbar:[ mymdb.genre.NewGenreActionFactory('button'), ],
-            buttons:[
-                {
-                    text:'Ok'
-                },
-                {
-                    text:'Cancel'
-                }
-            ]
-        });
-        mymdb.movie.MovieGenreSelector.superclass.initComponent.apply(this, arguments);
-    }
-});
-
-mymdb.movie.GenreSelectorListView = Ext.extend( Ext.list.ListView, {
-    id:'genreListView',
-	emptyText: 'No Genres',
-	loadingText:'Loading...',
-	reserveScrollOffset: true,
-	hideHeaders:false,
-	multiSelect:true,
-	columns: [{header:'Genre', dataIndex:'label'}],
-
-    initComponent: function(){
-        mymdb.movie.GenreSelectorListView.superclass.initComponent.apply(this, arguments);
-
-//        Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
-
-//        this.on( 'dblclick', function(dataView,idx,node,evt){
-//            mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
-//        });
-
-//		this.on( 'contextmenu', function( dataView, idx, node, evt ){
-//            mymdb.genre.ContextPopupFactory(dataView,idx).showAt( evt.getXY() );
-//		} );
-    }
-});

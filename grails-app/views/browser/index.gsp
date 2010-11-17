@@ -9,7 +9,7 @@
       .icon-add-movie { background-image: url(/mymdb/images/icons/add.png)!important; }
       .icon-movie { background-image: url(/mymdb/images/icons/office_folders.png)!important; }
 
-      .x-list-selected {background-color: yellow; border: 1px solid gray;}
+      .x-list-selected { background-color:#F5ECC6; border: 1px dashed gray; }
     </style>
     <g:javascript library="mymdb.app" />
     <g:javascript library="mymdb.Dialogs" />
