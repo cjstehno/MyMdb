@@ -17,6 +17,7 @@
     <g:javascript library="mymdb.actor.ActorManager" />
     <g:javascript library="mymdb.movie.MovieManager" />
     <g:javascript library="mymdb.movie.GenreSelector" />
+    <g:javascript library="mymdb.movie.ActorSelector" />
     <g:javascript library="mymdb.ContentPanel" />
     <g:javascript library="mymdb.CategoriesPanel" />
     <script type="text/javascript">Ext.onReady(mymdb.app.init, mymdb.app);</script>

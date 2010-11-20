@@ -25,6 +25,8 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
 });
 
 mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
+    id:'movie-formpanel',
+    fileUpload:true,
     labelWidth:100,
     autoScroll:true,
     frame:false,
@@ -57,60 +59,36 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     items: [
                         {
                             xtype     : 'textfield',
-                            name      : 'storage_name',
+                            name      : 'storage.name',
                             fieldLabel: 'Name'
                         },
                         {
                             xtype     : 'textfield',
-                            name      : 'storage_index',
+                            name      : 'storage.index',
                             fieldLabel: 'Index'
                         }
                     ]
                 },
                 {
                 	xtype:'textfield',
+                    inputType:'file',
                     fieldLabel:'Poster',
                     name: 'poster',
-                    allowBlank:false,
-                    maxLength:4
+                    allowBlank:false
                 },
-                
                 {
                     xtype:'tabpanel',
                     height:375,
                     activeItem:0,
                     items:[
                         { xtype:'movieformgenrespanel' },
-                        {
-                            title:'Actors',
-                            bodyStyle:'padding:5px',
-                            autoScroll:true,
-                            items:[
-                               {
-                                    xtype:'checkboxgroup',
-                                    fieldLabel:'Actors',
-                                    itemCls:'x-check-group-alt',
-                                    columns:3,
-                                    items:[
-                                        {boxLabel:'Walken, Christoper', name:'xcb-col-1'},
-                                        {boxLabel:'Channing, Stockard', name:'xcb-col-2', checked: true},
-                                        {boxLabel:'Herman, Peewee', name:'xcb-cold-3'},
-                                        {boxLabel:'Murrow, Edward R.', name:'xcb-colf-1'},
-                                        {boxLabel:'Chabert, Lacy', name:'xcb-colg-2', checked: true},
-                                        {boxLabel:'Jackson, Sammuel L.', name:'xcb-col-e3'},
-                                        {boxLabel:'Bunker, Edith', name:'xcb-cols-1'},
-                                        {boxLabel:'Cher', name:'xcb-col-u2', checked: true},
-                                        {boxLabel:'Stooge, Curley M.', name:'xcb-col-3d'}                       
-                                    ]
-                               }
-                            ]
-                        },
+                        { xtype:'movie-form-actorspanel'},
                         {
                             title:'Description',
                             items:[
                                {
                                    xtype:'htmleditor',
-                                   id:'desctiption',
+                                   id:'description',
                                    height:347,
                                    width:597,
                                    hideLabel:true,
@@ -122,10 +100,7 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                 }
             ],
             buttons: [
-                {
-                    text:'Save',
-                    handler:function(b,e){ alert('Saving'); }
-                },
+                { xtype:'movie-form-savebutton' },
                 {
                     text:'Cancel',
                     handler:function(b,e){ Ext.getCmp('movieDialog').close(); }
@@ -137,91 +112,27 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
 });
 Ext.reg('movieformpanel', mymdb.movie.MovieFormPanel);
 
-mymdb.movie.MovieFormGenresPanel = Ext.extend( Ext.Panel, {
-    title:'Genres',
-    bodyStyle:'padding:5px',
-    autoScroll:true,
-    tbar:[
-        {
-            xtype:'menuitem',
-            text:'Add Genres',
-            icon:'/mymdb/images/icons/add.png',
-            handler:function(){
-                var genresStore = Ext.getCmp('movieGenresList').getStore();
-                
-                var genreIds = [];
-                genresStore.each( function(it){
-                    genreIds.push( it.data.id );
-                } );
-                
-                new mymdb.movie.MovieGenreSelector({preSelected:genreIds});
-            }    
-        }
-    ],    
-    initComponent: function(){
-        Ext.apply(this, {
-            items:[ { xtype:'movieformgenreslist' } ]
+mymdb.movie.MovieSaveButton = Ext.extend( Ext.Button, {
+    text: 'Save',
+    handler:function(b,e){
+        var theForm = Ext.getCmp('movie-formpanel').getForm();
+        var idValue = theForm.findField('id').getValue();
+        theForm.submit({
+            clientValidation: true,
+            url: 'movie/' + ( idValue == null || idValue == '' ? 'save' : 'update'),
+            method:'POST',
+            success: function(form, action) {
+               Ext.Msg.alert('Success', 'Move saved successfully', function(){
+                   // FIXME: turn these into event fires so listeners can handle these operations
+                   //   rather than having to force the issue this way
+                   Ext.getCmp('movieDialog').close();
+                   Ext.StoreMgr.lookup('gridData').load();
+               });
+            },
+            failure: function(form, action) {
+                Ext.Msg.alert('Failure', action.result.msg);
+            }
         });
-        mymdb.movie.MovieFormGenresPanel.superclass.initComponent.apply(this, arguments);
     }    
 });
-Ext.reg('movieformgenrespanel', mymdb.movie.MovieFormGenresPanel);
-
-mymdb.movie.MovieGenresListView = Ext.extend( Ext.list.ListView, {
-    id:'movieGenresList',
-    emptyText:'None selected',
-    loadingText:'Loading...',
-    reserveScrollOffset: true,
-    hideHeaders:true,
-    multiSelect:false,
-    columns: [ {header:'Genre', dataIndex:'label'} ],
-    store:new Ext.data.ArrayStore({
-        data:[],
-        autoLoad: true,
-        autoDestroy: true,
-        storeId: 'genre_form_store',
-        idIndex:0,
-        fields:[ 'id','label']
-    }),
-    initComponent: function(){
-        mymdb.movie.MovieGenresListView.superclass.initComponent.apply(this, arguments);
-
-        Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
-
-        this.on( 'contextmenu', function( dataView, idx, node, evt ){
-            mymdb.movie.GenreListContextPopupFactory( dataView,idx).showAt( evt.getXY() );
-        });
-    }
-});
-Ext.reg('movieformgenreslist', mymdb.movie.MovieGenresListView);
-
-mymdb.movie.GenreListContextPopupFactory = function( dataView, idx ){
-    return new Ext.menu.Menu({
-        items:[
-            {
-                xtype:'menuitem',
-                text:'Add Genres',
-                icon:'/mymdb/images/icons/add.png',
-                handler:function(){
-                    var genresStore = Ext.getCmp('movieGenresList').getStore();
-                    
-                    var genreIds = [];
-                    genresStore.each( function(it){
-                        genreIds.push( it.data.id );
-                    } );
-                    
-                    new mymdb.movie.MovieGenreSelector({preSelected:genreIds});
-                }
-            },
-            {
-                xtype:'menuitem',
-                text:'Remove Genres',
-                icon:'/mymdb/images/icons/delete.png',
-                handler:function(){
-                    alert('Removing genre from list...');
-                }
-            }
-        ]
-    });
-}
-
+Ext.reg('movie-form-savebutton', mymdb.movie.MovieSaveButton);

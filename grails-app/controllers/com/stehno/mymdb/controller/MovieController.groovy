@@ -19,36 +19,13 @@ import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.converters.JSON
 
-@Secured(['ROLE_ADMIN'])
 class MovieController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-    def index = {
-        redirect(action: "list", params: params)
-    }
 	
-	def poster = {
-        def movieInstance = Movie.get(params.id)
-        if (!movieInstance) {
-			response.sendError(404,"${message(code:'default.not.found.message', args:[message(code:'movie.label', default:'Movie'), params.id])}")
-        } else {
-			if( movieInstance.poster == null || movieInstance.poster.size() == 0 ){
-				response.sendRedirect "${request.contextPath}/images/nocover.jpg"
-			} else {
-				response.outputStream.withStream {
-					it << movieInstance.poster
-				}
-			}
-        }
-	}
-
-    def list = {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [movieInstanceList: Movie.list(params), movieInstanceTotal: Movie.count()]
-    }
+	def messageSource
 
     def create = {
         def movieInstance = new Movie()
@@ -74,32 +51,36 @@ class MovieController {
 		return tabSets
 	}
 
-    def save = {
-        def movieInstance = new Movie(params)
-		if(movieInstance.storage){
-			movieInstance.storage.name = movieInstance.storage.name.toUpperCase()
+    def save = { // done
+        def movie = new Movie(params)
+		if(movie.storage){
+			movie.storage.name = movie.storage.name.toUpperCase()
 		}
+		
+		def resp = [success:(movie.save(flush:true) != null)]
+		
+		if( movie.hasErrors() ){
+			resp.success = false
 
-        if (movieInstance.save(flush: true)) {
-            movieInstance.setTags( params.tags?.split().toList() )
-            
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"
-            redirect(action: "show", id: movieInstance.id)
-        } else {
-            render(view: "create", model: [movieInstance: movieInstance])
-        }
+			resp.errors = [:]
+			movie.errors.fieldErrors.each {
+				resp.errors[it.field] = messageSource.getMessage( it, request.locale)
+			}
+		}
+		
+		render( contentType:'text/html', text:(resp as JSON).toString(false) )
     }
 
-    def show = {
-        def movieInstance = Movie.get(params.id)
-        if (!movieInstance) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-            redirect(action: "list")
-        }
-        else {
-            [movieInstance: movieInstance]
-        }
-    }
+//    def show = {
+//        def movieInstance = Movie.get(params.id)
+//        if (!movieInstance) {
+//            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
+//            redirect(action: "list")
+//        }
+//        else {
+//            [movieInstance: movieInstance]
+//        }
+//    }
 
     def edit = {
         def movieInstance = Movie.get(params.id)
@@ -156,23 +137,27 @@ class MovieController {
             redirect(action: "list")
         }
     }
+	
+	def delete = { // done
+		def movie = Movie.get(params.id)
 
-    def delete = {
-        def movieInstance = Movie.get(params.id)
-        if (movieInstance) {
-            try {
-                movieInstance.delete(flush: true)
-                flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-                redirect(action: "list")
-            }
-            catch (org.springframework.dao.DataIntegrityViolationException e) {
-                flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-                redirect(action: "show", id: params.id)
-            }
-        }
-        else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-            redirect(action: "list")
-        }
-    }
+		def outp = [:]
+
+		if (movie) {
+			try {
+				movie.delete(flush: true)
+				outp.success = true
+
+			} catch (org.springframework.dao.DataIntegrityViolationException e) {
+				outp.success = false
+				outp.errors = ['general': "${message(code: 'default.not.deleted.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"]
+			}
+
+		} else {
+			outp.success = false
+			outp.errors = ['general': "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"]
+		}
+
+		render outp as JSON
+	}
 }

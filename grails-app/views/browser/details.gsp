@@ -15,6 +15,6 @@
     <span style="border-bottom:1px dashed gray;">${a?.firstName} ${a?.middleName} ${a?.lastName}</span>, 
   </g:each></div>
 
-  <p style="padding:10px;margin-left:15px;margin-right:15px;">${fieldValue(bean: movieInstance, field: "description")}</p>
+  <p style="padding:10px;margin-left:15px;margin-right:15px;">${movieInstance.description}</p>
 
 </div>

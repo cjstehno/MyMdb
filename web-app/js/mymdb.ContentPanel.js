@@ -44,8 +44,52 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
             cmp.add( new mymdb.MovieDetailsTab({ title:selectedMovie.data.ti, autoLoad:'browser/details?mid=' + selectedMovie.data.mid }) );
             cmp.activate(cmp.items.length-1);
         });
+        
+        Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
+
+        this.on( 'rowcontextmenu', function( grid, idx, evt ){
+        	mymdb.MovieListContextPopupFactory( grid,idx).showAt( evt.getXY() );
+        });        
     }
 });
+
+mymdb.MovieListContextPopupFactory = function( grid, idx ){
+    return new Ext.menu.Menu({
+        items:[
+            { 
+            	xtype:'menuitem',
+            	text:'New Movie',
+            	icon:'/mymdb/images/icons/add.png'
+            },
+            {
+                xtype:'menuitem',
+                text:'Delete Movie',
+                icon:'/mymdb/images/icons/delete.png',
+                handler:function(b,e){
+                	var movieStore = grid.getStore();
+                    var itemData = movieStore.getAt( idx ).data;
+                    Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.ti + '"?', function(sel){
+                        if( sel == 'yes' ){
+                            Ext.Ajax.request({
+                               url: 'movie/delete',
+                               method:'POST',
+                               params: { id:itemData.mid },
+                               success: function(resp,opts){
+                                   Ext.Msg.alert('Success','Movie successfully deleted.',function(){
+                                       movieStore.load();
+                                   });
+                               },
+                               failure: function(resp,opts){
+                                   Ext.Msg.alert('Delete Failure','Unable to deleted selected movie.');
+                               }
+                            });
+                        }
+                    });
+                }
+            }
+        ]
+    });
+}
 
 mymdb.ContentPanel = Ext.extend( Ext.TabPanel, {
     id:'contentPanel',
