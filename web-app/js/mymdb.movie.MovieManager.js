@@ -24,29 +24,6 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
     }	
 });
 
-mymdb.movie.MovieGenreLoader = function(){
-    var genreStore = new Ext.data.JsonStore({
-        url:'genre/list',
-        autoLoad: true,
-        autoDestroy: true,
-        storeId: 'movie_genre_store',
-        root: 'items',
-        idProperty: 'id',
-        fields: ['id','label']
-    });
-    
-    var genres = [];
-    
-    genreStore.on('load', function(store, recs, opts){
-        Ext.each( recs, function(rec){
-            alert(rec);
-            genres.push( { boxLabel:rec.label, name:'genre', value:rec.id } );            
-        });
-    });
-    
-    return genres;
-}
-
 mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
     labelWidth:100,
     autoScroll:true,
@@ -103,19 +80,7 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     height:375,
                     activeItem:0,
                     items:[
-                        {
-                            title:'Genres',
-                            bodyStyle:'padding:5px',
-                            autoScroll:true,
-                            items:[
-                                {
-                                    fieldLabel:'Genres',
-                                    itemCls:'x-check-group-alt',
-                                    columns:4,
-                                    items:mymdb.movie.MovieGenreLoader()
-                                }                         
-                            ]
-                        },
+                        { xtype:'movieformgenrespanel' },
                         {
                             title:'Actors',
                             bodyStyle:'padding:5px',
@@ -171,3 +136,92 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
     }
 });
 Ext.reg('movieformpanel', mymdb.movie.MovieFormPanel);
+
+mymdb.movie.MovieFormGenresPanel = Ext.extend( Ext.Panel, {
+    title:'Genres',
+    bodyStyle:'padding:5px',
+    autoScroll:true,
+    tbar:[
+        {
+            xtype:'menuitem',
+            text:'Add Genres',
+            icon:'/mymdb/images/icons/add.png',
+            handler:function(){
+                var genresStore = Ext.getCmp('movieGenresList').getStore();
+                
+                var genreIds = [];
+                genresStore.each( function(it){
+                    genreIds.push( it.data.id );
+                } );
+                
+                new mymdb.movie.MovieGenreSelector({preSelected:genreIds});
+            }    
+        }
+    ],    
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[ { xtype:'movieformgenreslist' } ]
+        });
+        mymdb.movie.MovieFormGenresPanel.superclass.initComponent.apply(this, arguments);
+    }    
+});
+Ext.reg('movieformgenrespanel', mymdb.movie.MovieFormGenresPanel);
+
+mymdb.movie.MovieGenresListView = Ext.extend( Ext.list.ListView, {
+    id:'movieGenresList',
+    emptyText:'None selected',
+    loadingText:'Loading...',
+    reserveScrollOffset: true,
+    hideHeaders:true,
+    multiSelect:false,
+    columns: [ {header:'Genre', dataIndex:'label'} ],
+    store:new Ext.data.ArrayStore({
+        data:[],
+        autoLoad: true,
+        autoDestroy: true,
+        storeId: 'genre_form_store',
+        idIndex:0,
+        fields:[ 'id','label']
+    }),
+    initComponent: function(){
+        mymdb.movie.MovieGenresListView.superclass.initComponent.apply(this, arguments);
+
+        Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
+
+        this.on( 'contextmenu', function( dataView, idx, node, evt ){
+            mymdb.movie.GenreListContextPopupFactory( dataView,idx).showAt( evt.getXY() );
+        });
+    }
+});
+Ext.reg('movieformgenreslist', mymdb.movie.MovieGenresListView);
+
+mymdb.movie.GenreListContextPopupFactory = function( dataView, idx ){
+    return new Ext.menu.Menu({
+        items:[
+            {
+                xtype:'menuitem',
+                text:'Add Genres',
+                icon:'/mymdb/images/icons/add.png',
+                handler:function(){
+                    var genresStore = Ext.getCmp('movieGenresList').getStore();
+                    
+                    var genreIds = [];
+                    genresStore.each( function(it){
+                        genreIds.push( it.data.id );
+                    } );
+                    
+                    new mymdb.movie.MovieGenreSelector({preSelected:genreIds});
+                }
+            },
+            {
+                xtype:'menuitem',
+                text:'Remove Genres',
+                icon:'/mymdb/images/icons/delete.png',
+                handler:function(){
+                    alert('Removing genre from list...');
+                }
+            }
+        ]
+    });
+}
+
