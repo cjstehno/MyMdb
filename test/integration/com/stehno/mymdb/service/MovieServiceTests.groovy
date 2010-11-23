@@ -1,5 +1,9 @@
 package com.stehno.mymdb.service
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import grails.test.*
 
 import com.stehno.mymdb.domain.Movie
@@ -13,14 +17,16 @@ class MovieServiceTests extends GrailsUnitTestCase {
     private def horror
     private def johnQPublic
 
-    protected void setUp(){
+	@Before
+    void before(){
         super.setUp()
 
         horror = new Genre(name:'Horror').save()
         johnQPublic = new Actor(firstName:'John', middleName:'Quincy', lastName:'Public').save()
     }
 
-    void testFindMovieTitleLetters(){
+	@Test
+    void findMovieTitleLetters(){
         [ 'Charlie', 'Alpha', 'Bravo', 'Choochoo', 'boo'].each { addMovie it }
 
         assertEquals 5, Movie.list().size()
@@ -32,7 +38,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 'C', letters[2]
     }
 
-    void testFindMoviesTitleStartingWith(){
+	@Test
+    void findMoviesTitleStartingWith(){
         [ 'Charlie', 'Alpha', 'Bravo', 'Choochoo', 'boo'].each { addMovie it }
 
         def movies = movieService.findMoviesTitleStartingWith( 'C' )
@@ -45,7 +52,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 2, movieService.findMoviesTitleStartingWith( 'b' ).size()
     }
 
-    void testFindMoviesByGenre(){
+	@Test
+    void findMoviesByGenre(){
         [ 'Charlie', 'Alpha', 'Bravo', 'Choochoo', 'boo'].each { addMovie it }
 
         def movies = movieService.findMoviesByGenre( horror.id )
@@ -57,7 +65,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 0, movieService.findMoviesByGenre( 123 ).size()
     }
     
-    void testFindMoviesByActor(){
+	@Test
+    void findMoviesByActor(){
         [ 'Charlie', 'Alpha', 'Bravo', 'Choochoo', 'boo'].each { addMovie it }
 
         def movies = movieService.findMoviesByActor( johnQPublic.id )
@@ -69,7 +78,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 0, movieService.findMoviesByActor( 123 ).size()
     }
 
-    void testFindMovieReleaseYears(){
+	@Test
+    void findMovieReleaseYears(){
         addMovie( 'Alpha', { it.releaseYear = 2000 } )
         addMovie( 'Bravo', { it.releaseYear = 2010 } )
         addMovie( 'Charlie', { it.releaseYear = 1980 } )
@@ -82,7 +92,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 2010, years[2]
     }
 
-    void testFindMovieBoxes(){
+	@Test
+    void findMovieBoxes(){
         addMovie'Alpha', {
             it.releaseYear = 2000
             it.storage = new Storage( name:'A', index:1 )
@@ -102,7 +113,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 'B', boxes[1]
     }
 
-    void testFindMoviesForBox(){
+	@Test
+    void findMoviesForBox(){
         addMovie'Zed', {
             it.releaseYear = 2000
             it.storage = new Storage( name:'A', index:1 )
@@ -125,7 +137,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
         assertEquals 0, movieService.findMoviesForBox('C').size()
     }
 
-    protected void tearDown(){
+	@After
+    void after(){
         super.tearDown()
     }
 

@@ -1,5 +1,7 @@
 package com.stehno.mymdb.controller
 
+import org.junit.Test;
+
 import grails.test.*
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Genre
@@ -8,16 +10,14 @@ import com.stehno.mymdb.service.MovieService
 
 class MobileControllerTests extends ControllerUnitTestCase {
 
-    protected void setUp() {
-        super.setUp()
-    }
-
-    void testIndex() {
+	@Test
+    void index() {
         def resp = controller.index()
         assertEquals 5, resp.listItems.size()
     }
 
-    void testTitles(){
+	@Test
+    void titles(){
         def titleList = ['A','C','G']
         def movieService = [ findMovieTitleLetters:{ titleList } ] as MovieService
 
@@ -29,7 +29,8 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Titles:', titleList.collect { [label:it, category:'title', id:it] }
     }
 
-    void testTitle(){
+	@Test
+    void title(){
         def movieList = [
             new Movie(id:100, title:'Chicago'),
             new Movie(id:200, title:'Cars'),
@@ -50,7 +51,8 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Titles: C', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
-    void testGenres(){
+	@Test
+    void genres(){
         def genreList = [
             new Genre(id:100, name:'Action'),
             new Genre(id:200, name:'Comedy')
@@ -62,7 +64,8 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Genres:', genreList.collect { [label:it.name, category:'genre', id:it.id] }
     }
 
-    void testGenre(){
+	@Test
+    void genre(){
         mockDomain Genre, [
             new Genre(id:100, name:'Action'),
             new Genre(id:200, name:'Comedy')
@@ -88,7 +91,8 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Genres: Comedy', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
-    void testActors(){
+	@Test
+    void actors(){
         def actorList = [
             new Actor(id:200, firstName:'Abe', middleName:'Bernard', lastName:'Ableman'),
             new Actor(id:100, firstName:'John', middleName:'Quincy', lastName:'Public')
@@ -102,7 +106,8 @@ class MobileControllerTests extends ControllerUnitTestCase {
         }
     }
 
-    void testActor(){
+	@Test
+    void actor(){
         mockDomain Actor, [
             new Actor(id:200, firstName:'Abe', middleName:'Bernard', lastName:'Ableman'),
             new Actor(id:100, firstName:'John', middleName:'Quincy', lastName:'Public')
@@ -128,7 +133,8 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Actors: Ableman, Abe Bernard', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
-    void testMovie(){
+	@Test
+    void movie(){
         controller.params.id = 135
 
         def movieList = [
@@ -142,11 +148,6 @@ class MobileControllerTests extends ControllerUnitTestCase {
 
         assertEquals movieList[1], resp.movie
     }
-
-    protected void tearDown() {
-        super.tearDown()
-    }
-
 
     private def assertResponse( categoryName, expectedItems ){
         assertEquals 'index', controller.modelAndView.viewName

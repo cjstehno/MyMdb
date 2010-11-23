@@ -1,32 +1,38 @@
 package com.stehno.mymdb.domain
 
 import grails.test.*
+import org.junit.Test 
 
 class GenreTests extends GrailsUnitTestCase {
 
-    void testValidation_valid() {
+	@Test
+    void validation_valid() {
 		assertTrue genre(name:'Testing').validate()
     }
 
-    void testValidation_no_name() {
+	@Test
+    void validation_no_name() {
 		def genre = genre(name:null)
 		assertFalse genre.validate()
 		assertLength 1, genre.errors
     }
 
-    void testValidation_name_too_long() {
+	@Test
+    void validation_name_too_long() {
 		def genre = genre(name:'xxxxxxxxxxx')
 		assertFalse genre.validate()
 		assertLength 1, genre.errors
     }
 
-	void testValidation_name_too_short() {
+	@Test
+	void validation_name_too_short() {
 		def genre = genre(name:'x')
 		assertFalse genre.validate()
 		assertLength 1, genre.errors
     }
 
-	void testValidation_name_too_empty() {
+	@Test
+	void validation_name_too_empty() {
 		def genre = genre(name:'')
 		assertFalse genre.validate()
 		assertLength 1, genre.errors

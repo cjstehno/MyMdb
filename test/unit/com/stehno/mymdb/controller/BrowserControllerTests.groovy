@@ -1,26 +1,25 @@
 package com.stehno.mymdb.controller
 
+import org.junit.Test;
+
 import grails.test.*
 
 import com.stehno.mymdb.domain.Movie
 
 class BrowserControllerTests extends ControllerUnitTestCase {
 
-    protected void setUp() {
-        super.setUp()
-    }
-
-    // just assert no errors
-    void testIndex() {
+	@Test
+    void index() {	// just assert no errors
         controller.index()
     }
 
-    // just assert no errors
-    void testAbout() {
+    @Test
+    void about() {	// just assert no errors
         controller.about()
     }
 
-    void testDetails(){
+	@Test
+    void details(){
         def movie = new Movie(id:123,title:'Foozilla')
         mockDomain Movie, [movie]
 
@@ -29,9 +28,5 @@ class BrowserControllerTests extends ControllerUnitTestCase {
         def resp = controller.details()
 
         assertEquals movie, resp.movieInstance
-    }
-
-    protected void tearDown() {
-        super.tearDown()
     }
 }
