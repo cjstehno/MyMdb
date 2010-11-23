@@ -3,6 +3,11 @@ package com.stehno.mymdb.controller
 import com.stehno.mymdb.domain.Movie 
 import grails.test.GrailsUnitTestCase
 import java.io.StringReader 
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import grails.converters.JSON
 
 import com.stehno.mymdb.domain.Genre
@@ -11,7 +16,8 @@ class MovieControllerTests extends GrailsUnitTestCase {
 	
 	def controller
 
-	protected void setUp() {
+	@Before
+	void before() {
 		super.setUp()
 		
 		def genreList = [
@@ -23,7 +29,23 @@ class MovieControllerTests extends GrailsUnitTestCase {
 		controller = new MovieController()
 	}
 	
-    void testSave(){
+	@Test
+	void toLongArray(){
+		def ary = controller.toLongArray('1,3,8')
+		assertEquals 3, ary.size()
+		assertEquals( 1 as Long,  ary[0])
+		assertEquals( 3 as Long,  ary[1])
+		assertEquals( 8 as Long,  ary[2])
+	}
+	
+	@Test
+	void toLongArray_null(){
+		def ary = controller.toLongArray(null)
+		assertNull ary
+	}
+	
+	@Test
+    void save(){
         controller.params.title = 'Testing'
 		controller.params.releaseYear = '2010'
 		controller.params.description = 'Some text.'
@@ -54,7 +76,8 @@ class MovieControllerTests extends GrailsUnitTestCase {
 //		assertEquals 'Horror', movie.genres[0].name
     }
 	
-	protected void tearDown(){
+	@After
+	void after(){
 		super.tearDown();
 	}
 	

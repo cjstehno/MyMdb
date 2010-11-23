@@ -36,6 +36,7 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
             items: [
                 { name:'id', xtype:'hidden' },
                 { name:'version', xtype:'hidden' },
+                { name:'genres', xtype:'hidden' },
                 {
                 	xtype:'textfield',
                     fieldLabel:'Title',
@@ -117,6 +118,15 @@ mymdb.movie.MovieSaveButton = Ext.extend( Ext.Button, {
     handler:function(b,e){
         var theForm = Ext.getCmp('movie-formpanel').getForm();
         var idValue = theForm.findField('id').getValue();
+        
+        // add the genres
+        var genreIds = [];
+        var genreStore = Ext.StoreMgr.lookup('genre_form_store');
+        genreStore.each(function(g){
+            genreIds.push(g.data.id);
+        });
+        theForm.findField('genres').setValue(genreIds);
+        
         theForm.submit({
             clientValidation: true,
             url: 'movie/' + ( idValue == null || idValue == '' ? 'save' : 'update'),

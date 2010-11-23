@@ -50,8 +50,14 @@ class MovieController {
 		
 		return tabSets
 	}
+	
+	private def toLongArray( str ){
+		str ? str.split(',').collect { it as Long } : null
+	}
 
     def save = { // done
+		params.genres = toLongArray( params.genres )
+		
         def movie = new Movie(params)
 		if(movie.storage){
 			movie.storage.name = movie.storage.name.toUpperCase()
