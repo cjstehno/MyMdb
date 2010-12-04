@@ -63,6 +63,25 @@ mymdb.MovieListContextPopupFactory = function( grid, idx ){
             },
             {
                 xtype:'menuitem',
+                text:'Edit Movie',
+                icon:'/mymdb/images/icons/edit.png',
+            	handler:function(){
+            	    var movieId = grid.getStore().getAt( idx ).data.mid;
+            	    var dialog = new mymdb.movie.MovieDialog({autoShow:false});
+            	    dialog.get(0).getForm().load({
+            	        url: 'movie/edit',
+            	        params:{ id:movieId },
+            	        method:'GET',
+            	        failure: function(form, action) {
+            	            Ext.Msg.alert('Load Failure', action.result.errorMessage);
+            	        }
+            	    });
+            	    
+            	    dialog.show();
+            	}
+            },            
+            {
+                xtype:'menuitem',
                 text:'Delete Movie',
                 icon:'/mymdb/images/icons/delete.png',
                 handler:function(b,e){

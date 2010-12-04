@@ -1,4 +1,3 @@
-Ext.BLANK_IMAGE_URL = 'js/ext/resources/images/default/s.gif';
 Ext.QuickTips.init();
 
 Ext.namespace('mymdb','mymdb.actor','mymdb.genre','mymdb.movie');

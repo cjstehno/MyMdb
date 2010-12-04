@@ -76,29 +76,28 @@ class MovieController {
 		
 		render( contentType:'text/html', text:(resp as JSON).toString(false) )
     }
+	
+	def edit = { // done
+		def outp = [:]
 
-//    def show = {
-//        def movieInstance = Movie.get(params.id)
-//        if (!movieInstance) {
-//            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-//            redirect(action: "list")
-//        }
-//        else {
-//            [movieInstance: movieInstance]
-//        }
-//    }
+		def movie = Movie.get(params.id)
+		if (!movie){
+			outp.success = false
+			outp.errorMessage = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
 
-    def edit = {
-        def movieInstance = Movie.get(params.id)
-        if (!movieInstance) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-            redirect(action: "list")
-        }
-        else {
-			def tabSet = tabbify( Actor.list([sort:'lastName',order:'asc']) ,30)
-            return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), tabRange:(0..<tabSet.size()), tabs:tabSet]
-        }
-    }
+		} else {
+			outp.success = true
+			outp.data = [ 
+				id:movie.id, version:movie.version, 
+				title:movie.title, description:movie.description, 
+				releaseYear:movie.releaseYear, 
+				'storage.name':movie.storage.name, 'storage.index':movie.storage.index,
+				'genres':movie.genres?.collect { g-> g.id }
+			]
+		}
+
+		render outp as JSON
+	}
 
     def update = {
         def movieInstance = Movie.get(params.id)

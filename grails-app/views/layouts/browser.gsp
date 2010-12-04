@@ -5,7 +5,10 @@
         <title><g:layoutTitle default="My Movie Database" /></title>
  
         <ext:css />
+        <link rel="stylesheet" type="text/css" href="${resource(dir:'js/SuperBoxSelect',file:'superboxselect.css')}" />
+        
         <ext:js />
+        <g:javascript library="SuperBoxSelect/SuperBoxSelect" />
 		
 		<g:layoutHead />
     </head>

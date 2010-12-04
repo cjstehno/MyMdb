@@ -36,7 +36,6 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
             items: [
                 { name:'id', xtype:'hidden' },
                 { name:'version', xtype:'hidden' },
-                { name:'genres', xtype:'hidden' },
                 {
                 	xtype:'textfield',
                     fieldLabel:'Title',
@@ -77,26 +76,18 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     name: 'poster',
                     allowBlank:false
                 },
+                mymdb.movie.MovieGenresSelectionBoxFactory(),
                 {
-                    xtype:'tabpanel',
-                    height:375,
-                    activeItem:0,
+                    title:'Description',
                     items:[
-                        { xtype:'movieformgenrespanel' },
-                        { xtype:'movie-form-actorspanel'},
-                        {
-                            title:'Description',
-                            items:[
-                               {
-                                   xtype:'htmleditor',
-                                   id:'description',
-                                   height:347,
-                                   width:597,
-                                   hideLabel:true,
-                                   anchor:'100%'
-                               }                              
-                            ]
-                        }
+                       {
+                           xtype:'htmleditor',
+                           id:'description',
+                           height:347,
+                           width:597,
+                           hideLabel:true,
+                           anchor:'100%'
+                       }                              
                     ]
                 }
             ],
