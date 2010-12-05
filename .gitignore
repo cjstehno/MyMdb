@@ -1,6 +1,5 @@
 # .gitignore mymdb
 
-/web-app/WEB-INF
 cobertura.ser
 mymdb-config.groovy
 
