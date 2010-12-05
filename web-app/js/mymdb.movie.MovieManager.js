@@ -76,7 +76,30 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     name: 'poster',
                     allowBlank:false
                 },
-                mymdb.movie.MovieGenresSelectionBoxFactory(),
+                new Ext.ux.form.SuperBoxSelect({
+                    allowBlank:false,
+                    id:'genre-selector',
+                    xtype:'superboxselect',
+                    fieldLabel: 'Genres',
+                    emptyText: 'Select genres for movie.',
+                    resizable: true,
+                    name: 'genres',
+                    anchor:'100%',
+                    store:new Ext.data.JsonStore({
+                        url:'genre/list',
+                        autoLoad: true,
+                        autoDestroy: true,
+                        storeId: 'genre_form_store',
+                        root: 'items',
+                        idProperty: 'id',
+                        fields: ['id','label','count']
+                    }),
+                    mode: 'local',
+                    displayField: 'label',
+                    displayFieldTpl: '{label}',
+                    valueField: 'id',
+                    forceSelection : true
+                }),
                 {
                     title:'Description',
                     items:[
