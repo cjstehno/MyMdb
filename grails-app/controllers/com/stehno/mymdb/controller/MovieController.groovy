@@ -27,31 +27,7 @@ class MovieController {
 	
 	def messageSource
 
-    def create = {
-        def movieInstance = new Movie()
-        movieInstance.properties = params
-		
-		def actorList = Actor.list([sort:'lastName',order:'asc'])
-		def tabSets = tabbify(actorList, 30)
-		
-        return [movieInstance: movieInstance, genres:Genre.list([sort:'name',order:'asc']), tabRange:(0..<tabSets.size()), tabs:tabSets]
-    }
-	
-	def tabbify( theList, groupCnt ){
-		def tabCount = (int)(theList.size() / groupCnt)
-		tabCount = (theList.size() % groupCnt) > 0 ? tabCount+1 : tabCount
-		
-		def tabSets = []
-		tabCount.times {
-			def end = (it*groupCnt+(groupCnt-1)) >= theList.size() ? theList.size()-1 : (it*groupCnt+(groupCnt-1))
-			def sub = theList[it*groupCnt..end]
-			tabSets.add sub
-		}
-		
-		return tabSets
-	}
-	
-    def save = { // done
+    def save = { 
         def movie = new Movie(params)
 		if(movie.storage){
 			movie.storage.name = movie.storage.name.toUpperCase()
@@ -71,7 +47,59 @@ class MovieController {
 		render( contentType:'text/html', text:(resp as JSON).toString(false) )
     }
 	
-	def edit = { // done
+	def update = { 
+		def outp = [:]
+
+		def movie = Movie.get(params.id)
+		if (movie) {
+			if (params.version) {
+				def version = params.version.toLong()
+				if (movie.version > version) {
+					outp.success = false
+					outp.errors = ['general':'Another user has updated this Movie while you were editing']
+
+					render outp as JSON
+					return
+				}
+			}
+			
+			// protect the existing image data
+			def posterHolder = null
+			if(params.poster.bytes.length == 0){
+				posterHolder = movie.poster
+			}
+			
+			movie.properties = params
+			if(posterHolder){
+				movie.poster = posterHolder
+			}
+			
+			if(movie.storage){
+				movie.storage.name = movie.storage.name.toUpperCase()
+			}
+			
+			if (!movie.hasErrors() && movie.save(flush: true)) {
+				//movie.setTags( params.tags?.split().toList() )
+				
+				outp.success = true
+				
+			} else {
+				outp.success = false
+				outp.errors = [:]
+				movie.errors.fieldErrors.each {
+					outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+				}
+			}
+
+		} else {
+			outp.success = false
+			outp.errors = ['general':"${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"]
+		}
+
+		render( contentType:'text/html', text:(outp as JSON).toString(false) )
+	}
+
+	def edit = {
 		def outp = [:]
 
 		def movie = Movie.get(params.id)
@@ -81,63 +109,23 @@ class MovieController {
 
 		} else {
 			outp.success = true
-			outp.data = [ 
-				id:movie.id, version:movie.version, 
-				title:movie.title, description:movie.description, 
-				releaseYear:movie.releaseYear, 
-				'storage.name':movie.storage.name, 'storage.index':movie.storage.index,
-				'genres':movie.genres?.collect { g-> g.id }
+			outp.data = [
+				id:movie.id, 
+				version:movie.version,
+				title:movie.title, 
+				description:movie.description,
+				releaseYear:movie.releaseYear,
+				'storage.name':movie.storage.name, 
+				'storage.index':movie.storage.index,
+				'genres':movie.genres?.collect { g-> g.id },
+				'actors':movie.actors?.collect {a-> a.id }
 			]
 		}
 
 		render outp as JSON
 	}
-
-    def update = {
-        def movieInstance = Movie.get(params.id)
-        if (movieInstance) {
-            if (params.version) {
-                def version = params.version.toLong()
-                if (movieInstance.version > version) {
-                    
-                    movieInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code:'movie.label', default:'Movie')] as Object[], "Another user has updated this Movie while you were editing")
-                    render(view: "edit", model: [movieInstance: movieInstance])
-                    return
-                }
-            }
-			
-			// protect the exting image data
-			def posterHolder = null
-			if(params.poster.bytes.length == 0){
-				posterHolder = movieInstance.poster
-			}
-			
-            movieInstance.properties = params
-			if(posterHolder){
-				movieInstance.poster = posterHolder
-			}
-			
-			if(movieInstance.storage){
-				movieInstance.storage.name = movieInstance.storage.name.toUpperCase()
-			}			
-			
-            if (!movieInstance.hasErrors() && movieInstance.save(flush: true)) {
-                movieInstance.setTags( params.tags?.split().toList() )
-                
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'movie.label', default: 'Movie'), movieInstance.id])}"
-                redirect(action: "show", id: movieInstance.id)
-            }
-            else {
-                render(view: "edit", model: [movieInstance: movieInstance])
-            }
-        }
-        else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-            redirect(action: "list")
-        }
-    }
 	
-	def delete = { // done
+	def delete = {
 		def movie = Movie.get(params.id)
 
 		def outp = [:]

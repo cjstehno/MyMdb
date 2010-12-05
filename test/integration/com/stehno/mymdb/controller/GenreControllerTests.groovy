@@ -1,5 +1,9 @@
 package com.stehno.mymdb.controller
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import grails.test.*
 import grails.converters.JSON
 import com.stehno.mymdb.domain.Genre
@@ -8,7 +12,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
 
     def controller
 
-    protected void setUp() {
+	@Before
+    void before() {
         super.setUp()
 
         def genreList = [
@@ -20,7 +25,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         controller = new GenreController()
     }
 
-    void testList(){
+	@Test
+    void list(){
         controller.list()
 
         assertEquals 'application/json;charset=UTF-8', controller.response.contentType
@@ -30,7 +36,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Horror', jso.items[1].label
     }
 
-    void testSave(){
+	@Test
+    void save(){
         controller.params.name = 'Testing'
 
         controller.save()
@@ -40,7 +47,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertNull jso.errors
     }
 
-    void testSave_NoName(){
+	@Test
+    void save_NoName(){
         controller.save()
 
         def jso = parseJsonResponse()
@@ -50,7 +58,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Property [name] of class [class com.stehno.mymdb.domain.Genre] cannot be null', jso.errors.name
     }
 
-    void testUpdate(){
+	@Test
+    void update(){
         def theGenre = Genre.findByName('Action')
         controller.params.id = theGenre.id
         controller.params.version = theGenre.version
@@ -63,7 +72,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertNull jso.errors
     }
 
-    void testDelete(){
+	@Test
+    void delete(){
         controller.params.id = Genre.findByName('Action').id
 
         controller.delete()
@@ -76,7 +86,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 'Horror', genres[0].name
     }
 
-    void testDelete_NotFound(){
+	@Test
+    void delete_NotFound(){
         controller.delete()
 
         def jso = parseJsonResponse()
@@ -88,7 +99,8 @@ class GenreControllerTests extends GrailsUnitTestCase {
         assertEquals 2, Genre.list().size()
     }
 
-    protected void tearDown() {
+	@After
+    void after() {
         super.tearDown()
     }
 

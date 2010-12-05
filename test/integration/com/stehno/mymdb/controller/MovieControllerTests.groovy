@@ -11,6 +11,7 @@ import org.junit.Test;
 import grails.converters.JSON
 
 import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Storage
 
 class MovieControllerTests extends GrailsUnitTestCase {
 	
@@ -20,28 +21,36 @@ class MovieControllerTests extends GrailsUnitTestCase {
 	void before() {
 		super.setUp()
 		
-		def genreList = [
-			new Genre(name:'Horror'),
-			new Genre(name:'Action')
-		]
-		genreList*.save(flush:true)
+		[ new Genre(name:'Horror'), new Genre(name:'Action') ]*.save(flush:true)
+		
+		def mov = new Movie(title:'Some Movie', releaseYear:2000, description:'A movie.')
+		mov.storage = new Storage(name:'A', index:100)
+		mov.poster = ''
+		mov.save(flush:true)
 		
 		controller = new MovieController()
 	}
 	
 	@Test
-	void toLongArray(){
-		def ary = controller.toLongArray('1,3,8')
-		assertEquals 3, ary.size()
-		assertEquals( 1 as Long,  ary[0])
-		assertEquals( 3 as Long,  ary[1])
-		assertEquals( 8 as Long,  ary[2])
-	}
-	
-	@Test
-	void toLongArray_null(){
-		def ary = controller.toLongArray(null)
-		assertNull ary
+	void edit(){
+		def movie = Movie.findByTitle('Some Movie')
+		controller.params.id = movie.id
+		
+		controller.edit()
+		
+		def jso = parseJsonResponse()
+		assertTrue jso.success
+		assertNull jso.errors
+		
+		def data = jso.data
+		assertNotNull data
+		assertEquals movie.id, data.id
+		assertEquals movie.version, data.version
+		assertEquals 'Some Movie', data.title
+		assertEquals 2000, data.releaseYear
+		assertEquals 'A movie.', data.description
+		assertEquals 'A', data['storage.name']
+		assertEquals 100, data['storage.index']
 	}
 	
 	@Test
@@ -49,14 +58,14 @@ class MovieControllerTests extends GrailsUnitTestCase {
         controller.params.title = 'Testing'
 		controller.params.releaseYear = '2010'
 		controller.params.description = 'Some text.'
-		controller.params['storage.name'] = 'A'
+		controller.params['storage.name'] = 'a'
 		controller.params['storage.index'] = '1'
 		controller.params.poster = ''
 		
-//		def genre = Genre.findByName('Horror')
-//		controller.request.addParameter 'genres', [ genre.id as String ] as String[]
-//		
-////		controller.params.actors = ''
+		def genre = Genre.findByName('Horror')
+		controller.params.genres = genre.id as String
+
+		//		controller.params.actors = ''
 
         controller.save()
 
@@ -72,9 +81,68 @@ class MovieControllerTests extends GrailsUnitTestCase {
 		assertEquals 'A', movie.storage.name
 		assertEquals 1, movie.storage.index
 		
-//		assertEquals 1, movie.genres.size()
-//		assertEquals 'Horror', movie.genres[0].name
+		assertEquals 1, movie.genres.size()
+		assertEquals 'Horror', movie.genres.iterator().next().name
     }
+	
+	@Test
+	void update(){
+		controller.params.id = Movie.findByTitle('Some Movie').id
+		controller.params.title = 'Foovie'
+		controller.params.releaseYear = '2011'
+		controller.params.description = 'Some more text.'
+		controller.params['storage.name'] = 'A'
+		controller.params['storage.index'] = '2'
+		controller.params.poster = ''
+		
+		def genre = Genre.findByName('Action')
+		controller.params.genres = genre.id as String
+		
+		controller.update()
+
+		def jso = parseJsonResponse()
+		assertTrue jso.success
+		assertNull jso.errors
+		
+		assertNull Movie.findByTitle('Some Movie')
+		
+		def movie = Movie.findByTitle('Foovie')
+		assertNotNull movie
+		assertEquals 'Foovie', movie.title
+		assertEquals 2011, movie.releaseYear
+		assertEquals 'Some more text.', movie.description
+		assertEquals 'A', movie.storage.name
+		assertEquals 2, movie.storage.index
+		
+		assertEquals 1, movie.genres.size()
+		assertEquals 'Action', movie.genres.iterator().next().name
+	}
+	
+	@Test
+	void delete(){
+		controller.params.id = Movie.findByTitle('Some Movie').id
+
+		controller.delete()
+
+		def jso = parseJsonResponse()
+		assertTrue jso.success
+
+		def movies = Movie.list()
+		assertEquals 0, movies.size()
+	}
+
+	@Test
+	void delete_NotFound(){
+		controller.delete()
+
+		def jso = parseJsonResponse()
+		assertFalse jso.success
+		assertNotNull jso.errors
+		assertEquals 1, jso.errors.size()
+		assertEquals 'Movie not found with id null', jso.errors.general
+
+		assertEquals 1, Movie.list().size()
+	}
 	
 	@After
 	void after(){

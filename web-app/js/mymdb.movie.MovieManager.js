@@ -41,14 +41,17 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     fieldLabel:'Title',
                     name: 'title',
                     allowBlank:false,
-                    maxLength:40
+                    maxLength:40,
+                    width:200
                 },
                 {
-                	xtype:'textfield',
+                	xtype:'numberfield',
                     fieldLabel:'Release Year',
                     name: 'releaseYear',
                     allowBlank:false,
-                    maxLength:4
+                    maxValue:2200,
+                    minValue:1900,
+                    width:75
                 },
                 {
                     xtype: 'compositefield',
@@ -60,12 +63,14 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                         {
                             xtype     : 'textfield',
                             name      : 'storage.name',
-                            fieldLabel: 'Name'
+                            fieldLabel: 'Name',
+                            width:100
                         },
                         {
                             xtype     : 'textfield',
                             name      : 'storage.index',
-                            fieldLabel: 'Index'
+                            fieldLabel: 'Index',
+                            width:100
                         }
                     ]
                 },
@@ -74,12 +79,12 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     inputType:'file',
                     fieldLabel:'Poster',
                     name: 'poster',
-                    allowBlank:false
+                    allowBlank:true
                 },
-                new Ext.ux.form.SuperBoxSelect({
+                {
+                    xtype:'superboxselect',
                     allowBlank:false,
                     id:'genre-selector',
-                    xtype:'superboxselect',
                     fieldLabel: 'Genres',
                     emptyText: 'Select genres for movie.',
                     resizable: true,
@@ -99,19 +104,36 @@ mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
                     displayFieldTpl: '{label}',
                     valueField: 'id',
                     forceSelection : true
-                }),
+                },
                 {
-                    title:'Description',
-                    items:[
-                       {
-                           xtype:'htmleditor',
-                           id:'description',
-                           height:347,
-                           width:597,
-                           hideLabel:true,
-                           anchor:'100%'
-                       }                              
-                    ]
+                    xtype:'superboxselect',
+                    allowBlank:false,
+                    id:'actor-selector',
+                    fieldLabel: 'Actors',
+                    emptyText: 'Select actors for movie.',
+                    resizable: true,
+                    name: 'actors',
+                    anchor:'100%',
+                    store:new Ext.data.JsonStore({
+                        url:'actor/list',
+                        autoLoad: true,
+                        autoDestroy: true,
+                        storeId: 'actor_form_store',
+                        root: 'items',
+                        idProperty: 'id',
+                        fields: ['id','label','count']
+                    }),
+                    mode: 'local',
+                    displayField: 'label',
+                    displayFieldTpl: '{label}',
+                    valueField: 'id',
+                    forceSelection : true
+                },                
+                {
+                    xtype:'htmleditor',
+                    id:'description',
+                    hideLabel:true,
+                    anchor:'100%'
                 }
             ],
             buttons: [
