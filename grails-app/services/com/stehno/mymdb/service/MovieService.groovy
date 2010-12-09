@@ -36,7 +36,7 @@ class MovieService {
      * title.
      */
     def findMovieTitleLetters(){
-        Movie.executeQuery("select distinct(substring(upper(m.title),1,1)) from Movie m")
+        Movie.executeQuery("select distinct(substring(upper(m.title),1,1)) from Movie m").sort()
     }
 
     def findMoviesTitleStartingWith( letter ){

@@ -11,7 +11,7 @@ mymdb-config.groovy
 
 stacktrace.log
 /test/reports
-
+/web-app/WEB-INF/classes
 /target
 
 *.war
