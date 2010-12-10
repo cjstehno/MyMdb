@@ -147,4 +147,38 @@ class MovieController {
 
 		render outp as JSON
 	}
+	
+	// flow
+	
+	private static final def FLOWKEY = 'movie.flow'
+	
+	def enterTitle = {
+		if( request.method.equalsIgnoreCase('get')){
+			// prepare flow session (or clear out existing)
+			session[FLOWKEY] = [:]
+			render( [ success:true, data:[] ] as JSON )
+		} else {
+			
+			if( params.title && params.title.length() > 1 ){
+				session[FLOWKEY].title = params.title
+				render( [ success:true, data:[ flowkey:FLOWKEY ] ] as JSON )
+			} else {
+				render( [ success:false, errors:[ title:'incorrect length' ] ] as JSON )
+			}
+		}
+	}
+	
+	def fetchResults = {
+		if( request.method.equalsIgnoreCase('get')){
+			render( [ success:true, data:[ flowkey:100, title:session[FLOWKEY].title ] ] as JSON )
+		} else {
+			render( [ success:true, data:[ flowkey:100 ] ] as JSON )
+		}
+	}
+	
+	// this is where the form data would be finally submitted (validation should be done at each step
+	def finish = { 
+		println 'finish'
+		render( [ success:true, data:[ flowkey:100 ] ] as JSON )
+	}
 }

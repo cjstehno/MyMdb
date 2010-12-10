@@ -14,14 +14,13 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
     initComponent: function(){
         Ext.apply(this, {
         	tbar:[ 
-                { xtype:'button',text:'Fetch' }, 
                 { xtype:'tbfill' }, 
                 { xtype:'button',text:'Help', iconCls:'icon-help' } 
             ],
-            items:[ { xtype:'movieformpanel' } ],
+            items:[ new mymdb.movie.MovieManagerFlowPanel() ]
         });
         mymdb.movie.MovieDialog.superclass.initComponent.apply(this, arguments);
-    }	
+    }
 });
 
 mymdb.movie.MovieFormPanel = Ext.extend( Ext.FormPanel, {
