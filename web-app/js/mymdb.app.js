@@ -1,6 +1,6 @@
 Ext.QuickTips.init();
 
-Ext.namespace('mymdb','mymdb.actor','mymdb.genre','mymdb.movie');
+Ext.namespace('mymdb','mymdb.actor','mymdb.genre','mymdb.movie', 'mymdb.movie.flow');
  
 mymdb.app = function() {
     // do NOT access DOM from here; elements don't exist yet

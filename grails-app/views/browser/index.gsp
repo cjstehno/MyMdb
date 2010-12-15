@@ -16,7 +16,13 @@
     <g:javascript library="mymdb.genre.GenreManager" />
     <g:javascript library="mymdb.actor.ActorManager" />
     <g:javascript library="mymdb.movie.MovieManager" />
-    <g:javascript library="mymdb.movie.MovieFlow" />
+    <g:javascript library="mymdb.movie.flow.MovieFlow" />
+    <g:javascript library="mymdb.movie.flow.FetchResults" />
+    <g:javascript library="mymdb.movie.flow.Details" />
+    <g:javascript library="mymdb.movie.flow.Poster" />
+    <g:javascript library="mymdb.movie.flow.Genres" />
+    <g:javascript library="mymdb.movie.flow.Actors" />
+    <g:javascript library="mymdb.movie.flow.Summary" />
     <g:javascript library="mymdb.ContentPanel" />
     <g:javascript library="mymdb.CategoriesPanel" />
     <script type="text/javascript">Ext.onReady(mymdb.app.init, mymdb.app);</script>
