@@ -31,13 +31,19 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
                     xtype:'button',
                     itemId:'prev-btn',
                     text:'Previous',
-                    handler:function(){ alert('prev'); }
+                    handler:function(b,e){
+                        var active = Ext.getCmp('movieDialog').findByType(mymdb.movie.flow.MovieManagerFlowPanel)[0].getLayout().activeItem;
+                        active.previous();
+                    }
                 },
                 {
                     xtype:'button',
                     itemId:'next-btn',
                     text:'Next',
-                    handler:function(){ alert('next'); }
+                    handler:function(b,e){
+                        var active = Ext.getCmp('movieDialog').findByType(mymdb.movie.flow.MovieManagerFlowPanel)[0].getLayout().activeItem;
+                        active.next();
+                    }
                 }
             ]
         });

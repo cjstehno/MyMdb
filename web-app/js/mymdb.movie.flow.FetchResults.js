@@ -1,16 +1,19 @@
 
-mymdb.movie.flow.FetchResultsView = Ext.extend(Ext.form.FormPanel, {
+mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
+    formUrl:'movie/fetchResults',
+    nextId:2,
+    previousId:0,
     initComponent: function(){
         Ext.apply(this, {
-            formUrl:'movie/fetchResults',
             items:[
-                { xtype:'textfield', fieldLabel:'Title', name:'title', readOnly:true },
-                { xtype:'movieflow-nextbutton', text:'Next', nextId:2 },
-                { xtype:'movieflow-nextbutton', text:'Previous', nextId:0 },
+                { xtype:'textfield', fieldLabel:'Title', name:'title', readOnly:true }
             ]
         });
 
-        this.on('activate',mymdb.movie.flow.FlowViewInitFunction);
+        this.on('activate',function(p){
+            mymdb.movie.flow.DisableButtonFunction(p);
+            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Fetch Results');
+        });
 
         mymdb.movie.flow.FetchResultsView.superclass.initComponent.apply(this, arguments);
     }

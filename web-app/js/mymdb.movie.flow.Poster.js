@@ -1,16 +1,19 @@
 
-mymdb.movie.flow.PosterView = Ext.extend(Ext.form.FormPanel, {
+mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
+    formUrl:'movie/poster',
+    nextId:4,
+    previousId:2,
     initComponent: function(){
         Ext.apply(this, {
-            formUrl:'movie/poster',
             items:[
-                { xtype:'label', text:'Poster' },
-                { xtype:'movieflow-nextbutton', text:'Next', nextId:4 },
-                { xtype:'movieflow-nextbutton', text:'Previous', nextId:2 },
+                { xtype:'label', text:'Poster' }
             ]
         });
 
-        this.on('activate',mymdb.movie.flow.FlowViewInitFunction);
+        this.on('activate',function(p){
+            mymdb.movie.flow.DisableButtonFunction(p);
+            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Poster');
+        });
 
         mymdb.movie.flow.PosterView.superclass.initComponent.apply(this, arguments);
     }

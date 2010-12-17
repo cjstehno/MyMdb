@@ -1,16 +1,19 @@
 
-mymdb.movie.flow.ActorsView = Ext.extend(Ext.form.FormPanel, {
+mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
+    formUrl:'movie/actor',
+    nextId:6,
+    previousId:4,
     initComponent: function(){
         Ext.apply(this, {
-            formUrl:'movie/actor',
             items:[
-                { xtype:'label', text:'Actors' },
-                { xtype:'movieflow-nextbutton', text:'Next', nextId:6 },
-                { xtype:'movieflow-nextbutton', text:'Previous', nextId:4 },
+                { xtype:'label', text:'Actors' }
             ]
         });
 
-        this.on('activate',mymdb.movie.flow.FlowViewInitFunction);
+        this.on('activate',function(p){
+            mymdb.movie.flow.DisableButtonFunction(p);
+            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Actors');
+        });
 
         mymdb.movie.flow.ActorsView.superclass.initComponent.apply(this, arguments);
     }

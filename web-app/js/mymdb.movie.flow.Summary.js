@@ -1,18 +1,24 @@
 
-mymdb.movie.flow.SummaryView = Ext.extend(Ext.form.FormPanel, {
+mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
+    formUrl:'movie/finish',
+    nextId:7,
+    previousId:5,
     initComponent: function(){
         Ext.apply(this, {
-            formUrl:'movie/finish',
             items:[
-                { xtype:'label', text:'Summary' },
-                { xtype:'movieflow-nextbutton', text:'Next', nextId:6 },
-                { xtype:'movieflow-nextbutton', text:'Previous', nextId:4 },
+                { xtype:'label', text:'Summary' }
             ]
         });
 
-        this.on('activate',mymdb.movie.flow.FlowViewInitFunction);
+        this.on('activate',function(p){
+            mymdb.movie.flow.DisableButtonFunction(p);
+            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Summary');
+        });
 
         mymdb.movie.flow.SummaryView.superclass.initComponent.apply(this, arguments);
+    },
+    next:function(){
+        alert('submit the final data');
     }
 });
 Ext.reg('movieflow-summary', mymdb.movie.flow.SummaryView);

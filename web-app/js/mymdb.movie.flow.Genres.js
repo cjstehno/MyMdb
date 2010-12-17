@@ -1,16 +1,19 @@
 
-mymdb.movie.flow.GenresView = Ext.extend(Ext.form.FormPanel, {
+mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
+    formUrl:'movie/genre',
+    nextId:5,
+    previousId:3,
     initComponent: function(){
         Ext.apply(this, {
-            formUrl:'movie/genre',
             items:[
-                { xtype:'label', text:'Genres' },
-                { xtype:'movieflow-nextbutton', text:'Next', nextId:5 },
-                { xtype:'movieflow-nextbutton', text:'Previous', nextId:3 },
+                { xtype:'label', text:'Genres' }
             ]
         });
 
-        this.on('activate',mymdb.movie.flow.FlowViewInitFunction);
+        this.on('activate',function(p){
+            mymdb.movie.flow.DisableButtonFunction(p);
+            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Genres');
+        });
 
         mymdb.movie.flow.GenresView.superclass.initComponent.apply(this, arguments);
     }
