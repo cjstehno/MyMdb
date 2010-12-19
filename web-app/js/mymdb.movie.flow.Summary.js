@@ -1,8 +1,8 @@
 
 mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     formUrl:'movie/finish',
-    nextId:7,
-    previousId:5,
+    nextId:6,
+    previousId:4,
     initComponent: function(){
         Ext.apply(this, {
             items:[

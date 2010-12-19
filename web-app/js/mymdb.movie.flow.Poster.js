@@ -1,12 +1,35 @@
 
 mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     formUrl:'movie/poster',
-    nextId:4,
-    previousId:2,
+    nextId:3,
+    previousId:1,
     initComponent: function(){
         Ext.apply(this, {
             items:[
-                { xtype:'label', text:'Poster' }
+                {
+                    xtype:'radiogroup',
+                    columns:1,
+                    items:[
+                        {
+                            xtype:'compositefield',
+                            items:[
+                                {
+                                    xtype: 'radio',
+                                    fieldLabel:'URL'
+                                }
+                            ]
+                        },
+                        {
+                            xtype:'compositefield',
+                            items:[
+                                {
+                                    xtype: 'radio',
+                                    fieldLabel:'Upload'
+                                }
+                            ]
+                        }
+                    ]
+                }
             ]
         });
 

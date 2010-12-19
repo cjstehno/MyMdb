@@ -153,29 +153,11 @@ class MovieController {
 	
     private static final def FLOWKEY = 'movie.flow'
 	
-    def enterTitle = { EnterTitleDto dto ->
+    def fetchResults = { FetchResultsDto dto ->
         if( isGet(request) ){
             // prepare flow session (or clear out existing)
             session[FLOWKEY] = [:]
-            render( [ success:true, data:[] ] as JSON )
             
-        } else {
-            if( dto.hasErrors() ){
-                render( errorResponse(dto,request) as JSON )
-                
-            } else {
-                getFlow(session).enterTitle = dto
-                render( [ success:true ] as JSON )
-            }
-        }
-    }
-	
-    def fetchResults = { FetchResultsDto dto ->
-        if( isGet(request) ){
-            // FIXME: pull down the search resutls and populate
-            
-            getFlow(session).fetchResults = dto
-
             render( [ success:true, data:dto ] as JSON )
         } else {
             if( dto.hasErrors() ){
@@ -190,10 +172,14 @@ class MovieController {
 
     def details = { DetailsDto dto ->
         if( isGet(request) ){
-            // FIXME: if fetchresults has a selected url, fetch data to populate
             def flow = getFlow(session)
-            dto.title = flow.enterTitle.title
-            flow.details = dto
+            if( !flow.details ){
+                flow.details = dto
+            } else {
+                dto = flow.details
+            }
+
+            dto.title = dto.title ?: flow.fetchResults.title
 
             render( [ success:true, data:dto ] as JSON )
         } else {

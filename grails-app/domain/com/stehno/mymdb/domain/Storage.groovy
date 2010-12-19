@@ -17,10 +17,10 @@ package com.stehno.mymdb.domain
 
 class Storage {
 
-	String name
-	int index
+    String name
+    int index
 	
-	static constraints = {
-		index(range:1..120)
-	}
+    static constraints = {
+        index(range:1..120)
+    }
 }

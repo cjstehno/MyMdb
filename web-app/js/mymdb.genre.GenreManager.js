@@ -98,12 +98,12 @@ mymdb.genre.ContextPopupFactory = function( dataView, idx ){
 
 mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
     id:'genreListView',
-	emptyText: 'No Genres',
-	loadingText:'Loading...',
-	reserveScrollOffset: true,
-	hideHeaders:false,
-	multiSelect:false,
-	columns: [{header:'Genre', dataIndex:'label'}, {header:'# Movies',dataIndex:'count'}],
+    emptyText: 'No Genres',
+    loadingText:'Loading...',
+    reserveScrollOffset: true,
+    hideHeaders:false,
+    multiSelect:false,
+    columns: [{header:'Genre', dataIndex:'label'}, {header:'# Movies',dataIndex:'count'}],
 
     initComponent: function(){
         mymdb.genre.GenreListView.superclass.initComponent.apply(this, arguments);
@@ -114,9 +114,9 @@ mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
             mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
         });
 
-		this.on( 'contextmenu', function( dataView, idx, node, evt ){
+        this.on( 'contextmenu', function( dataView, idx, node, evt ){
             mymdb.genre.ContextPopupFactory(dataView,idx).showAt( evt.getXY() );
-		} );
+        });
     }
 });
 

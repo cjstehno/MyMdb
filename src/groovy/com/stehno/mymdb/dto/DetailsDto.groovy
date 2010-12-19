@@ -22,6 +22,11 @@ class DetailsDto {
     Integer releaseYear
     String storageName
     Integer storageIndex
-    
+
+    static constraints = {
+        title(blank:false, minSize:1)
+        description(size:0..2000)
+        releaseYear(range:1930..2020)
+    }
 }
 

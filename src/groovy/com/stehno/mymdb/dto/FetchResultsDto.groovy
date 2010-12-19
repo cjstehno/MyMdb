@@ -17,7 +17,9 @@ package com.stehno.mymdb.dto
 
 class FetchResultsDto {
 
-    String selectedUrl
-	
-}
+    String title
 
+    static constraints = {
+        title(blank:false, minSize:1)
+    }
+}

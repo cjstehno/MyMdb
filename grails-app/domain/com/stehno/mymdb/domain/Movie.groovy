@@ -22,11 +22,11 @@ class Movie implements Taggable {
     String title
     String description
     int releaseYear
-	Storage storage
-	byte[] poster
+    Storage storage
+    byte[] poster
     
     static hasMany = [genres:Genre, actors:Actor]
-	static embedded = ['storage']
+    static embedded = ['storage']
 	
     Date dateCreated
     Date lastUpdate
@@ -37,12 +37,12 @@ class Movie implements Taggable {
         releaseYear(range:1930..2020)
         lastUpdate(nullable:true)
         dateCreated(nullable:true)
-		storage(nullable:true)
+        storage(nullable:true)
     }
 	
-	static mapping = {
-		cache true
-	}
+    static mapping = {
+        cache true
+    }
 
     static transients = ['storageLabel']
 

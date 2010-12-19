@@ -5,7 +5,6 @@ mymdb.movie.flow.MovieManagerFlowPanel = Ext.extend( Ext.Panel, {
     initComponent: function(){
         Ext.apply(this, {
             items:[
-               {xtype:'movieflow-entertitle'},
                {xtype:'movieflow-fetchresults'},
                {xtype:'movieflow-details'},
                {xtype:'movieflow-poster'},
@@ -52,26 +51,6 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
     }
 });
 Ext.reg('movieflow-viewpanel', mymdb.movie.flow.ViewPanel);
-
-mymdb.movie.flow.EnterTitleView = Ext.extend(mymdb.movie.flow.ViewPanel, {
-    formUrl:'movie/enterTitle',
-    nextId:1,
-    initComponent: function(){
-        Ext.apply(this, {
-            items:[
-                { xtype:'textfield', fieldLabel:'Title', name:'title' }
-            ]  
-        });
-
-        this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p, 'prev-btn');
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Enter Title');
-        });
-        
-        mymdb.movie.flow.EnterTitleView.superclass.initComponent.apply(this, arguments);
-    }
-});
-Ext.reg('movieflow-entertitle', mymdb.movie.flow.EnterTitleView);
 
 mymdb.movie.flow.DisableButtonFunction = function( p, buttonId ){
     var dia = p.findParentByType(mymdb.movie.MovieDialog);

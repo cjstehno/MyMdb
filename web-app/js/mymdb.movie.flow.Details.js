@@ -1,16 +1,16 @@
 
 mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     formUrl:'movie/details',
-    nextId:3,
-    previousId:1,
+    nextId:2,
+    previousId:0,
     initComponent: function(){
         Ext.apply(this, {
             items:[
-                { xtype:'textfield', fieldLabel:'Title', name:'title' },
-                { xtype:'numberfield', fieldLabel:'Release Year', name:'releaseYear' },
+                { xtype:'textfield', fieldLabel:'Title', name:'title', allowBlank:false, minLength:1 },
+                { xtype:'numberfield', fieldLabel:'Release Year', name:'releaseYear', allowBlank:false, allowDecimals:false, allowNegative:false, minValue:1930, maxValue:2020 },
                 { xtype:'textfield', fieldLabel:'Storage Name', name:'storageName' },
-                { xtype:'numberfield', fieldLabel:'Storage Index', name:'storageIndex' },
-                { xtype:'htmleditor', fieldLabel:'Description', name:'description', anchor:'100%', height:200 }
+                { xtype:'numberfield', fieldLabel:'Storage Index', name:'storageIndex', allowDecimals:false, allowNegative:false, minValue:1, maxValue:120 },
+                { xtype:'htmleditor', fieldLabel:'Description', name:'description', anchor:'100%', height:200, allowBlank:false }
             ]
         });
 
