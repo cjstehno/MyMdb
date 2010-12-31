@@ -10,7 +10,7 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 { xtype:'numberfield', fieldLabel:'Release Year', name:'releaseYear', allowBlank:false, allowDecimals:false, allowNegative:false, minValue:1930, maxValue:2020 },
                 { xtype:'textfield', fieldLabel:'Storage Name', name:'storageName' },
                 { xtype:'numberfield', fieldLabel:'Storage Index', name:'storageIndex', allowDecimals:false, allowNegative:false, minValue:1, maxValue:120 },
-                { xtype:'htmleditor', fieldLabel:'Description', name:'description', anchor:'100%', height:200, allowBlank:false }
+                { xtype:'htmleditor', fieldLabel:'Description', name:'description', anchor:'100%', height:260, allowBlank:false }
             ]
         });
 

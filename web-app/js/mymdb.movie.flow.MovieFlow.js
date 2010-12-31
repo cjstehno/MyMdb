@@ -23,6 +23,7 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
     formUrl:'',
     nextId:0,
     previousId:0,
+    bodyStyle:{ padding:'5px' },
     initComponent: function(){
         Ext.apply(this, {});
 
