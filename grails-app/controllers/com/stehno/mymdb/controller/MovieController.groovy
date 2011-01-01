@@ -195,16 +195,26 @@ class MovieController {
 
     def poster = { PosterDto dto ->
         if( isGet(request) ){
-            getFlow(session).poster = dto
+            def flow = getFlow(session)
+            if( !flow.poster ){
+                flow.poster = dto
+            } else {
+                dto = flow.poster
+            }
 
             render( [ success:true, data:dto ] as JSON )
         } else {
             if( dto.hasErrors() ){
-                render( errorResponse(dto,request) as JSON )
+                render( contentType:'text/html', text:(errorResponse(dto,request) as JSON).toString(false) )
 
             } else {
                 getFlow(session).poster = dto
-                render( [ success:true ] as JSON )
+
+                if( dto.posterType == 'url' ){
+                    dto.file = dto.url.toURL().getBytes()
+                }
+
+                render( contentType:'text/html', text:([success:true] as JSON).toString(false) )
             }
         }
     }

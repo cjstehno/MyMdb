@@ -17,6 +17,9 @@ package com.stehno.mymdb.dto
 
 class PosterDto {
 
+    String posterType
+    String url = 'http://'
+    byte[] file
     
 }
 
