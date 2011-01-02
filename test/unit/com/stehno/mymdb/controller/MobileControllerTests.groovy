@@ -10,13 +10,13 @@ import com.stehno.mymdb.service.MovieService
 
 class MobileControllerTests extends ControllerUnitTestCase {
 
-	@Test
+    @Test
     void index() {
         def resp = controller.index()
         assertEquals 5, resp.listItems.size()
     }
 
-	@Test
+    @Test
     void titles(){
         def titleList = ['A','C','G']
         def movieService = [ findMovieTitleLetters:{ titleList } ] as MovieService
@@ -29,7 +29,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Titles:', titleList.collect { [label:it, category:'title', id:it] }
     }
 
-	@Test
+    @Test
     void title(){
         def movieList = [
             new Movie(id:100, title:'Chicago'),
@@ -51,7 +51,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Titles: C', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
-	@Test
+    @Test
     void genres(){
         def genreList = [
             new Genre(id:100, name:'Action'),
@@ -64,7 +64,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Genres:', genreList.collect { [label:it.name, category:'genre', id:it.id] }
     }
 
-	@Test
+    @Test
     void genre(){
         mockDomain Genre, [
             new Genre(id:100, name:'Action'),
@@ -91,7 +91,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Genres: Comedy', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
-	@Test
+    @Test
     void actors(){
         def actorList = [
             new Actor(id:200, firstName:'Abe', middleName:'Bernard', lastName:'Ableman'),
@@ -106,7 +106,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
         }
     }
 
-	@Test
+    @Test
     void actor(){
         mockDomain Actor, [
             new Actor(id:200, firstName:'Abe', middleName:'Bernard', lastName:'Ableman'),
@@ -133,7 +133,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
         assertResponse 'Actors: Ableman, Abe Bernard', movieList.collect { [label:it.title, category:'movie', id:it.id] }
     }
 
-	@Test
+    @Test
     void movie(){
         controller.params.id = 135
 
@@ -151,7 +151,7 @@ class MobileControllerTests extends ControllerUnitTestCase {
 
     private def assertResponse( categoryName, expectedItems ){
         assertEquals 'index', controller.modelAndView.viewName
-        assertEquals categoryName, controller.modelAndView.model.linkedHashMap.categoryName
-        assertEquals expectedItems, controller.modelAndView.model.linkedHashMap.listItems
+        assertEquals categoryName, controller.modelAndView.model.categoryName
+        assertEquals expectedItems, controller.modelAndView.model.listItems
     }
 }
