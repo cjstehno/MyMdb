@@ -173,11 +173,7 @@ class MovieController {
     def details = { DetailsDto dto ->
         if( isGet(request) ){
             def flow = getFlow(session)
-            if( !flow.details ){
-                flow.details = dto
-            } else {
-                dto = flow.details
-            }
+            dto = extractExistingOrUse(flow, 'details', dto)
 
             dto.title = dto.title ?: flow.fetchResults.title
 
@@ -196,11 +192,7 @@ class MovieController {
     def poster = { PosterDto dto ->
         if( isGet(request) ){
             def flow = getFlow(session)
-            if( !flow.poster ){
-                flow.poster = dto
-            } else {
-                dto = flow.poster
-            }
+            dto = extractExistingOrUse(flow, 'poster', dto)
 
             render( [ success:true, data:dto ] as JSON )
         } else {
@@ -257,6 +249,15 @@ class MovieController {
     }
 
     ///
+
+    private def extractExistingOrUse( flow, dtoName, dto ){
+        def existing = flow[dtoName]
+        if( !existing ){
+            flow[dtoName] = dto
+            existing = dto
+        }
+        existing
+    }
 
     private def errorResponse( dto, request ){
         def outp = [success:false, errors:[:]]

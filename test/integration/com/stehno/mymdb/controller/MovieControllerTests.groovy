@@ -12,6 +12,7 @@ import grails.converters.JSON
 
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Storage
+import com.stehno.mymdb.dto.FetchResultsDto
 
 class MovieControllerTests extends GrailsUnitTestCase {
 	
@@ -187,6 +188,120 @@ class MovieControllerTests extends GrailsUnitTestCase {
         def jso = parseJsonResponse()
         assertFalse jso.success
         assertNotNull jso.errors
+    }
+
+    @Test
+    void details_GET(){
+        controller.session['movie.flow'] = [:]
+        controller.session['movie.flow'].fetchResults = new FetchResultsDto( title:'A Title' )
+        
+        controller.request.method = 'GET'
+
+        controller.details()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNotNull jso.data
+
+        assertNotNull controller.session['movie.flow']
+    }
+
+    @Test
+    void details_POST(){
+        controller.session['movie.flow'] = [:]
+        controller.session['movie.flow'].fetchResults = new FetchResultsDto( title:'A Title' )
+        
+        controller.request.method = 'POST'
+        controller.params.title = 'Some title'
+        controller.params.releaseYear = '2005'
+        controller.params.storageName = 'A'
+        controller.params.storageIndex = '1'
+        controller.params.description = 'blah blah blah...'
+
+        controller.details()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+
+        def flow = controller.session['movie.flow']
+        assertNotNull flow
+        assertNotNull flow.details
+        assertEquals 'Some title', flow.details.title
+        assertEquals 2005, flow.details.releaseYear
+        assertEquals 'A', flow.details.storageName
+        assertEquals 1, flow.details.storageIndex
+        assertEquals 'blah blah blah...', flow.details.description
+    }
+
+    @Test
+    void poster_GET(){
+        controller.session['movie.flow'] = [:]
+
+        controller.request.method = 'GET'
+
+        controller.poster()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNotNull jso.data
+
+        assertNotNull controller.session['movie.flow']
+        assertNotNull controller.session['movie.flow'].poster
+    }
+
+    @Test
+    void poster_POST_none(){
+        controller.session['movie.flow'] = [:]
+
+        controller.request.method = 'POST'
+        controller.params.posterType = 'none'
+
+        controller.poster()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+
+        def flow = controller.session['movie.flow']
+        assertNotNull flow
+        assertNotNull flow.poster
+        assertNull flow.file
+    }
+
+//    @Test
+//    void poster_POST_url(){
+//        controller.session['movie.flow'] = [:]
+//
+//        controller.request.method = 'POST'
+//        controller.params.posterType = 'url'
+//        controller.params.url = ''
+//
+//        controller.poster()
+//
+//        def jso = parseJsonResponse()
+//        assertTrue jso.success
+//
+//        def flow = controller.session['movie.flow']
+//        assertNotNull flow
+//        assertNotNull flow.poster
+//        assertNull flow.file
+//    }
+
+    @Test
+    void extractExistingOrUse_Use(){
+        def flow = [:]
+        def dto = [name:'SomeBean']
+        controller.extractExistingOrUse( flow, 'foo', dto)
+
+        assertEquals dto, flow.foo
+    }
+
+    @Test
+    void extractExistingOrUse_Existing(){
+        def flow = [foo:'Bar']
+        def dto = [name:'SomeBean']
+        controller.extractExistingOrUse( flow, 'foo', dto)
+
+        assertEquals 'Bar', flow.foo
     }
 
     @After
