@@ -16,6 +16,5 @@ limitations under the License.
 package com.stehno.mymdb.dto
 
 class ActorDto {
-	
+    long[] actors
 }
-

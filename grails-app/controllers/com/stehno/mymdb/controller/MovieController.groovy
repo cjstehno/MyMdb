@@ -213,7 +213,8 @@ class MovieController {
 
     def genre = { GenreDto dto ->
         if( isGet(request) ){
-            getFlow(session).genre = dto
+            def flow = getFlow(session)
+            dto = extractExistingOrUse(flow, 'genre', dto)
 
             render( [ success:true, data:dto ] as JSON )
         } else {
@@ -221,6 +222,9 @@ class MovieController {
                 render( errorResponse(dto,request) as JSON )
 
             } else {
+
+                println dto.genres
+
                 getFlow(session).genre = dto
                 render( [ success:true ] as JSON )
             }

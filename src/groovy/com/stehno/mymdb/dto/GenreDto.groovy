@@ -16,6 +16,6 @@ limitations under the License.
 package com.stehno.mymdb.dto
 
 class GenreDto {
-	
-}
 
+    long[] genres
+}

@@ -26,7 +26,9 @@ mymdb.genre.GenreManagerDialog = Ext.extend( Ext.Window ,{
                     })
                 })
             ],
-            tbar:[ mymdb.genre.NewGenreActionFactory('button'), ]
+            tbar:[
+                mymdb.genre.NewGenreActionFactory('button')
+            ]
         });
         mymdb.genre.GenreManagerDialog.superclass.initComponent.apply(this, arguments);
     }
@@ -37,7 +39,9 @@ mymdb.genre.NewGenreActionFactory = function(xt){
         xtype:xt,
         text:'New Genre',
         icon:'/mymdb/images/icons/add.png',
-        handler: function(){ new mymdb.genre.GenreDialog(); }
+        handler: function(b,e){
+            new mymdb.genre.GenreDialog();
+        }
     };
 }
 
@@ -121,7 +125,6 @@ mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
 });
 
 mymdb.genre.GenreDialog = Ext.extend( Ext.Window ,{
-    id:'genreFormDialog',
     iconCls:'icon-genre',
     autoShow:true,
     closable:true,
@@ -132,13 +135,15 @@ mymdb.genre.GenreDialog = Ext.extend( Ext.Window ,{
     height:110,
     title:'Genre',
     layout:'fit',
+    reloadTarget:'genreListView',
     initComponent: function(){
         Ext.apply(this, {
-            items:[ {xtype:'genreformpanel'} ]
+            items:[ {xtype:'genreformpanel', reloadTarget:this.reloadTarget} ]
         });
         mymdb.genre.GenreDialog.superclass.initComponent.apply(this, arguments);
     }
 });
+Ext.reg('genre-dialog', mymdb.genre.GenreDialog);
 
 mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
     labelWidth:50,
@@ -166,10 +171,8 @@ mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Genre saved successfully', function(){
-                                   // FIXME: turn these into event fires so listeners can handle these operations
-                                   //   rather than havign to force the issue this way
-                                   Ext.getCmp('genreFormDialog').close();
-                                   Ext.getCmp('genreListView').getStore().load();
+                                   formPanel.findParentByType('genre-dialog').close();
+                                   Ext.getCmp(formPanel.reloadTarget).getStore().load();
                                });
                             },
                             failure: function(form, action) {
@@ -190,7 +193,7 @@ mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                 },
                 {
                     text: 'Cancel',
-                    handler:function(b,e){ Ext.getCmp('genreFormDialog').close(); }
+                    handler:function(b,e){ b.findParentByType('genre-dialog').close(); }
                 }
             ]
         });

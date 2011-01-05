@@ -19,3 +19,4 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     }
 });
 Ext.reg('movieflow-actor', mymdb.movie.flow.ActorsView);
+
