@@ -1,0 +1,13 @@
+<atlassian-ide-plugin>
+  <project-configuration>
+    <servers>
+      <jira>
+        <server-id>a2d0c550-2deb-4760-b0d8-4a7c06a5aae5</server-id>
+        <name>Local</name>
+        <url>http://192.168.1.9:8080/jira</url>
+        <shared>false</shared>
+      </jira>
+    </servers>
+    <default-jira-server>a2d0c550-2deb-4760-b0d8-4a7c06a5aae5</default-jira-server>
+  </project-configuration>
+</atlassian-ide-plugin>

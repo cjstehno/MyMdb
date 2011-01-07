@@ -16,11 +16,8 @@ limitations under the License.
 package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.dto.*
-
 import grails.converters.JSON
+import com.stehno.mymdb.dto.*
 
 class MovieController {
 
@@ -222,9 +219,6 @@ class MovieController {
                 render( errorResponse(dto,request) as JSON )
 
             } else {
-
-                println dto.genres
-
                 getFlow(session).genre = dto
                 render( [ success:true ] as JSON )
             }
@@ -233,7 +227,8 @@ class MovieController {
 
     def actor = { ActorDto dto ->
         if( isGet(request) ){
-            getFlow(session).actor = dto
+            def flow = getFlow(session)
+            dto = extractExistingOrUse(flow, 'actor', dto)
 
             render( [ success:true, data:dto ] as JSON )
         } else {

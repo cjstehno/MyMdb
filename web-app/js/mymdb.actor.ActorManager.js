@@ -134,6 +134,9 @@ mymdb.actor.ActorDialog = Ext.extend( Ext.Window ,{
             items:[ {xtype:'actorformpanel'} ]
         });
         mymdb.actor.ActorDialog.superclass.initComponent.apply(this, arguments);
+    },
+    onSave:function(){
+        Ext.getCmp('actorListView').getStore().load();
     }
 });
 
@@ -178,8 +181,9 @@ mymdb.actor.ActorFormPanel = Ext.extend( Ext.FormPanel, {
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Actor saved successfully', function(){
-                                   Ext.getCmp('actorFormDialog').close();
-                                   Ext.getCmp('actorListView').getStore().load();
+                                    var dia = Ext.getCmp('actorFormDialog');
+                                    dia.close();
+                                    dia.onSave();
                                });
                             },
                             failure: function(form, action) {

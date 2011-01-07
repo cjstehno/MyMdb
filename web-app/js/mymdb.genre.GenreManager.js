@@ -135,12 +135,14 @@ mymdb.genre.GenreDialog = Ext.extend( Ext.Window ,{
     height:110,
     title:'Genre',
     layout:'fit',
-    reloadTarget:'genreListView',
     initComponent: function(){
         Ext.apply(this, {
-            items:[ {xtype:'genreformpanel', reloadTarget:this.reloadTarget} ]
+            items:[ {xtype:'genreformpanel' } ]
         });
         mymdb.genre.GenreDialog.superclass.initComponent.apply(this, arguments);
+    },
+    onSave:function(){
+        Ext.getCmp('genreListView').getStore().load();
     }
 });
 Ext.reg('genre-dialog', mymdb.genre.GenreDialog);
@@ -171,8 +173,9 @@ mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Genre saved successfully', function(){
-                                   formPanel.findParentByType('genre-dialog').close();
-                                   Ext.getCmp(formPanel.reloadTarget).getStore().load();
+                                   var dia = formPanel.findParentByType('genre-dialog');
+                                   dia.close();
+                                   dia.onSave();
                                });
                             },
                             failure: function(form, action) {

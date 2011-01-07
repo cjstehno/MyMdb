@@ -7,23 +7,18 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         Ext.apply(this, {
             items:[
                 { xtype:'label', text:'Select genres for movie:' },
-                {
-                    xtype:'panel',
-                    border:false,
-                    layout:'hbox',
-                    items:[
-                        { xtype:'movieflow-selector-availablepanel' },
-                        { xtype:'movieflow-selector-buttons' },
-                        { xtype:'movieflow-selector-selectedpanel' },
-                    ]
-                },
+                { xtype:'movieflow-itemselector', availableUrl:'genre/list' },
                 { 
                     xtype:'button',
                     text:'New Genre',
                     style:{padding:'4px'},
                     icon:'/mymdb/images/icons/add.png',
-                    handler: function(){ 
-                        new mymdb.genre.GenreDialog({reloadTarget:'available-items'});
+                    handler: function(b,e){
+                        new mymdb.genre.GenreDialog({
+                            onSave:function(){
+                                (b.findParentByType('movieflow-genre').find('itemId', 'selector-available')[0]).getStore().load();
+                            }
+                        });
                     }
                 }
             ]
@@ -40,7 +35,7 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         var panel = this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel);
         var nid = this.nextId;
 
-        var selectedRecs = (this.findByType('movieflow-selector-selectedlist')[0]).getStore().getRange();
+        var selectedRecs = (this.find('itemId','selector-selected')[0]).getStore().getRange();
         var genreIds = [];
         Ext.each(selectedRecs, function(it){
             genreIds.push(it.data.id);
@@ -62,135 +57,117 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
 });
 Ext.reg('movieflow-genre', mymdb.movie.flow.GenresView);
 
-mymdb.movie.flow.AvailableItemsPanel = Ext.extend( Ext.Panel, {
-    width:275,
-    height:350,
-    autoScroll:true,
-    initComponent: function(){
-        Ext.apply(this, {
-            items:[
-                {
-                    xtype:'movieflow-selector-availablelist',
-                    store:new Ext.data.JsonStore({
-                        url:'genre/list',
-                        autoLoad: true,
-                        autoDestroy: true,
-                        storeId: 'movie-flow-genres-avail',
-                        root: 'items',
-                        idProperty: 'id',
-                        fields: ['id','label']
-                    })
-                }
-            ]
-        });
-
-        mymdb.movie.flow.AvailableItemsPanel.superclass.initComponent.apply(this, arguments);
-    }
-});
-Ext.reg('movieflow-selector-availablepanel', mymdb.movie.flow.AvailableItemsPanel);
-
-mymdb.movie.flow.SelectorButtonPanel = Ext.extend( Ext.Panel, {
-    width:45,
-    height:300,
+mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
     border:false,
+    layout:'hbox',
     initComponent: function(){
         Ext.apply(this, {
             items:[
                 {
-                    xtype:'button',
-                    icon:'/mymdb/images/icons/next.png',
-                    style:{padding:'11px'},
-                    handler:function(b,e){
-                        mymdb.movie.flow.MoveItemFunction(b,true);
-                    }
+                    xtype:'movieflow-itemselector-listpanel',
+                    items:[
+                        {
+                            xtype:'movieflow-selector-itemslist',
+                            itemId:'selector-available',
+                            columns: [{header:'Available', dataIndex:'label'}],
+                            store:new Ext.data.JsonStore({
+                                url:this.availableUrl,
+                                autoLoad: true,
+                                autoDestroy: true,
+                                root: 'items',
+                                idProperty: 'id',
+                                fields: ['id','label']
+                            })
+                        }
+                    ]
                 },
-                { 
-                    xtype:'button',
-                    icon:'/mymdb/images/icons/back.png',
-                    style:{padding:'11px'},
-                    handler:function(b,e){
-                        mymdb.movie.flow.MoveItemFunction(b,false);
-                    }
+                {
+                    xtype:'panel',
+                    width:45,
+                    height:300,
+                    border:false,
+                    items:[
+                        {
+                            xtype:'button',
+                            icon:'/mymdb/images/icons/next.png',
+                            style:{padding:'11px'},
+                            handler:function(b,e){
+                                b.findParentByType('movieflow-itemselector').moveSelectedItems(true);
+                            }
+                        },
+                        {
+                            xtype:'button',
+                            icon:'/mymdb/images/icons/back.png',
+                            style:{padding:'11px'},
+                            handler:function(b,e){
+                                b.findParentByType('movieflow-itemselector').moveSelectedItems(false);
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype:'movieflow-itemselector-listpanel',
+                    items:[
+                        {
+                            xtype:'movieflow-selector-itemslist',
+                            itemId:'selector-selected',
+                            columns: [{header:'Selected', dataIndex:'label'}],
+                            moveRight:false,
+                            store: []
+                        }
+                    ]
                 }
             ]
         });
 
-        mymdb.movie.flow.SelectorButtonPanel.superclass.initComponent.apply(this, arguments);
+        mymdb.movie.flow.ItemSelector.superclass.initComponent.apply(this, arguments);
+    },
+    moveSelectedItems:function(moveRight){
+        var fromList = this.find('itemId', 'selector-available')[0];
+        var toList = this.find('itemId', 'selector-selected')[0];
+
+        if(!moveRight){
+            var tmp = fromList;
+            fromList = toList;
+            toList = tmp;
+        }
+
+        if( fromList.getSelectionCount() > 0 ){
+            var recs = fromList.getSelectedRecords();
+            fromList.getStore().remove(recs);
+
+            toList.getStore().add(recs);
+        }
     }
 });
-Ext.reg('movieflow-selector-buttons', mymdb.movie.flow.SelectorButtonPanel);
+Ext.reg('movieflow-itemselector', mymdb.movie.flow.ItemSelector);
 
-mymdb.movie.flow.MoveItemFunction = function(ctx,moveRight){
-    var parent = ctx.findParentByType(mymdb.movie.flow.GenresView);
-    var fromList = parent.findByType('movieflow-selector-availablelist')[0];
-    var toList = parent.findByType('movieflow-selector-selectedlist')[0];
-
-    if(!moveRight){
-        var tmp = fromList;
-        fromList = toList;
-        toList = tmp;
-    }
-
-    if( fromList.getSelectionCount() > 0 ){
-        var recs = fromList.getSelectedRecords();
-        fromList.getStore().remove(recs);
-
-        toList.getStore().add(recs);
-    }
-};
-
-mymdb.movie.flow.SelectedItemsPanel = Ext.extend( Ext.Panel, {
+mymdb.movie.flow.ItemSelectorListPanel = Ext.extend(Ext.Panel, {
     width:275,
     height:350,
     autoScroll:true,
     initComponent: function(){
-        Ext.apply(this, {
-            items:[
-                { 
-                    xtype:'movieflow-selector-selectedlist',
-                    store: []
-                }
-            ]
-        });
+        Ext.apply(this, {});
 
-        mymdb.movie.flow.SelectedItemsPanel.superclass.initComponent.apply(this, arguments);
+        mymdb.movie.flow.ItemSelectorListPanel.superclass.initComponent.apply(this, arguments);
     }
 });
-Ext.reg('movieflow-selector-selectedpanel', mymdb.movie.flow.SelectedItemsPanel);
+Ext.reg('movieflow-itemselector-listpanel', mymdb.movie.flow.ItemSelectorListPanel);
 
-mymdb.movie.flow.AvailableItemsList = Ext.extend( Ext.list.ListView, {
-    id:'available-items',
+mymdb.movie.flow.ItemSelectorItemsList = Ext.extend( Ext.list.ListView, {
     emptyText: 'None available.',
     loadingText:'Loading...',
     reserveScrollOffset: true,
     hideHeaders:false,
     multiSelect:true,
-    columns: [{header:'Available', dataIndex:'label'}],
-
+    moveRight:true,
     initComponent: function(){
-        mymdb.movie.flow.AvailableItemsList.superclass.initComponent.apply(this, arguments);
+        mymdb.movie.flow.ItemSelectorItemsList.superclass.initComponent.apply(this, arguments);
 
         this.on( 'dblclick', function(dataView,idx,node,evt){
-            mymdb.movie.flow.MoveItemFunction(dataView,true);
+            dataView.findParentByType('movieflow-itemselector').moveSelectedItems(this.moveRight);
         });
     }
 });
-Ext.reg('movieflow-selector-availablelist', mymdb.movie.flow.AvailableItemsList);
+Ext.reg('movieflow-selector-itemslist',mymdb.movie.flow.ItemSelectorItemsList);
 
-mymdb.movie.flow.SelectedItemsList = Ext.extend( Ext.list.ListView, {
-    emptyText: 'None selected.',
-    loadingText:'Loading...',
-    reserveScrollOffset: true,
-    hideHeaders:false,
-    multiSelect:true,
-    columns: [{header:'Selected', dataIndex:'label'}],
-
-    initComponent: function(){
-        mymdb.movie.flow.SelectedItemsList.superclass.initComponent.apply(this, arguments);
-
-        this.on( 'dblclick', function(dataView,idx,node,evt){
-            mymdb.movie.flow.MoveItemFunction(dataView,false);
-        });
-    }
-});
-Ext.reg('movieflow-selector-selectedlist', mymdb.movie.flow.SelectedItemsList);
