@@ -1,18 +1,14 @@
 package com.stehno.mymdb.controller
 
-import com.stehno.mymdb.domain.Movie 
-import grails.test.GrailsUnitTestCase
-import java.io.StringReader 
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import grails.converters.JSON
-
 import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Storage
 import com.stehno.mymdb.dto.FetchResultsDto
+import grails.converters.JSON
+import grails.test.GrailsUnitTestCase
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 
 class MovieControllerTests extends GrailsUnitTestCase {
 	
@@ -285,6 +281,76 @@ class MovieControllerTests extends GrailsUnitTestCase {
 //        assertNotNull flow.poster
 //        assertNull flow.file
 //    }
+
+    @Test
+    void genres_GET(){
+        controller.session['movie.flow'] = [:]
+
+        controller.request.method = 'GET'
+        controller.genre()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNotNull jso.data
+
+        assertNotNull controller.session['movie.flow']
+        assertNotNull controller.session['movie.flow'].genre
+    }
+
+    @Test
+    void genres_POST(){
+        controller.session['movie.flow'] = [:]
+
+        controller.request.method = 'GET'
+        controller.params.genres = ['1','3']
+
+        controller.genre()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNotNull jso.data
+
+        assertNotNull controller.session['movie.flow']
+
+        def genre = controller.session['movie.flow'].genre
+        assertNotNull genre
+        assertEquals( [1,3], genre.genres )
+    }
+
+    @Test
+    void actors_GET(){
+        controller.session['movie.flow'] = [:]
+
+        controller.request.method = 'GET'
+        controller.actor()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNotNull jso.data
+
+        assertNotNull controller.session['movie.flow']
+        assertNotNull controller.session['movie.flow'].actor
+    }
+
+    @Test
+    void actors_POST(){
+        controller.session['movie.flow'] = [:]
+
+        controller.request.method = 'GET'
+        controller.params.actors = ['1','3']
+
+        controller.actor()
+
+        def jso = parseJsonResponse()
+        assertTrue jso.success
+        assertNotNull jso.data
+
+        assertNotNull controller.session['movie.flow']
+
+        def actor = controller.session['movie.flow'].actor
+        assertNotNull actor
+        assertEquals( [1,3], actor.actors )
+    }
 
     @Test
     void extractExistingOrUse_Use(){
