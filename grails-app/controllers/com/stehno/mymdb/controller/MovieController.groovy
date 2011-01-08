@@ -15,7 +15,9 @@ limitations under the License.
  */
 package com.stehno.mymdb.controller
 
+import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.Actor
 import grails.converters.JSON
 import com.stehno.mymdb.dto.*
 
@@ -243,8 +245,31 @@ class MovieController {
     }
 	
     // this is where the form data would be finally submitted (validation should be done at each step
-    def finish = {
-        render( [ success:true, data:[ flowkey:100 ] ] as JSON )
+    def summary = {
+        if( isGet(request) ){
+            def flow = getFlow(session)
+
+            def genres = flow.genre.genres.collect { Genre.get(it) }
+            def actors = flow.actor.actors.collect { Actor.get(it) }
+
+            [
+                title:flow.details.title,
+                releaseYear:flow.details.releaseYear,
+                storage:"${flow.details.storageName}-${flow.details.storageIndex}",
+                description:flow.details.description,
+                genres:genres,
+                actors:actors
+            ]
+
+        } else {
+            if( dto.hasErrors() ){
+                render( errorResponse(dto,request) as JSON )
+
+            } else {
+                getFlow(session).actor = dto
+                render( [ success:true ] as JSON )
+            }
+        }
     }
 
     ///

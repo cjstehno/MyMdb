@@ -1,7 +1,5 @@
 package com.stehno.mymdb.controller
 
-import com.stehno.mymdb.domain.Movie
-
 class PosterController {
 
     def movieService
@@ -14,4 +12,15 @@ class PosterController {
             response.sendRedirect "${request.contextPath}/images/nocover.jpg"
         }
 	}
+
+    private static final def FLOWKEY = 'movie.flow'
+
+    def flow = {
+        def f = session[FLOWKEY]
+        if(f && f.poster.posterType != 'none'){
+             response.outputStream.withStream { it << f.poster.file }
+        } else {
+            response.sendRedirect "${request.contextPath}/images/nocover.jpg"
+        }
+    }
 }
