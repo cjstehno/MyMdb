@@ -1,21 +1,17 @@
 package com.stehno.mymdb.service
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import grails.test.*
-
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.Storage
+import grails.test.GrailsUnitTestCase
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import com.stehno.mymdb.domain.*
 
 class MovieServiceTests extends GrailsUnitTestCase {
 
     def movieService
     private def horror
     private def johnQPublic
+    private def moviePoster
 
 	@Before
     void before(){
@@ -23,6 +19,7 @@ class MovieServiceTests extends GrailsUnitTestCase {
 
         horror = new Genre(name:'Horror').save()
         johnQPublic = new Actor(firstName:'John', middleName:'Quincy', lastName:'Public').save()
+        moviePoster = new Poster(title:'Movie Poster', content:'foo'.getBytes()).save()
     }
 
 	@Test
@@ -143,9 +140,7 @@ class MovieServiceTests extends GrailsUnitTestCase {
     }
 
     private def addMovie( title, Closure c = defaultMovieBuilder ){
-        def movie = new Movie(title:title, description:'something...',
-            poster:'foo'.getBytes()
-        )
+        def movie = new Movie( title:title, description:'something...', poster:moviePoster )
         c.call movie
         movie.addToGenres horror
         movie.addToActors johnQPublic

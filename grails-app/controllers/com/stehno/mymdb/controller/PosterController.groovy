@@ -20,6 +20,8 @@ import com.stehno.mymdb.dto.PosterType
 
 class PosterController {
 
+    private static final def DEFAULT_POSTER = '/images/nocover.jpg'
+
     def movieService
 
     /**
@@ -29,11 +31,10 @@ class PosterController {
      */
 	def image = {
         def poster = movieService.findPoster(params.id as Long)
-        if( poster ){
-            response.outputStream.withStream { it << poster }
-        } else {
-            response.sendRedirect "${request.contextPath}/images/nocover.jpg"
+        if( !poster ){
+            poster = servletContext.getResource(DEFAULT_POSTER).getBytes()
         }
+        response.outputStream.withStream { it << poster }
 	}
 
     // TODO: move this to a flow service
@@ -45,8 +46,8 @@ class PosterController {
      */
     def flow = {
         def f = session[FLOWKEY]
-        if( f == null || f.poster.posterType == PosterType.NONE ){
-            response.sendRedirect "${request.contextPath}/images/nocover.jpg"
+        if( f == null || f.poster.posterType == null || f.poster.posterType == PosterType.NONE ){
+            response.outputStream.withStream { it << servletContext.getResource(DEFAULT_POSTER).getBytes() }
         } else if(f.poster.posterType == PosterType.EXISTING){
             response.outputStream.withStream { it << Poster.get(f.poster.posterId).content }
         } else {

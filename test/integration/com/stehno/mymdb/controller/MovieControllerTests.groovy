@@ -218,7 +218,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         controller.session['movie.flow'] = [:]
 
         controller.request.method = 'POST'
-        controller.params.posterType = 'none'
+        controller.params.posterType = 'NONE'
 
         controller.poster()
 
