@@ -42,8 +42,8 @@ mymdb.app = function() {
             text:'New Movie',
             iconCls:'icon-add-movie',
             handler: function(){ new mymdb.movie.MovieDialog(); }
-        }),        
- 
+        }),
+
         // public methods
         init: function() {
 			new Ext.Viewport({

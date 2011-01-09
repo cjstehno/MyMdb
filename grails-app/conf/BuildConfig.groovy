@@ -54,7 +54,8 @@ grails.war.resources = { stagingDir, args ->
                 maxIdle:myConfig.mymdb.jndi.dataSource.pool.maxIdle,
                 maxWait:myConfig.mymdb.jndi.dataSource.pool.maxWait,
                 removeAbandoned:myConfig.mymdb.jndi.dataSource.pool.removeAbandoned,
-                removeAbandonedTimeout:myConfig.mymdb.jndi.dataSource.pool.removeAbandonedTimeout
+                removeAbandonedTimeout:myConfig.mymdb.jndi.dataSource.pool.removeAbandonedTimeout,
+                validationQuery:'select 1'
             )
         }
     }

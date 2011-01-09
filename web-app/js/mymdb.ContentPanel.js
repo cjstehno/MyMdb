@@ -1,7 +1,30 @@
 
 mymdb.MovieDetailsTab = Ext.extend( Ext.Panel, {
-    title:'Movie',
-    closable:true
+    closable:true,
+    layout:'fit',
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                {
+                    xtype:'panel',
+                    autoHeight:true,
+                    autoLoad:'browser/details?mid=' + this.movieId,
+                    tbar:[
+                        {
+                            xtype:'button',
+                            text:'Edit Movie',
+                            icon:'/mymdb/images/icons/edit.png',
+                            handler:function(){
+                                new mymdb.movie.MovieDialog({ movieId:this.movieId });
+                            }
+                        }
+                    ]
+                }
+            ]
+        });
+
+        mymdb.MovieDetailsTab.superclass.initComponent.apply(this, arguments);
+    }
 });
 Ext.reg('movietab', mymdb.MovieDetailsTab);
 
@@ -38,10 +61,10 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
 
         mymdb.MovieGridPanel.superclass.initComponent.apply(this, arguments);
 
-        this.on( 'rowclick', function(g,idx,evt){
+        this.on( 'rowdblclick', function(g,idx,evt){
             var selectedMovie = g.store.getAt(idx);
             var cmp = Ext.getCmp('contentPanel');
-            cmp.add( new mymdb.MovieDetailsTab({ title:selectedMovie.data.ti, autoLoad:'browser/details?mid=' + selectedMovie.data.mid }) );
+            cmp.add( new mymdb.MovieDetailsTab({ title:selectedMovie.data.ti, movieId:selectedMovie.data.mid }) );
             cmp.activate(cmp.items.length-1);
         });
         
@@ -56,30 +79,15 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
 mymdb.MovieListContextPopupFactory = function( grid, idx ){
     return new Ext.menu.Menu({
         items:[
-            { 
-            	xtype:'menuitem',
-            	text:'New Movie',
-            	icon:'/mymdb/images/icons/add.png'
-            },
+            mymdb.app.openNewMovieAction,
             {
                 xtype:'menuitem',
                 text:'Edit Movie',
                 icon:'/mymdb/images/icons/edit.png',
-            	handler:function(){
-            	    var movieId = grid.getStore().getAt( idx ).data.mid;
-            	    var dialog = new mymdb.movie.MovieDialog({autoShow:false});
-            	    // dialog.get(0).getForm().load({
-            	    //     url: 'movie/edit',
-            	    //     params:{ id:movieId },
-            	    //     method:'GET',
-            	    //     failure: function(form, action) {
-            	    //         Ext.Msg.alert('Load Failure', action.result.errorMessage);
-            	    //     }
-            	    // });
-            	    
-            	    dialog.show();
-            	}
-            },            
+                handler:function(){
+                    new mymdb.movie.MovieDialog({ movieId:grid.getStore().getAt( idx ).data.mid });
+                }
+            },
             {
                 xtype:'menuitem',
                 text:'Delete Movie',

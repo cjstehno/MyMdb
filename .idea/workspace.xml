@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b1da19fc-80ea-4ec3-a8a4-2366a416c058" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy" afterPath="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/integration/com/stehno/mymdb/controller/MovieControllerTests.groovy" afterPath="$PROJECT_DIR$/test/integration/com/stehno/mymdb/controller/MovieControllerTests.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.movie.MovieManager.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.movie.MovieManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy" afterPath="$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/views/browser/details.gsp" afterPath="$PROJECT_DIR$/grails-app/views/browser/details.gsp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.ContentPanel.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.ContentPanel.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.app.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.app.js" />
     </list>
     <ignored path="MyMdb.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,52 +65,35 @@
     <favorites_list name="MyMdb" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.47697842">
-      <split-first>
-        <leaf>
-          <file leaf-file-name="MovieController.groovy" pinned="false" current="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="239" column="53" selection-start="7559" selection-end="7559" vertical-scroll-proportion="0.2589928">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="mymdb.movie.flow.Summary.js" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="7" column="19" selection-start="210" selection-end="210" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="mymdb.movie.flow.MovieFlow.js" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="35" column="20" selection-start="1073" selection-end="1073" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="MovieControllerTests.groovy" pinned="false" current="true" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/test/integration/com/stehno/mymdb/controller/MovieControllerTests.groovy">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="344" column="23" selection-start="9273" selection-end="9273" vertical-scroll-proportion="0.20338982">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf>
+      <file leaf-file-name="mymdb.movie.flow.MovieFlow.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="0" selection-start="653" selection-end="653" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mymdb.ContentPanel.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.ContentPanel.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="83" selection-start="662" selection-end="662" vertical-scroll-proportion="0.3371105">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mymdb.app.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="46" column="1" selection-start="1521" selection-end="1521" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -135,6 +118,10 @@
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.MovieManager.js" />
         <option value="$PROJECT_DIR$/test/integration/com/stehno/mymdb/controller/MovieControllerTests.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/views/browser/details.gsp" />
+        <option value="$PROJECT_DIR$/web-app/js/mymdb.app.js" />
+        <option value="$PROJECT_DIR$/web-app/js/mymdb.ContentPanel.js" />
       </list>
     </option>
   </component>
@@ -172,7 +159,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -183,7 +170,31 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="Favorites" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMdb" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMdb" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMdb" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Artifacts" />
@@ -388,7 +399,7 @@
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24964029" sideWeight="0.67017084" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.24964029" sideWeight="0.67017084" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -509,41 +520,6 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.actor.ActorManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="182" column="71" selection-start="6478" selection-end="6478" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Genres.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="78" selection-start="292" selection-end="354" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Actors.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="0" selection-start="2018" selection-end="2018" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/groovy/com/stehno/mymdb/dto/GenreDto.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="6" selection-start="620" selection-end="620" vertical-scroll-proportion="0.3255814" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.FetchResults.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="66" selection-start="1017" selection-end="1017" vertical-scroll-proportion="0.5362517" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/groovy/com/stehno/mymdb/dto/PosterDto.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="6" selection-start="620" selection-end="620" vertical-scroll-proportion="0.3255814" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/views/browser/details.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="94" selection-start="19" selection-end="101" vertical-scroll-proportion="0.04087591" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="67" selection-start="575" selection-end="575" vertical-scroll-proportion="0.39548022" />
@@ -564,37 +540,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="20" selection-start="1073" selection-end="1073" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.MovieManager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="53" column="0" selection-start="1859" selection-end="1859" vertical-scroll-proportion="1.0150479">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/views/movie/summary.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="38" selection-start="890" selection-end="890" vertical-scroll-proportion="0.44963503">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="19" selection-start="210" selection-end="210" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="239" column="53" selection-start="7559" selection-end="7559" vertical-scroll-proportion="0.2589928">
           <folding />
         </state>
       </provider>
@@ -606,6 +554,83 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="19" selection-start="210" selection-end="210" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mymdb-config.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="233" column="56" selection-start="7297" selection-end="7297" vertical-scroll-proportion="0.1381295">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.CategoriesPanel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.17236662">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="41" selection-start="2451" selection-end="2451" vertical-scroll-proportion="0.6169631">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/views/movie/summary.gsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="967" vertical-scroll-proportion="-0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/views/browser/details.gsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="8" selection-start="366" selection-end="366" vertical-scroll-proportion="0.10218978">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.Dialogs.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="1" selection-start="1521" selection-end="1521" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="0" selection-start="653" selection-end="653" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.ContentPanel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="83" selection-start="662" selection-end="662" vertical-scroll-proportion="0.3371105">
+          <folding />
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="grailsSettings">
     <option name="map">
@@ -613,7 +638,7 @@
         <entry key="MyMdb">
           <value>
             <GrailsSettings>
-              <option name="buildConfigCrc" value="-508367284" />
+              <option name="buildConfigCrc" value="1757753984" />
               <option name="pluginDependenciesCrc" value="1864538575" />
               <option name="properties">
                 <map>
