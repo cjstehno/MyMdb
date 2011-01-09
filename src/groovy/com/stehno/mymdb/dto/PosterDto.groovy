@@ -15,11 +15,23 @@ limitations under the License.
  */
 package com.stehno.mymdb.dto
 
+/**
+ * MovieManager wizard DTO for the poster panel. The posterType field value will specify which of the other properties should be specified.
+ *
+ * NONE - no value
+ * FILE - file property (uploaded file data)
+ * URL - url property (url of image to be copied), should populate file data
+ * EXISTING - posterId of existing poster
+ */
 class PosterDto {
 
-    String posterType
+    PosterType posterType
     String url = 'http://'
     byte[] file
-    
+    long posterId
+}
+
+enum PosterType {
+    NONE, FILE, EXISTING, URL
 }
 

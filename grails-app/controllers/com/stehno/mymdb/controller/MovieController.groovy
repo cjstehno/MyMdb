@@ -15,11 +15,8 @@ limitations under the License.
  */
 package com.stehno.mymdb.controller
 
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Storage
 import grails.converters.JSON
+import com.stehno.mymdb.domain.*
 import com.stehno.mymdb.dto.*
 
 class MovieController {
@@ -28,83 +25,83 @@ class MovieController {
 
     def messageSource
 
-    def update = {
-        def outp = [:]
+//    def update = {
+//        def outp = [:]
+//
+//        def movie = Movie.get(params.id)
+//        if (movie) {
+//            if (params.version) {
+//                def version = params.version.toLong()
+//                if (movie.version > version) {
+//                    outp.success = false
+//                    outp.errors = ['general':'Another user has updated this Movie while you were editing']
+//
+//                    render outp as JSON
+//                    return
+//                }
+//            }
+//
+//            // protect the existing image data
+//            def posterHolder = null
+//            if(params.poster.bytes.length == 0){
+//                posterHolder = movie.poster
+//            }
+//
+//            movie.properties = params
+//            if(posterHolder){
+//                movie.poster = posterHolder
+//            }
+//
+//            if(movie.storage){
+//                movie.storage.name = movie.storage.name.toUpperCase()
+//            }
+//
+//            if (!movie.hasErrors() && movie.save(flush: true)) {
+//                //movie.setTags( params.tags?.split().toList() )
+//
+//                outp.success = true
+//
+//            } else {
+//                outp.success = false
+//                outp.errors = [:]
+//                movie.errors.fieldErrors.each {
+//                    outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+//                }
+//            }
+//
+//        } else {
+//            outp.success = false
+//            outp.errors = ['general':"${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"]
+//        }
+//
+//        render( contentType:'text/html', text:(outp as JSON).toString(false) )
+//    }
 
-        def movie = Movie.get(params.id)
-        if (movie) {
-            if (params.version) {
-                def version = params.version.toLong()
-                if (movie.version > version) {
-                    outp.success = false
-                    outp.errors = ['general':'Another user has updated this Movie while you were editing']
-
-                    render outp as JSON
-                    return
-                }
-            }
-			
-            // protect the existing image data
-            def posterHolder = null
-            if(params.poster.bytes.length == 0){
-                posterHolder = movie.poster
-            }
-			
-            movie.properties = params
-            if(posterHolder){
-                movie.poster = posterHolder
-            }
-			
-            if(movie.storage){
-                movie.storage.name = movie.storage.name.toUpperCase()
-            }
-			
-            if (!movie.hasErrors() && movie.save(flush: true)) {
-                //movie.setTags( params.tags?.split().toList() )
-				
-                outp.success = true
-				
-            } else {
-                outp.success = false
-                outp.errors = [:]
-                movie.errors.fieldErrors.each {
-                    outp.errors[it.field] = messageSource.getMessage( it, request.locale)
-                }
-            }
-
-        } else {
-            outp.success = false
-            outp.errors = ['general':"${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"]
-        }
-
-        render( contentType:'text/html', text:(outp as JSON).toString(false) )
-    }
-
-    def edit = {
-        def outp = [:]
-
-        def movie = Movie.get(params.id)
-        if (!movie){
-            outp.success = false
-            outp.errorMessage = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-
-        } else {
-            outp.success = true
-            outp.data = [
-                id:movie.id,
-                version:movie.version,
-                title:movie.title,
-                description:movie.description,
-                releaseYear:movie.releaseYear,
-				'storage.name':movie.storage.name, 
-				'storage.index':movie.storage.index,
-				'genres':movie.genres?.collect { g-> g.id },
-				'actors':movie.actors?.collect {a-> a.id }
-            ]
-        }
-
-        render outp as JSON
-    }
+//    def edit = {
+//        def outp = [:]
+//
+//        def movie = Movie.get(params.id)
+//        if (!movie){
+//            outp.success = false
+//            outp.errorMessage = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
+//
+//        } else {
+//            outp.success = true
+//            outp.data = [
+//                id:movie.id,
+//                version:movie.version,
+//                title:movie.title,
+//                description:movie.description,
+//                releaseYear:movie.releaseYear,
+//				'storage.name':movie.storage.name,
+//				'storage.index':movie.storage.index,
+//				'genres':movie.genres?.collect { g-> g.id },
+//				'actors':movie.actors?.collect {a-> a.id }
+//            ]
+//        }
+//
+//        render outp as JSON
+//    }
 	
     def delete = {
         def movie = Movie.get(params.id)
@@ -161,7 +158,10 @@ class MovieController {
             description:movie.description
         )
 
-        flow.poster = new PosterDto()
+        flow.poster = new PosterDto(
+            posterType:PosterType.EXISTING,
+            posterId:movie.poster.id
+        )
 
         flow.genre = new GenreDto(
             genres:movie.genres.collect { it.id }
@@ -207,7 +207,7 @@ class MovieController {
             } else {
                 getFlow(session).poster = dto
 
-                if( dto.posterType == 'url' ){
+                if( dto.posterType == PosterType.URL ){
                     dto.file = dto.url.toURL().getBytes()
                 }
 
@@ -275,7 +275,7 @@ class MovieController {
             movie.releaseYear = flow.details.releaseYear
             movie.storage = new Storage( name:flow.details.storageName?.toUpperCase(), index:flow.details.storageIndex )
             movie.description = flow.details.description
-            movie.poster = flow.poster.file
+//            movie.poster = new Posterflow.poster.file TODO: needs to be converted to the new format
 
             flow.genre.genres?.each {
                 movie.addToGenres( Genre.get(it) )

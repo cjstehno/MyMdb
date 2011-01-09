@@ -17,7 +17,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 {
                     xtype:'panel',
                     padding:4,
-                    html:'<div>Select movie poster to use:</div><div style="margin-top:4px;"><img src="/mymdb/images/noposter.jpg" width="80" height="122"/></div>',
+                    html:'<div>Select movie poster to use:</div><div style="margin-top:4px;"><img src="/mymdb/poster/flow" width="80" height="122"/></div>',
                     border:false,
                     height:150,
                     colspan:2
@@ -25,7 +25,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 {
                     xtype: 'radio',
                     name:'posterType',
-                    inputValue:'url',
+                    inputValue:'URL',
                     hideLabel:true,
                     boxLabel:'URL:',
                     checked:true,
@@ -53,7 +53,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 {
                     xtype: 'radio',
                     name:'posterType',
-                    inputValue:'file',
+                    inputValue:'FILE',
                     hideLabel:true,
                     boxLabel:'File:',
                     width:75,
@@ -81,7 +81,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 {
                     xtype: 'radio',
                     name:'posterType',
-                    inputValue:'existing',
+                    inputValue:'EXISTING',
                     hideLabel:true,
                     boxLabel:'Existing:',
                     width:75,
@@ -93,8 +93,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                         } else {
                             // disable selector
                         }
-                    },
-                    disabled:true
+                    }
                 },
                 {
                     xtype:'button', 
@@ -105,7 +104,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 {
                     xtype: 'radio',
                     name:'posterType',
-                    inputValue:'none',
+                    inputValue:'NONE',
                     hideLabel:true,
                     boxLabel:'None',
                     colspan:2,

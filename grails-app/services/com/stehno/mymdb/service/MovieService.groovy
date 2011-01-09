@@ -28,7 +28,7 @@ class MovieService {
      */
     def findPoster( movieId ){
         def movie = Movie.get(movieId)
-        movie && movie.poster && movie.poster.size() != 0 ? movie.poster : null
+        movie && movie.poster ? movie.poster : null
     }
 
     /**

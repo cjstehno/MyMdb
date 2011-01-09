@@ -23,7 +23,7 @@ class Movie implements Taggable {
     String description
     int releaseYear
     Storage storage
-    byte[] poster
+    Poster poster
     
     static hasMany = [genres:Genre, actors:Actor]
     static embedded = ['storage']
@@ -34,10 +34,11 @@ class Movie implements Taggable {
     static constraints = {
         title(size:1..100)
         description(size:0..2000)
-        releaseYear(range:1930..2020)
+        releaseYear(range:1900..2100)
         lastUpdate(nullable:true)
         dateCreated(nullable:true)
-        storage(nullable:true)
+        storage(nullable:true)  // TODO: make this required when I do the storage refactoring
+        poster(nullable:true)
     }
 	
     static mapping = {
