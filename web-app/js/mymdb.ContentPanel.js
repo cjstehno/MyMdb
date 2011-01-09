@@ -17,6 +17,9 @@ mymdb.MovieDetailsTab = Ext.extend( Ext.Panel, {
                             handler:function(){
                                 new mymdb.movie.MovieDialog({ movieId:this.movieId });
                             }
+                        },
+                        {
+                            text:'Delete'
                         }
                     ]
                 }

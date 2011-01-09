@@ -17,7 +17,7 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
                 { xtype:'tbfill' }, 
                 { xtype:'button',text:'Help', iconCls:'icon-help', handler:function(){ Ext.Msg.alert('Help', 'Alas, you are currently helpless!'); } }
             ],
-            items:[ {xtype:'movieflow-panel'} ],
+            items:[ {xtype:'movieflow-panel', movieId:this.movieId} ],
             buttons:[
                 { 
                     xtype:'button',

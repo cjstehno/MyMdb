@@ -1,19 +1,19 @@
 
 mymdb.movie.flow.MovieManagerFlowPanel = Ext.extend( Ext.Panel, {
     layout:'card',
-    activeItem:0,
     initComponent: function(){
         Ext.apply(this, {
+            activeItem:this.movieId != undefined && this.movieId != null ? 1 : 0,
             items:[
                {xtype:'movieflow-fetchresults'},
-               {xtype:'movieflow-details'},
-               {xtype:'movieflow-poster'},
-               {xtype:'movieflow-genre'},
-               {xtype:'movieflow-actor'},
-               {xtype:'movieflow-summary'}
+               {xtype:'movieflow-details', movieId:this.movieId },
+               {xtype:'movieflow-poster', movieId:this.movieId },
+               {xtype:'movieflow-genre', movieId:this.movieId },
+               {xtype:'movieflow-actor', movieId:this.movieId },
+               {xtype:'movieflow-summary', movieId:this.movieId }
             ]
         });
-        
+
         mymdb.movie.flow.MovieManagerFlowPanel.superclass.initComponent.apply(this, arguments);
     }
 });
@@ -30,7 +30,13 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
         mymdb.movie.flow.ViewPanel.superclass.initComponent.apply(this, arguments);
 
         this.on('activate',function(p){
-            p.load({method:'GET', url:p.formUrl});
+            p.load({
+                method:'GET',
+                url:p.formUrl,
+                params:{
+                    id:p.movieId
+                }
+            });
         });
     },
     next:function(){

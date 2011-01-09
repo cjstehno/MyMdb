@@ -15,12 +15,12 @@ limitations under the License.
  */
 package com.stehno.mymdb.controller
 
+import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.Storage
 import grails.converters.JSON
 import com.stehno.mymdb.dto.*
-import com.stehno.mymdb.domain.Storage
 
 class MovieController {
 
@@ -150,9 +150,34 @@ class MovieController {
         }
     }
 
+    private def populateDtos(flow, movie){
+        flow.clear()
+        
+        flow.details = new DetailsDto(
+            title:movie.title,
+            releaseYear:movie.releaseYear,
+            storageName:movie.storage.name,
+            storageIndex:movie.storage.index,
+            description:movie.description
+        )
+
+        flow.poster = new PosterDto()
+
+        flow.genre = new GenreDto(
+            genres:movie.genres.collect { it.id }
+        )
+
+        flow.actor = new ActorDto(
+            actors:movie.actors.collect { it.id }
+        )
+    }
+
     def details = { DetailsDto dto ->
+        def flow = getFlow(session)
+
         if( isGet(request) ){
-            def flow = getFlow(session)
+            if(params.id) populateDtos( flow, Movie.get(params.id) )
+
             dto = extractExistingOrUse(flow, 'details', dto)
 
             dto.title = dto.title ?: flow.fetchResults.title
@@ -163,7 +188,7 @@ class MovieController {
                 render( errorResponse(dto,request) as JSON )
 
             } else {
-                getFlow(session).details = dto
+                flow.details = dto
                 render( [ success:true ] as JSON )
             }
         }
