@@ -51,38 +51,6 @@ class MovieControllerTests extends GrailsUnitTestCase {
     }
 	
     @Test
-    void save(){
-        controller.params.title = 'Testing'
-        controller.params.releaseYear = '2010'
-        controller.params.description = 'Some text.'
-        controller.params['storage.name'] = 'a'
-        controller.params['storage.index'] = '1'
-        controller.params.poster = ''
-		
-        def genre = Genre.findByName('Horror')
-        controller.params.genres = genre.id as String
-
-        //		controller.params.actors = ''
-
-        controller.save()
-
-        def jso = parseJsonResponse()
-        assertTrue jso.success
-        assertNull jso.errors
-		
-        def movie = Movie.findByTitle('Testing')
-        assertNotNull movie
-        assertEquals 'Testing', movie.title
-        assertEquals 2010, movie.releaseYear
-        assertEquals 'Some text.', movie.description
-        assertEquals 'A', movie.storage.name
-        assertEquals 1, movie.storage.index
-		
-        assertEquals 1, movie.genres.size()
-        assertEquals 'Horror', movie.genres.iterator().next().name
-    }
-	
-    @Test
     void update(){
         controller.params.id = Movie.findByTitle('Some Movie').id
         controller.params.title = 'Foovie'
@@ -350,6 +318,32 @@ class MovieControllerTests extends GrailsUnitTestCase {
         def actor = controller.session['movie.flow'].actor
         assertNotNull actor
         assertEquals( [1,3], actor.actors )
+    }
+
+    @Test
+    void summary_GET(){
+        def details = [
+            title:'Some Title',
+            releaseYear:2010,
+            storageName:'x',
+            storageIndex:23,
+            description:'This is a description'
+        ]
+
+        controller.session['movie.flow'] = [
+            details:details,
+            genre:[genres:null],
+            actor:[actors:null]
+        ]
+
+        controller.request.method = 'GET'
+        def resp = controller.summary()
+
+        assertNotNull resp
+        assertEquals 'Some Title', resp.title
+        assertEquals 2010, resp.releaseYear
+        assertEquals 'x-23', resp.storage
+        assertEquals 'This is a description', resp.description
     }
 
     @Test

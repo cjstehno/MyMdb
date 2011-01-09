@@ -25,7 +25,23 @@ mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
     },
     next:function(){
-        alert('submit the final data');
+        var thePanel = this;
+        var theForm = this.getForm();
+        var theUrl = this.formUrl;
+        theForm.submit({
+            url:theUrl,
+            clientValidation: true,
+            method:'POST',
+            success:function(form,action){
+               Ext.Msg.alert('Success', 'Movie saved successfully', function(){
+                   thePanel.findParentByType('window').close();
+                   Ext.StoreMgr.lookup('gridData').load();
+               });
+            },
+            failure:function(form,action){
+                Ext.Msg.alert('Failure', action.result.msg);
+            }
+        });
     }
 //    updateNextButtonText:function(newText){
 //        var dia = this.findParentByType(mymdb.movie.MovieDialog);

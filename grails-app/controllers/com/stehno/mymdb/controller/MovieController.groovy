@@ -20,6 +20,7 @@ import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Actor
 import grails.converters.JSON
 import com.stehno.mymdb.dto.*
+import com.stehno.mymdb.domain.Storage
 
 class MovieController {
 
@@ -27,26 +28,6 @@ class MovieController {
 
     def messageSource
 
-    def save = { 
-        def movie = new Movie(params)
-        if(movie.storage){
-            movie.storage.name = movie.storage.name.toUpperCase()
-        }
-
-        def resp = [success:(movie.save(flush:true) != null)]
-
-        if( movie.hasErrors() ){
-            resp.success = false
-
-            resp.errors = [:]
-            movie.errors.fieldErrors.each {
-                resp.errors[it.field] = messageSource.getMessage( it, request.locale)
-            }
-        }
-
-        render( contentType:'text/html', text:(resp as JSON).toString(false) )
-    }
-	
     def update = {
         def outp = [:]
 
@@ -249,8 +230,8 @@ class MovieController {
         if( isGet(request) ){
             def flow = getFlow(session)
 
-            def genres = flow.genre.genres.collect { Genre.get(it) }
-            def actors = flow.actor.actors.collect { Actor.get(it) }
+            def genres = flow.genre.genres?.collect { Genre.get(it) }
+            def actors = flow.actor.actors?.collect { Actor.get(it) }
 
             [
                 title:flow.details.title,
@@ -262,17 +243,36 @@ class MovieController {
             ]
 
         } else {
-            if( dto.hasErrors() ){
-                render( errorResponse(dto,request) as JSON )
+            def flow = getFlow(session)
 
-            } else {
-                getFlow(session).actor = dto
-                render( [ success:true ] as JSON )
+            def movie = new Movie()
+            movie.title = flow.details.title
+            movie.releaseYear = flow.details.releaseYear
+            movie.storage = new Storage( name:flow.details.storageName?.toUpperCase(), index:flow.details.storageIndex )
+            movie.description = flow.details.description
+            movie.poster = flow.poster.file
+
+            flow.genre.genres?.each {
+                movie.addToGenres( Genre.get(it) )
             }
+
+            flow.actor.actors?.each {
+                movie.addToActors( Actor.get(it) )
+            }
+
+            def resp = [success:(movie.save(flush:true) != null)]
+            if( movie.hasErrors() ){
+                resp.success = false
+
+                resp.errors = [:]
+                movie.errors.fieldErrors.each {
+                    resp.errors[it.field] = messageSource.getMessage( it, request.locale)
+                }
+            }
+
+            render( resp as JSON )
         }
     }
-
-    ///
 
     private def extractExistingOrUse( flow, dtoName, dto ){
         def existing = flow[dtoName]
