@@ -46,7 +46,7 @@ class PosterController {
      */
     def flow = {
         def f = session[FLOWKEY]
-        if( f == null || f.poster.posterType == null || f.poster.posterType == PosterType.NONE ){
+        if( f == null || f.poster == null || f.poster.posterType == null || f.poster.posterType == PosterType.NONE ){
             response.outputStream.withStream { it << servletContext.getResource(DEFAULT_POSTER).getBytes() }
         } else if(f.poster.posterType == PosterType.EXISTING){
             response.outputStream.withStream { it << Poster.get(f.poster.posterId).content }
