@@ -29,52 +29,33 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     height:160,
                     rowspan:4
                 },
+                { xtype: 'movieflow-poster-radio', boxLabel:'URL:', inputValue:'URL', targetItemId:'url-text', checked:true },
                 {
-                    xtype: 'radio',
-                    name:'posterType',
-                    inputValue:'URL',
-                    hideLabel:true,
-                    boxLabel:'URL:',
-                    checked:true,
-                    width:75,
-                    handler:function(rdo, checked){
-                        var ct = rdo.ownerCt;
-                        var urlTxt = ct.getComponent('url-text');
-                        if(checked){
-                            urlTxt.enable();
-                            ct.clearOtherRadios(rdo);
-                        } else {
-                            urlTxt.disable();
-                        }
-                    }
-                },
-                {
-                    xtype:'textfield',
+                    xtype:'movieflow-poster-fetch',
                     itemId:'url-text',
-                    name:'url',
-                    hideLabel:true,
-                    value:'http://',
-                    height:25,
-                    width:400
-                },
-                {
-                    xtype: 'radio',
-                    name:'posterType',
-                    inputValue:'FILE',
-                    hideLabel:true,
-                    boxLabel:'File:',
-                    width:75,
-                    handler:function(rdo, checked){
-                        var ct = rdo.ownerCt;
-                        var fileFld = ct.getComponent('file-text');
-                        if(checked){
-                            fileFld.enable();
-                            ct.clearOtherRadios(rdo);
-                        } else {
-                            fileFld.disable();
-                        }
+                    textName:'url',
+                    textValue:'http://',
+                    buttonText:'Fetch',
+                    handler:function(btn){
+                        // TODO: do ajax request to fetch image and stuff in DTO, then update image panle
+//                        url:'' - stores in flow scope
+//                        on success update image panel
+                        // note: you dont have to fetch, next will also download and save as before (check for existing)
+
+                        var urlText = btn.previousSibling().getValue();
+
+                        Ext.Ajax.request({
+                            url:'movie/fetchPosterUrl',
+                            params: { url:urlText },
+                            success:function(){
+                                btn.findParentByType('movieflow-poster').findByType('mymdb-imagepanel').reload();
+                            },
+                            failure:function(){
+                            }
+                        });
                     }
                 },
+                { xtype: 'movieflow-poster-radio', boxLabel:'File:', inputValue:'FILE', targetItemId:'file-text' },
                 {
                     xtype:'textfield',
                     itemId:'file-text',
@@ -85,42 +66,24 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     width:400,
                     disabled:true
                 },
+                { xtype: 'movieflow-poster-radio', boxLabel:'Existing:', inputValue:'EXISTING', targetItemId:'existing-field' },
                 {
-                    xtype: 'radio',
-                    name:'posterType',
-                    inputValue:'EXISTING',
-                    hideLabel:true,
-                    boxLabel:'Existing:',
-                    width:75,
-                    handler:function(rdo, checked){
-                        var ct = rdo.ownerCt;
-                        if(checked){
-                            // enable selector
-                            ct.clearOtherRadios(rdo);
-                        } else {
-                            // disable selector
-                        }
-                    }
+                    xtype:'movieflow-poster-fetch',
+                    itemId:'existing-field',
+                    disabled:true,
+                    textName:'title',
+                    buttonText:'Select...'
                 },
                 {
-                    xtype:'button', 
-                    text:'Select...',
-                    height:25,
-                    disabled:true
-                },
-                {
-                    xtype: 'radio',
-                    name:'posterType',
+                    xtype:'movieflow-poster-radio',
+                    boxLabel:'None:',
                     inputValue:'NONE',
-                    hideLabel:true,
-                    boxLabel:'None',
                     colspan:2,
-                    width:75,
                     handler:function(rdo, checked){
                         if(checked){
                             rdo.ownerCt.clearOtherRadios(rdo);
                         }
-                    }
+                    }                    
                 }
             ]
         });
@@ -141,6 +104,39 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     }
 });
 Ext.reg('movieflow-poster', mymdb.movie.flow.PosterView);
+
+
+mymdb.movie.flow.PosterFetchField = Ext.extend(Ext.form.CompositeField, {
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                { xtype:'textfield', name:this.textName, hideLabel:true, value:this.textValue, height:25, width:325 },
+                { xtype:'button', text:this.buttonText, height:23, flex:1, handler:this.handler }
+            ]
+        });
+
+        mymdb.movie.flow.PosterFetchField.superclass.initComponent.apply(this, arguments);
+    }
+});
+Ext.reg('movieflow-poster-fetch',mymdb.movie.flow.PosterFetchField);
+
+
+mymdb.movie.flow.PosterTypeRadio = Ext.extend(Ext.form.Radio, {
+    name:'posterType',
+    hideLabel:true,
+    width:75,
+    handler:function(rdo, checked){
+        var ct = rdo.ownerCt;
+        var item = ct.getComponent(rdo.targetItemId);
+        if(checked){
+            item.enable();
+            ct.clearOtherRadios(rdo);
+        } else {
+            item.disable();
+        }
+    }
+});
+Ext.reg('movieflow-poster-radio',mymdb.movie.flow.PosterTypeRadio);
 
 //mymdb.ImagePanel = Ext.extend(Ext.Panel, {
 //    autoLoad:false,
@@ -193,7 +189,8 @@ Ext.ux.Image = Ext.extend(Ext.BoxComponent, {
     },
 
     reload:function(){
-        alert('reloading image');
+        onLoad();
     }
 });
 Ext.reg('mymdb-imagepanel', Ext.ux.Image);
+

@@ -216,6 +216,20 @@ class MovieController {
         }
     }
 
+    def fetchPosterUrl = {
+        def url = params.url
+
+        def flow = getFlow(session)
+        if( !flow.poster ){
+            flow.poster = new PosterDto()
+        }
+
+        flow.poster.posterType = PosterType.URL
+        flow.poster.file = url.toURL().getBytes()
+
+        render( [success:true] as JSON)
+    }
+
     def genre = { GenreDto dto ->
         if( isGet(request) ){
             def flow = getFlow(session)
