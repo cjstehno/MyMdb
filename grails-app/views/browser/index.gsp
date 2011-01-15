@@ -15,7 +15,6 @@
     <g:javascript library="mymdb.Dialogs" />
     <g:javascript library="mymdb.genre.GenreManager" />
     <g:javascript library="mymdb.actor.ActorManager" />
-    <g:javascript library="mymdb.movie.MovieManager" />
     <g:javascript library="mymdb.movie.flow.MovieFlow" />
     <g:javascript library="mymdb.movie.flow.FetchResults" />
     <g:javascript library="mymdb.movie.flow.Details" />
