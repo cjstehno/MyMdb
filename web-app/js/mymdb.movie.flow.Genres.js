@@ -25,9 +25,9 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p);
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Genres');
-        });
+            this.disableNavButtons( [] );
+            this.setDialogTitle('New Movie: Genres');
+        },this);
 
         mymdb.movie.flow.GenresView.superclass.initComponent.apply(this, arguments);
     },

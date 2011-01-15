@@ -25,9 +25,9 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p);
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Actors');
-        });
+            this.disableNavButtons( [] );
+            this.setDialogTitle('New Movie: Actors');
+        },this);
 
         mymdb.movie.flow.ActorsView.superclass.initComponent.apply(this, arguments);
     },

@@ -1,3 +1,63 @@
+// mymdb.movie
+
+mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
+    id:'movieDialog',
+    autoShow:true,
+    iconCls:'icon-movie',
+    closable:true,
+    initHidden:false,
+    modal:true,
+    width:625,
+    height:500,
+    title:'New Movie',
+    layout:'fit',
+    initComponent: function(){
+        Ext.apply(this, {
+            tbar:[
+                { xtype:'tbfill' },
+                { xtype:'button', text:'Help', iconCls:'icon-help', handler:function(){ Ext.Msg.alert('Help', 'Alas, you are currently helpless!'); } }
+            ],
+            items:[ {xtype:'movieflow-panel', movieId:this.movieId} ],
+            buttons:[
+                {
+                    xtype:'button',
+                    itemId:'cancel-btn',
+                    text:'Cancel',
+                    handler:function(b){
+                        b.findParentByType(mymdb.movie.MovieDialog).close();
+                    }
+                },
+                {
+                    xtype:'button',
+                    itemId:'prev-btn',
+                    text:'Previous',
+                    handler:function(b,e){
+                        var active = Ext.getCmp('movieDialog').findByType(mymdb.movie.flow.MovieManagerFlowPanel)[0].getLayout().activeItem;
+                        active.previous();
+                    }
+                },
+                {
+                    xtype:'button',
+                    itemId:'next-btn',
+                    text:'Next',
+                    handler:function(b,e){
+                        var active = Ext.getCmp('movieDialog').findByType(mymdb.movie.flow.MovieManagerFlowPanel)[0].getLayout().activeItem;
+                        active.next();
+                    }
+                },
+                {
+                    xtype:'button',
+                    itemId:'finish-btn',
+                    text:'Finish',
+                    handler:function(b,e){
+                    }
+                }
+            ]
+        });
+        mymdb.movie.MovieDialog.superclass.initComponent.apply(this, arguments);
+    }
+});
+Ext.reg('movie-dialog', mymdb.movie.MovieDialog);
 
 mymdb.movie.flow.MovieManagerFlowPanel = Ext.extend( Ext.Panel, {
     layout:'card',
@@ -55,22 +115,20 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
     },
     previous:function(){
         this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel).getLayout().setActiveItem(this.previousId);
+    },
+    setDialogTitle:function( title ){
+        var dia = this.findParentByType(mymdb.movie.MovieDialog);
+        dia.setTitle(title);
+    },
+    disableNavButtons:function( itemIds ){
+        var dia = this.findParentByType(mymdb.movie.MovieDialog);
+        Ext.each( dia.buttons, function(b){
+            if( itemIds.indexOf(b.itemId) != -1 ){
+                b.disable();
+            } else {
+                b.enable();
+            }
+        });
     }
 });
 Ext.reg('movieflow-viewpanel', mymdb.movie.flow.ViewPanel);
-
-mymdb.movie.flow.DisableButtonFunction = function( p, buttonId ){
-    var dia = p.findParentByType(mymdb.movie.MovieDialog);
-    Ext.each( dia.buttons, function(b){
-        if(b.itemId == buttonId){
-            b.disable();
-        } else {
-            b.enable();
-        }
-    });
-};
-
-mymdb.movie.flow.UpdateDialogTitleFunction = function( p, title ){
-    var dia = p.findParentByType(mymdb.movie.MovieDialog);
-    dia.setTitle(title);
-};

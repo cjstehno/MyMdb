@@ -11,10 +11,9 @@ mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p);
-//            p.updateNextButtonText('Finish');
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Summary');
-        });
+            this.disableNavButtons( ['next-btn'] );
+            this.setDialogTitle('New Movie: Summary');
+        },this);
 
         mymdb.movie.flow.SummaryView.superclass.initComponent.apply(this, arguments);
 

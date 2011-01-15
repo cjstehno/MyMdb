@@ -15,9 +15,9 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p);
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Details');
-        });
+            this.disableNavButtons( [] );
+            this.setDialogTitle('New Movie: Details');
+        },this);
 
         mymdb.movie.flow.DetailsView.superclass.initComponent.apply(this, arguments);
     }

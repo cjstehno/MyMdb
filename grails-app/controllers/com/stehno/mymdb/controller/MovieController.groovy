@@ -129,7 +129,7 @@ class MovieController {
     // flow
 	
     private static final def FLOWKEY = 'movie.flow'
-	
+
     def fetchResults = { FetchResultsDto dto ->
         if( isGet(request) ){
             // prepare flow session (or clear out existing)

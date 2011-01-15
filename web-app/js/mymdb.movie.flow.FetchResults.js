@@ -26,9 +26,9 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p, 'prev-btn');
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Fetch Results');
-        });
+            this.disableNavButtons( ['prev-btn', 'finish-btn'] );
+            this.setDialogTitle('New Movie: Fetch Results');
+        }, this);
 
         mymdb.movie.flow.FetchResultsView.superclass.initComponent.apply(this, arguments);
     }

@@ -22,9 +22,10 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 },
                 {
                     xtype:'mymdb-imagepanel',
+                    id:'movieflow-poster',
                     url:'/mymdb/poster/flow',
                     style:'margin:4px;',
-                    border:true,
+                    border:false,
                     width:110,
                     height:160,
                     rowspan:4
@@ -36,19 +37,18 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     textName:'url',
                     textValue:'http://',
                     buttonText:'Fetch',
-                    handler:function(btn){
-                        // TODO: do ajax request to fetch image and stuff in DTO, then update image panle
-//                        url:'' - stores in flow scope
-//                        on success update image panel
-                        // note: you dont have to fetch, next will also download and save as before (check for existing)
+                    buttonHandler:function(b,e){
+                        var urlText = b.previousSibling().getValue();
 
-                        var urlText = btn.previousSibling().getValue();
+                        // TODO: figure out why this doesnt work
+//                        var imagePanel = b.findParentByType('form').findByType('mymdb-imagepanel')[0];
+                        var imagePanel = Ext.getCmp('movieflow-poster');
 
                         Ext.Ajax.request({
                             url:'movie/fetchPosterUrl',
                             params: { url:urlText },
                             success:function(){
-                                btn.findParentByType('movieflow-poster').findByType('mymdb-imagepanel').reload();
+                                imagePanel.reload();
                             },
                             failure:function(){
                             }
@@ -72,7 +72,24 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     itemId:'existing-field',
                     disabled:true,
                     textName:'title',
-                    buttonText:'Select...'
+                    buttonText:'Select...',
+                    buttonHandler:function(b,e){
+//                        var urlText = b.previousSibling().getValue();
+//
+//                        // TODO: figure out why this doesnt work
+////                        var imagePanel = b.findParentByType('form').findByType('mymdb-imagepanel')[0];
+//                        var imagePanel = Ext.getCmp('movieflow-poster');
+//
+//                        Ext.Ajax.request({
+//                            url:'movie/fetchPosterUrl',
+//                            params: { url:urlText },
+//                            success:function(){
+//                                imagePanel.reload();
+//                            },
+//                            failure:function(){
+//                            }
+//                        });
+                    }
                 },
                 {
                     xtype:'movieflow-poster-radio',
@@ -89,9 +106,9 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            mymdb.movie.flow.DisableButtonFunction(p);
-            mymdb.movie.flow.UpdateDialogTitleFunction(p, 'New Movie: Poster');
-        });
+            this.disableNavButtons( [] );
+            this.setDialogTitle('New Movie: Poster');
+        },this);
 
         mymdb.movie.flow.PosterView.superclass.initComponent.apply(this, arguments);
     },
@@ -111,7 +128,13 @@ mymdb.movie.flow.PosterFetchField = Ext.extend(Ext.form.CompositeField, {
         Ext.apply(this, {
             items:[
                 { xtype:'textfield', name:this.textName, hideLabel:true, value:this.textValue, height:25, width:325 },
-                { xtype:'button', text:this.buttonText, height:23, flex:1, handler:this.handler }
+                {
+                    xtype:'button',
+                    text:this.buttonText,
+                    height:23,
+                    flex:1,
+                    handler:this.buttonHandler
+                }
             ]
         });
 
@@ -138,59 +161,22 @@ mymdb.movie.flow.PosterTypeRadio = Ext.extend(Ext.form.Radio, {
 });
 Ext.reg('movieflow-poster-radio',mymdb.movie.flow.PosterTypeRadio);
 
-//mymdb.ImagePanel = Ext.extend(Ext.Panel, {
-//    autoLoad:false,
-//    tpl:'<img src="/mymdb/poster/flow" />',
-//    initComponent: function(){
-//        Ext.apply(this, {});
-//
-//        mymdb.ImagePanel.superclass.initComponent.apply(this, arguments);
-//    },
-//    reload:function(){
-//        this.load({
-//            url:this.url,
-//            nocache: false,
-//            text:'Loading...',
-//            timeout:30,
-//            scripts:false
-//        });
-//    }
-//});
-//Ext.reg('mymdb-imagepanel', mymdb.ImagePanel);
+mymdb.ImagePanel = Ext.extend(Ext.Panel, {
+    tpl:'<img src="{src}" width="{w}" height="{h}" />',
+    initComponent: function(){
+        Ext.apply(this, {
+            data:{ src:this.url + '?' + Math.random(), w:this.width, h:this.height }
+        });
 
-Ext.ux.Image = Ext.extend(Ext.BoxComponent, {
-    url  : Ext.BLANK_IMAGE_URL,  //for initial src value
-
-    autoEl: {
-        tag: 'img',
-        src: Ext.BLANK_IMAGE_URL,
-        cls: 'tng-managed-image'
+        mymdb.ImagePanel.superclass.initComponent.apply(this, arguments);
     },
-
-    initComponent : function(){
-        Ext.ux.Image.superclass.initComponent.call(this);
-        this.addEvents('load');
-    },
-
-    onRender: function() {
-        Ext.ux.Image.superclass.onRender.apply(this, arguments);
-        this.el.on('load', this.onLoad, this);
-        if(this.url){
-            this.setSrc(this.url);
-        }
-    },
-
-    onLoad: function() {
-        this.fireEvent('load', this);
-    },
-
-    setSrc: function(src) {
-        this.el.dom.src = src;
-    },
-
     reload:function(){
-        onLoad();
+        // TODO: see if there is a better way of not caching the urls
+        // if nothing else, I should use unix date long value instead of random
+        var dat = { src:this.url + '?' + Math.random(), w:this.width, h:this.height };
+        this.update( dat );
     }
 });
-Ext.reg('mymdb-imagepanel', Ext.ux.Image);
+Ext.reg('mymdb-imagepanel', mymdb.ImagePanel);
+
 
