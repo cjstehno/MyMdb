@@ -17,12 +17,22 @@ package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.domain.Poster
 import com.stehno.mymdb.dto.PosterType
+import grails.converters.JSON
 
 class PosterController {
 
     private static final def DEFAULT_POSTER = '/images/nocover.jpg'
 
     def movieService
+
+    def list = {
+        def posters = Poster.list().collect { [name:it.title, id:it.id]}
+        render( posters as JSON )
+    }
+
+    def show = {
+        response.outputStream.withStream { it << Poster.get(params.id).content }
+    }
 
     /**
      * Retrieves the poster image data for a specific movie instance.

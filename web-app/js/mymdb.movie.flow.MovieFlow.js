@@ -50,6 +50,8 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
                     itemId:'finish-btn',
                     text:'Finish',
                     handler:function(b,e){
+                        var active = Ext.getCmp('movieDialog').findByType(mymdb.movie.flow.MovieManagerFlowPanel)[0].getLayout().activeItem;
+                        active.finish();
                     }
                 }
             ]
@@ -115,6 +117,25 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
     },
     previous:function(){
         this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel).getLayout().setActiveItem(this.previousId);
+    },
+    finish:function(){
+        var thePanel = this;
+        var theForm = this.getForm();
+        var theUrl = this.formUrl;
+        theForm.submit({
+            url:theUrl,
+            clientValidation: true,
+            method:'POST',
+            success:function(form,action){
+               Ext.Msg.alert('Success', 'Movie saved successfully', function(){
+                   thePanel.findParentByType('window').close();
+                   Ext.StoreMgr.lookup('gridData').load();
+               });
+            },
+            failure:function(form,action){
+                Ext.Msg.alert('Failure', action.result.msg);
+            }
+        });
     },
     setDialogTitle:function( title ){
         var dia = this.findParentByType(mymdb.movie.MovieDialog);
