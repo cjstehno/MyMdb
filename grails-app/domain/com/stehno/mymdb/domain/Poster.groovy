@@ -19,9 +19,9 @@ class Poster {
 
     String title
     byte[] content
-    
+
     static constraints = {
         title(size:2..100)
-        content(validator:{ it != null && (2..1024).contains(it.size()) })
+        content(maxSize:1024000)
     }
 }

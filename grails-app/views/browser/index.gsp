@@ -10,6 +10,7 @@
       .icon-movie { background-image: url(/mymdb/images/icons/office_folders.png)!important; }
 
       .x-list-selected { background-color:#F5ECC6; border: 1px dashed gray; }
+      .x-view-selected { background-color:#F5ECC6; border: 1px dashed gray; }
     </style>
     <g:javascript library="mymdb.app" />
     <g:javascript library="mymdb.Dialogs" />

@@ -13,10 +13,10 @@ environments {
 		dataSource {
 			// dbCreate = "create-drop" // one of 'create', 'create-drop','update'
 			dbCreate = "update"
-            dialect = org.hibernate.dialect.HSQLDialect
-			url = "jdbc:hsqldb:/home/cjstehno/hsql/mymdb/mymdb"
+            dialect = org.hibernate.dialect.H2Dialect
+			url = "jdbc:h2:file:/home/cjstehno/h2/mymdb"
             pooled = true
-            driverClassName = "org.hsqldb.jdbcDriver"
+            driverClassName = "org.h2.Driver"
             username = "sa"
             password = ""
 		}
@@ -24,10 +24,10 @@ environments {
 	test {
 		dataSource {
 			dbCreate = "create-drop"
-			dialect = org.hibernate.dialect.HSQLDialect
-            url = "jdbc:hsqldb:mem:testDb"
+			dialect = org.hibernate.dialect.H2Dialect
+            url = "jdbc:h2:mem:mymdb_test"
             pooled = true
-            driverClassName = "org.hsqldb.jdbcDriver"
+            driverClassName = "org.h2.Driver"
             username = "sa"
             password = ""
 		}

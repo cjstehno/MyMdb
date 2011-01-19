@@ -27,7 +27,7 @@ class PosterController {
 
     def list = {
         def posters = Poster.list().collect { [name:it.title, id:it.id]}
-        render( posters as JSON )
+        render( [posters:posters] as JSON )
     }
 
     def show = {

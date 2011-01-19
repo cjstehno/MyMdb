@@ -31,16 +31,6 @@ class PosterControllerTests extends ControllerUnitTestCase {
 		assertEquals( [1,3,5,7,9] as byte[], controller.response.contentAsByteArray )
     }
 	
-	@Test
-	void image_not_found(){
-		controller.request.contextPath = '/unit'
-		controller.params.id = '357'
-		
-		controller.image()
-		
-		assertEquals( '/unit/images/nocover.jpg', controller.response.redirectedUrl )
-	}
-	
 	@After
 	void after(){
 		super.tearDown()

@@ -137,32 +137,45 @@ mymdb.movie.flow.PosterSelector = Ext.extend(Ext.Window, {
     width:300,
     height:400,
     modal:true,
+    buttons:[
+        {
+            xtype:'button',
+            text:'Cancel'
+        },
+        {
+            xtype:'button',
+            text:'OK'
+        }
+    ],
     initComponent: function(){
         Ext.apply(this, {
             items:[
                 {
                     xtype:'panel',
-                    layout:'fit',
-                    height:200,
+                    height:330,
+                    autoScroll:true,
                     items:[
                         {
                             xtype:'dataview',
-                            height:200,
+//                            width:150,
                             store: new Ext.data.JsonStore({
+                                autoLoad:true,
                                 url:'poster/list',
                                 root: 'posters',
                                 fields: ['name', 'id']
                             }),
                             tpl: new Ext.XTemplate(
                                 '<tpl for=".">',
-                                    '<div class="thumb-wrap" id="{name}">',
-                                    '<div class="thumb"><img src="poster/show/{id}" title="{name}"></div>',
+                                    '<div class="thumb-wrap" id="{id}" style="padding:4px;">',
+                                    '<div class="thumb"><img src="poster/show/{id}" title="{name}" width="120" style="border:1px solid gray;"></div>',
+                                    '<div class="poster-name">{name}</div>',
                                     '</div>',
                                 '</tpl>',
                                 '<div class="x-clear"></div>'
                             ),
                             autoHeight:true,
                             multiSelect:false,
+                            singleSelect:true,
                             overClass:'x-view-over',
                             itemSelector:'div.thumb-wrap',
                             emptyText: 'No images to display'

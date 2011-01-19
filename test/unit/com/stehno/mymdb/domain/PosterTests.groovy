@@ -26,7 +26,7 @@ class PosterTests extends GrailsUnitTestCase {
         assertTrue poster( title:'xx', content:content(10) ).validate()
         assertTrue poster( title:('x'*100), content:content(10) ).validate()
         assertTrue poster( title:'Testing', content:content(2) ).validate()
-        assertTrue poster( title:'Testing', content:content(1024) ).validate()
+        assertTrue poster( title:'Testing', content:content(1024000) ).validate()
     }
 
 	@Test
@@ -50,13 +50,8 @@ class PosterTests extends GrailsUnitTestCase {
     }
 
     @Test
-    void validation_invalid_contenttoosmall() {
-		assertFalse poster( title:'Foo', content:content(1) ).validate()
-    }
-
-    @Test
     void validation_invalid_contenttoolong() {
-		assertFalse poster( title:'Foo', content:content(1025) ).validate()
+		assertFalse poster( title:'Foo', content:content(1024001) ).validate()
     }
 
 	private Poster poster(params){

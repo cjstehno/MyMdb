@@ -2,16 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1da19fc-80ea-4ec3-a8a4-2366a416c058" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/cjstehno.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/cjstehno.xml" />
+      <change type="MOVED" beforePath="C:\Users\cjstehno\home\projects\mymdb\MyMdb\mymdb.iml" afterPath="$PROJECT_DIR$/MyMdb.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MyMdb-grailsPlugins.iml" afterPath="$PROJECT_DIR$/MyMdb-grailsPlugins.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.properties" afterPath="$PROJECT_DIR$/application.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" afterPath="$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy" afterPath="$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/conf/Config.groovy" afterPath="$PROJECT_DIR$/grails-app/conf/Config.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/conf/DataSource.groovy" afterPath="$PROJECT_DIR$/grails-app/conf/DataSource.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy" afterPath="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Details.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Details.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Poster.groovy" afterPath="$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Poster.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grails-app/views/browser/index.gsp" afterPath="$PROJECT_DIR$/grails-app/views/browser/index.gsp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/unit/com/stehno/mymdb/controller/PosterControllerTests.groovy" afterPath="$PROJECT_DIR$/test/unit/com/stehno/mymdb/controller/PosterControllerTests.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/unit/com/stehno/mymdb/domain/PosterTests.groovy" afterPath="$PROJECT_DIR$/test/unit/com/stehno/mymdb/domain/PosterTests.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js" afterPath="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js" />
     </list>
     <ignored path="MyMdb.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -74,46 +77,34 @@
       <file leaf-file-name="MovieController.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="135" column="34" selection-start="4422" selection-end="4425" vertical-scroll-proportion="79.73913">
+            <state line="135" column="34" selection-start="4422" selection-end="4425" vertical-scroll-proportion="-0.6086956">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mymdb.movie.flow.Poster.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="mymdb.movie.flow.Poster.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="128" column="18" selection-start="4582" selection-end="4582" vertical-scroll-proportion="0.0">
+            <state line="155" column="30" selection-start="5208" selection-end="5208" vertical-scroll-proportion="0.3255814">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BootStrap.groovy" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy">
+      <file leaf-file-name="index.gsp" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/grails-app/views/browser/index.gsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="168" selection-start="1115" selection-end="1115" vertical-scroll-proportion="0.49794802">
+            <state line="12" column="13" selection-start="710" selection-end="710" vertical-scroll-proportion="-3.652174">
               <folding />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Poster.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Poster.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="6" selection-start="657" selection-end="657" vertical-scroll-proportion="-5.5348835">
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
-            <state />
           </provider>
         </entry>
       </file>
       <file leaf-file-name="PosterController.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="0" selection-start="970" selection-end="970" vertical-scroll-proportion="-7.0434785">
+            <state line="29" column="33" selection-start="1003" selection-end="1003" vertical-scroll-proportion="-6.4347825">
               <folding />
             </state>
           </provider>
@@ -142,22 +133,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Movie.groovy" />
-        <option value="$PROJECT_DIR$/test/integration/com/stehno/mymdb/service/MovieServiceTests.groovy" />
-        <option value="$PROJECT_DIR$/test/integration/com/stehno/mymdb/controller/MovieControllerTests.groovy" />
-        <option value="$PROJECT_DIR$/web-app/js/mymdb.CategoriesPanel.js" />
-        <option value="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy" />
-        <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.FetchResults.js" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Actors.js" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Genres.js" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.MovieManager.js" />
-        <option value="$PROJECT_DIR$/grails-app/views/browser/index.gsp" />
-        <option value="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js" />
         <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Details.js" />
-        <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js" />
+        <option value="$PROJECT_DIR$/grails-app/conf/Config.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Poster.groovy" />
         <option value="$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/conf/DataSource.groovy" />
+        <option value="$PROJECT_DIR$/test/unit/com/stehno/mymdb/domain/PosterTests.groovy" />
+        <option value="$PROJECT_DIR$/test/unit/com/stehno/mymdb/controller/PosterControllerTests.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/views/browser/index.gsp" />
+        <option value="$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js" />
       </list>
     </option>
   </component>
@@ -235,7 +226,7 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
-    <property name="options.lastSelected" value="editing.templates" />
+    <property name="options.lastSelected" value="copyright.profiles" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="options.searchVisible" value="true" />
@@ -532,103 +523,112 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/grails-app/views/movie/summary.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/services/com/stehno/mymdb/service/MovieService.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="36" selection-start="762" selection-end="762" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/integration/com/stehno/mymdb/service/MovieServiceTests.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="0" selection-start="4587" selection-end="4587" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Actors.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="41" selection-start="1028" selection-end="1028" vertical-scroll-proportion="0.51709986" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Genres.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="12" selection-start="1042" selection-end="1042" vertical-scroll-proportion="0.5362517" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/views/layouts/browser.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/views/browser/index.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="55" selection-start="963" selection-end="963" vertical-scroll-proportion="0.34744525" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="135" column="34" selection-start="4422" selection-end="4425" vertical-scroll-proportion="79.73913">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.FetchResults.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="61" selection-start="1012" selection-end="1012" vertical-scroll-proportion="0.3871409">
-          <folding />
-        </state>
+        <state line="28" column="61" selection-start="1012" selection-end="1012" vertical-scroll-proportion="0.3871409" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Details.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="54" selection-start="1042" selection-end="1042" vertical-scroll-proportion="0.34473324">
-          <folding />
-        </state>
+        <state line="18" column="54" selection-start="1042" selection-end="1042" vertical-scroll-proportion="0.34473324" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Summary.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="5" selection-start="704" selection-end="704" vertical-scroll-proportion="0.45964432">
+        <state line="24" column="5" selection-start="704" selection-end="704" vertical-scroll-proportion="0.45964432" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/MovieController.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="135" column="34" selection-start="4422" selection-end="4425" vertical-scroll-proportion="-0.6086956">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js">
+    <entry file="file://$PROJECT_DIR$/grails-app/conf/Config.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="128" column="18" selection-start="4582" selection-end="4582" vertical-scroll-proportion="0.0">
+        <state line="57" column="8" selection-start="2090" selection-end="2090" vertical-scroll-proportion="0.5978112">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Poster.groovy">
+    <entry file="file://$PROJECT_DIR$/grails-app/conf/BuildConfig.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="6" selection-start="657" selection-end="657" vertical-scroll-proportion="-5.5348835">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="970" selection-end="970" vertical-scroll-proportion="-7.0434785">
+        <state line="30" column="42" selection-start="1216" selection-end="1216" vertical-scroll-proportion="0.55540353">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.MovieFlow.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="23" selection-start="4384" selection-end="4384" vertical-scroll-proportion="0.0">
+        <state line="125" column="23" selection-start="4384" selection-end="4384" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Actor.groovy">
+      <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="51" selection-start="1125" selection-end="1172" vertical-scroll-proportion="0.6177326">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/unit/com/stehno/mymdb/domain/PosterTests.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="0" selection-start="1657" selection-end="1657" vertical-scroll-proportion="0.39548022">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/unit/com/stehno/mymdb/controller/PosterControllerTests.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="5" selection-start="653" selection-end="653" vertical-scroll-proportion="0.5275362">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="168" selection-start="1115" selection-end="1115" vertical-scroll-proportion="0.49794802">
+        <state line="12" column="4" selection-start="718" selection-end="718" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/conf/DataSource.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="27" selection-start="544" selection-end="544" vertical-scroll-proportion="0.36388507">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/stehno/mymdb/domain/Poster.groovy">
+      <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="24" selection-start="782" selection-end="782" vertical-scroll-proportion="0.4883721">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/stehno/mymdb/controller/PosterController.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="33" selection-start="1003" selection-end="1003" vertical-scroll-proportion="-6.4347825">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/views/browser/index.gsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="13" selection-start="710" selection-end="710" vertical-scroll-proportion="-3.652174">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-app/js/mymdb.movie.flow.Poster.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="155" column="30" selection-start="5208" selection-end="5208" vertical-scroll-proportion="0.3255814">
           <folding />
         </state>
       </provider>
@@ -640,7 +640,7 @@
         <entry key="MyMdb">
           <value>
             <GrailsSettings>
-              <option name="buildConfigCrc" value="1757753984" />
+              <option name="buildConfigCrc" value="1802832612" />
               <option name="pluginDependenciesCrc" value="1864538575" />
               <option name="properties">
                 <map>
@@ -664,7 +664,13 @@
     <states>
       <state key="Copyright.UI">
         <settings>
-          <splitter-proportions />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
         </settings>
       </state>
       <state key="ScopeChooserConfigurable.UI">
