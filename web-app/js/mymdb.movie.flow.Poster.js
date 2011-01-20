@@ -41,11 +41,11 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     }
                 },
 
-                { xtype: 'movieflow-poster-radio', boxLabel:'File:', inputValue:'FILE', targetItemIds:['file-text'] },
+                { xtype:'movieflow-poster-radio', boxLabel:'File:', inputValue:'FILE', targetItemIds:['file-text'] },
                 { xtype:'textfield', itemId:'file-text', inputType:'file', name:'file', hideLabel:true, height:25, width:400, disabled:true, colspan:2 },
 
-                { xtype: 'movieflow-poster-radio', boxLabel:'Existing:', inputValue:'EXISTING', targetItemIds:['existing-text','existing-button'] },
-                { xtype:'textfield', itemId:'existing-text', name:'existing', width:325, disabled:true },
+                { xtype:'movieflow-poster-radio', boxLabel:'Existing:', inputValue:'EXISTING', targetItemIds:['existing-text','existing-button'] },
+                { xtype:'textfield', itemId:'existing-text', name:'existingName', width:325, disabled:true, readOnly:true },
                 {
                     xtype:'button',
                     itemId:'existing-button',
@@ -53,7 +53,30 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     width:70,
                     disabled:true,
                     handler:function(b,e){
-                        new mymdb.movie.flow.PosterSelector().setVisible(true);
+                        var existingText = b.previousSibling();
+                        var existingId = b.ownerCt.find('name','existingId')[0];
+                        var preSelectedId = existingId.getValue();
+
+                        new mymdb.movie.flow.PosterSelector({
+                            preSelectedId:preSelectedId,
+                            callback:function(sel){
+                                existingText.setValue( sel.name );
+                                existingId.setValue( sel.id );
+
+                                var imagePanel = b.findParentByType('movieflow-poster').findByType('mymdb-imagepanel')[0];
+
+                                Ext.Ajax.request({
+                                    url:'movie/savePosterSelection',
+                                    params: { id:sel.id },
+                                    success:function(){
+                                        imagePanel.reload();
+                                    },
+                                    failure:function(){
+                                    }
+                                });
+
+                            }
+                        }).setVisible(true);
                     }
                 },
 
@@ -65,9 +88,21 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     handler:function(rdo, checked){
                         if(checked){
                             rdo.ownerCt.clearOtherRadios(rdo);
+
+                            var imagePanel = rdo.findParentByType('movieflow-poster').findByType('mymdb-imagepanel')[0];
+
+                            Ext.Ajax.request({
+                                url:'movie/clearSelectedPoster',
+                                success:function(){
+                                    imagePanel.reload();
+                                },
+                                failure:function(){ }
+                            });
                         }
                     }                    
-                }
+                },
+
+                { xtype:'hidden', itemId:'existing-id', name:'existingId', colspan:4 }
             ]
         });
 
@@ -137,18 +172,49 @@ mymdb.movie.flow.PosterSelector = Ext.extend(Ext.Window, {
     width:300,
     height:400,
     modal:true,
-    buttons:[
-        {
-            xtype:'button',
-            text:'Cancel'
-        },
-        {
-            xtype:'button',
-            text:'OK'
+
+    listeners:{
+        render:function(c){
+            if(c.preSelectedId != undefined && c.preSelectedId != null){
+                var dv = c.findByType('dataview')[0];
+                var sto = dv.getStore();
+try the store... it may be a timing issue but this is not working
+                var sid = c.preSelectedId.toString();
+                console.log("sel id " + sid);
+
+                var rec = sto.findBy(function(rec,id){
+                    return rec.data.id.toString() == sid;
+                });
+                console.log("found rec " + rec);
+
+                dv.select(rec);
+            }
         }
-    ],
+    },
+
     initComponent: function(){
         Ext.apply(this, {
+            buttons:[
+                {
+                    xtype:'button',
+                    text:'Cancel',
+                    handler:function(b,e){
+                        b.ownerCt.close();
+                    }
+                },
+                {
+                    xtype:'button',
+                    text:'OK',
+                    scope:this,
+                    handler:function(b,e){
+                        var dv = this.findByType('dataview')[0];
+                        if(dv.getSelectionCount() > 0){
+                            var sel = dv.getSelectedRecords()[0];
+                            this.onSelection({name:sel.data.name, id:sel.data.id});
+                        }
+                    }
+                }
+            ],
             items:[
                 {
                     xtype:'panel',
@@ -157,11 +223,11 @@ mymdb.movie.flow.PosterSelector = Ext.extend(Ext.Window, {
                     items:[
                         {
                             xtype:'dataview',
-//                            width:150,
                             store: new Ext.data.JsonStore({
                                 autoLoad:true,
                                 url:'poster/list',
                                 root: 'posters',
+                                idProperty:'id',
                                 fields: ['name', 'id']
                             }),
                             tpl: new Ext.XTemplate(
@@ -186,5 +252,9 @@ mymdb.movie.flow.PosterSelector = Ext.extend(Ext.Window, {
         });
 
         mymdb.movie.flow.PosterSelector.superclass.initComponent.apply(this, arguments);
+    },
+    onSelection:function( sel ){
+        this.callback(sel);
+        this.close();
     }
 });

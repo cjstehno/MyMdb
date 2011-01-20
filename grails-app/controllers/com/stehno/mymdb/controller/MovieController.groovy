@@ -230,6 +230,27 @@ class MovieController {
         render( [success:true] as JSON)
     }
 
+    def savePosterSelection = {
+        def pid = params.id
+
+        def flow = getFlow(session)
+        if( !flow.poster ){
+            flow.poster = new PosterDto()
+        }
+
+        flow.poster.posterType = PosterType.EXISTING
+        flow.poster.posterId = pid as Long
+
+        render( [success:true] as JSON)
+    }
+
+    def clearSelectedPoster = {
+        def flow = getFlow(session)
+        flow.remove('poster')
+
+        render( [success:true] as JSON)
+    }
+
     def genre = { GenreDto dto ->
         if( isGet(request) ){
             def flow = getFlow(session)
