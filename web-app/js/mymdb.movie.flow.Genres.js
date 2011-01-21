@@ -5,6 +5,15 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     previousId:2,
     initComponent: function(){
         Ext.apply(this, {
+            listeners:{
+                loaded:{
+                    scope:this,
+                    fn:function(action){
+                        var genres = action.result.data.genres;
+                        this.findByType('movieflow-itemselector')[0].setSelectedItems(genres);
+                    }
+                }
+            },
             items:[
                 { xtype:'label', text:'Select genres for movie:' },
                 { xtype:'movieflow-itemselector', availableUrl:'genre/list' },
@@ -122,6 +131,17 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
 
         mymdb.movie.flow.ItemSelector.superclass.initComponent.apply(this, arguments);
     },
+    setSelectedItems:function( items ){
+        var fromStore = this.find('itemId', 'selector-available')[0].getStore();
+
+        var recs = [];
+        Ext.each(items,function(it){
+            recs.push(fromStore.getById(it.toString()));
+        });
+
+        this.moveItems(true, recs);
+    },
+    // TODO: see if I can refactor these into one function
     moveSelectedItems:function(moveRight){
         var fromList = this.find('itemId', 'selector-available')[0];
         var toList = this.find('itemId', 'selector-selected')[0];
@@ -137,6 +157,21 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
             fromList.getStore().remove(recs);
 
             toList.getStore().add(recs);
+        }
+    },
+    moveItems:function( moveRight, items ){
+        var fromList = this.find('itemId', 'selector-available')[0];
+        var toList = this.find('itemId', 'selector-selected')[0];
+
+        if(!moveRight){
+            var tmp = fromList;
+            fromList = toList;
+            toList = tmp;
+        }
+
+        if( items.length > 0 ){
+            fromList.getStore().remove(items);
+            toList.getStore().add(items);
         }
     }
 });

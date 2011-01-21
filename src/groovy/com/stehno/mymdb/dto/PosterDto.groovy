@@ -29,6 +29,7 @@ class PosterDto {
     String url = 'http://'
     byte[] file
     long posterId
+    String posterName
 }
 
 enum PosterType {

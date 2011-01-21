@@ -97,6 +97,9 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
                 url:p.formUrl,
                 params:{
                     id:p.movieId
+                },
+                success:function(form,action){
+                    p.fireEvent('loaded',action);
                 }
             });
         });

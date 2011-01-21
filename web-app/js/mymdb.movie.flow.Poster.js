@@ -45,7 +45,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 { xtype:'textfield', itemId:'file-text', inputType:'file', name:'file', hideLabel:true, height:25, width:400, disabled:true, colspan:2 },
 
                 { xtype:'movieflow-poster-radio', boxLabel:'Existing:', inputValue:'EXISTING', targetItemIds:['existing-text','existing-button'] },
-                { xtype:'textfield', itemId:'existing-text', name:'existingName', width:325, disabled:true, readOnly:true },
+                { xtype:'textfield', itemId:'existing-text', name:'posterName', width:325, disabled:true, readOnly:true },
                 {
                     xtype:'button',
                     itemId:'existing-button',
@@ -54,14 +54,14 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     disabled:true,
                     handler:function(b,e){
                         var existingText = b.previousSibling();
-                        var existingId = b.ownerCt.find('name','existingId')[0];
-                        var preSelectedId = existingId.getValue();
+                        var posterId = b.ownerCt.find('name','posterId')[0];
+                        var preSelectedId = posterId.getValue();
 
                         new mymdb.movie.flow.PosterSelector({
                             preSelectedId:preSelectedId,
                             callback:function(sel){
                                 existingText.setValue( sel.name );
-                                existingId.setValue( sel.id );
+                                posterId.setValue( sel.id );
 
                                 var imagePanel = b.findParentByType('movieflow-poster').findByType('mymdb-imagepanel')[0];
 
@@ -102,7 +102,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     }                    
                 },
 
-                { xtype:'hidden', itemId:'existing-id', name:'existingId', colspan:4 }
+                { xtype:'hidden', itemId:'existing-id', name:'posterId', colspan:4 }
             ]
         });
 
@@ -172,26 +172,6 @@ mymdb.movie.flow.PosterSelector = Ext.extend(Ext.Window, {
     width:300,
     height:400,
     modal:true,
-
-    listeners:{
-        render:function(c){
-            if(c.preSelectedId != undefined && c.preSelectedId != null){
-                var dv = c.findByType('dataview')[0];
-                var sto = dv.getStore();
-try the store... it may be a timing issue but this is not working
-                var sid = c.preSelectedId.toString();
-                console.log("sel id " + sid);
-
-                var rec = sto.findBy(function(rec,id){
-                    return rec.data.id.toString() == sid;
-                });
-                console.log("found rec " + rec);
-
-                dv.select(rec);
-            }
-        }
-    },
-
     initComponent: function(){
         Ext.apply(this, {
             buttons:[
@@ -217,36 +197,20 @@ try the store... it may be a timing issue but this is not working
             ],
             items:[
                 {
-                    xtype:'panel',
-                    height:330,
-                    autoScroll:true,
-                    items:[
-                        {
-                            xtype:'dataview',
-                            store: new Ext.data.JsonStore({
-                                autoLoad:true,
-                                url:'poster/list',
-                                root: 'posters',
-                                idProperty:'id',
-                                fields: ['name', 'id']
-                            }),
-                            tpl: new Ext.XTemplate(
-                                '<tpl for=".">',
-                                    '<div class="thumb-wrap" id="{id}" style="padding:4px;">',
-                                    '<div class="thumb"><img src="poster/show/{id}" title="{name}" width="120" style="border:1px solid gray;"></div>',
-                                    '<div class="poster-name">{name}</div>',
-                                    '</div>',
-                                '</tpl>',
-                                '<div class="x-clear"></div>'
-                            ),
-                            autoHeight:true,
-                            multiSelect:false,
-                            singleSelect:true,
-                            overClass:'x-view-over',
-                            itemSelector:'div.thumb-wrap',
-                            emptyText: 'No images to display'
+                    xtype:'movieflow-poster-posterlist',
+                    listeners:{
+                        loaded:{
+                            scope:this,
+                            fn:function(pl){
+                                var preSel = this.preSelectedId;
+                                if(preSel != undefined && preSel != null){
+                                    var dv = pl.findByType('dataview')[0];
+                                    var rec = dv.getStore().getById(preSel.toString());
+                                    dv.select(rec);
+                                }
+                            }
                         }
-                    ]
+                    }
                 }
             ]
         });
@@ -258,3 +222,50 @@ try the store... it may be a timing issue but this is not working
         this.close();
     }
 });
+
+mymdb.movie.flow.PosterListPanel = Ext.extend(Ext.Panel, {
+    height:330,
+    autoScroll:true,
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                {
+                    xtype:'dataview',
+                    store: new Ext.data.JsonStore({
+                        autoLoad:true,
+                        url:'poster/list',
+                        root: 'posters',
+                        idProperty:'id',
+                        fields: ['name', 'id'],
+                        listeners:{
+                            load:{
+                                scope:this,
+                                fn:function(){
+                                    this.fireEvent('loaded',this);
+                                }
+                            }
+                        }
+                    }),
+                    tpl: new Ext.XTemplate(
+                        '<tpl for=".">',
+                            '<div class="thumb-wrap" id="{id}" style="padding:4px;">',
+                            '<div class="thumb"><img src="poster/show/{id}" title="{name}" width="120" style="border:1px solid gray;"></div>',
+                            '<div class="poster-name">{name}</div>',
+                            '</div>',
+                        '</tpl>',
+                        '<div class="x-clear"></div>'
+                    ),
+                    autoHeight:true,
+                    multiSelect:false,
+                    singleSelect:true,
+                    overClass:'x-view-over',
+                    itemSelector:'div.thumb-wrap',
+                    emptyText: 'No images to display'
+                }
+            ]
+        });
+
+        mymdb.movie.flow.PosterListPanel.superclass.initComponent.apply(this, arguments);
+    }
+});
+Ext.reg('movieflow-poster-posterlist',mymdb.movie.flow.PosterListPanel);

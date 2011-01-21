@@ -1,7 +1,7 @@
 <div>
     <h1 style='margin-bottom:5px;border-bottom:1px dashed gray;padding:4px;'>${fieldValue(bean: movieInstance, field: "title")} (${movieInstance.releaseYear})</h1>
 
-    <div style='float:left'><img src='<g:createLink controller="poster" action="image" params="[id:movieInstance.id]" />' style='margin:10px;border:1px solid gray;' width='160' /></div>
+    <div style='float:left'><img src='<g:createLink controller="poster" action="show" params="[id:movieInstance.poster?.id]" />' style='margin:10px;border:1px solid gray;' width='160' /></div>
 
     <div>
         <div style='margin-bottom:8px;'><b>Location:</b> ${movieInstance.storage.name}-${movieInstance.storage.index}</div>

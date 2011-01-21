@@ -5,6 +5,15 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     previousId:3,
     initComponent: function(){
         Ext.apply(this, {
+            listeners:{
+                loaded:{
+                    scope:this,
+                    fn:function(action){
+                        var actors = action.result.data.actors;
+                        this.findByType('movieflow-itemselector')[0].setSelectedItems(actors);
+                    }
+                }
+            },
             items:[
                 { xtype:'label', text:'Select actors for movie:' },
                 { xtype:'movieflow-itemselector', availableUrl:'actor/list' },

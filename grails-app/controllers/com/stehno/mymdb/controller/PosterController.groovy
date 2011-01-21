@@ -31,21 +31,13 @@ class PosterController {
     }
 
     def show = {
-        response.outputStream.withStream { it << Poster.get(params.id).content }
-    }
-
-    /**
-     * Retrieves the poster image data for a specific movie instance.
-     *
-     * @param id the movie id whose poster is to be rendered
-     */
-	def image = {
-        def poster = movieService.findPoster(params.id as Long)
+        def poster = Poster.get(params.id)
         if( !poster ){
-            poster = servletContext.getResource(DEFAULT_POSTER).getBytes()
+            response.outputStream.withStream { it << servletContext.getResource(DEFAULT_POSTER).getBytes() }
+        } else {
+            response.outputStream.withStream { it << poster.content }
         }
-        response.outputStream.withStream { it << poster }
-	}
+    }
 
     // TODO: move this to a flow service
     private static final def FLOWKEY = 'movie.flow'

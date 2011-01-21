@@ -160,7 +160,8 @@ class MovieController {
 
         flow.poster = new PosterDto(
             posterType:PosterType.EXISTING,
-            posterId:movie.poster.id
+            posterId:movie.poster.id,
+            posterName:movie.poster.title
         )
 
         flow.genre = new GenreDto(
@@ -196,10 +197,15 @@ class MovieController {
 
     def poster = { PosterDto dto ->
         if( isGet(request) ){
-            def flow = getFlow(session)
-            dto = extractExistingOrUse(flow, 'poster', dto)
+            dto = extractExistingOrUse( getFlow(session), 'poster', dto )
 
-            render( [ success:true, data:dto ] as JSON )
+            // TODO: this DTO is not really useful if I have to convert it anyway... reconsider
+            def jdto = [:]
+            if(dto.posterType) jdto.posterType = dto.posterType.name()
+            if(dto.posterId) jdto.posterId = dto.posterId
+            if(dto.posterName) jdto.posterName = dto.posterName
+
+            render( contentType:'text/html', text:([ success:true, data:jdto ] as JSON).toString(false) )
         } else {
             if( dto.hasErrors() ){
                 render( contentType:'text/html', text:(errorResponse(dto,request) as JSON).toString(false) )
@@ -310,7 +316,24 @@ class MovieController {
             movie.releaseYear = flow.details.releaseYear
             movie.storage = new Storage( name:flow.details.storageName?.toUpperCase(), index:flow.details.storageIndex )
             movie.description = flow.details.description
-//            movie.poster = new Posterflow.poster.file TODO: needs to be converted to the new format
+
+            // set poster
+            if( flow.poster.posterType == PosterType.URL || flow.poster.posterType == PosterType.FILE ){
+                // the content is already in the dto
+                def thePoster = new Poster( title:movie.title, content:flow.poster.file )
+                if( !thePoster.save(flush:true) ) {
+                   thePoster.errors.each {
+                       // TODO: these need to be sent to front end!
+                        println it
+                   }
+                } else {
+                    movie.poster = thePoster
+                }
+
+            } else if(flow.poster.posterType == PosterType.EXISTING){
+                movie.poster = Poster.get(flow.poster.posterId)
+
+            }
 
             flow.genre.genres?.each {
                 movie.addToGenres( Genre.get(it) )

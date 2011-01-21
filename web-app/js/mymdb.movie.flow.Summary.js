@@ -19,7 +19,7 @@ mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
 
         this.un('activate');
 
-        this.on('activate',function(p){
+        this.on('activate',function(p){ // TODO: try using autoload instead and then reloading... that is the difference
             p.getComponent('summary').load({url:p.formUrl});
         });
     }
