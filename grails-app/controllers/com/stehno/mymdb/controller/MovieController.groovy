@@ -1,17 +1,17 @@
 /*
-Copyright 2010 Christopher J. Stehno (chris@stehno.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ * Copyright (c) 2011 Christopher J. Stehno (chris@stehno.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.stehno.mymdb.controller
 
@@ -24,6 +24,7 @@ class MovieController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def messageSource
+    def movieFlowService
 
 //    def update = {
 //        def outp = [:]
@@ -102,25 +103,6 @@ class MovieController {
 	
     // flow
 	
-    private static final def FLOWKEY = 'movie.flow'
-
-    def fetchResults = { FetchResultsDto dto ->
-        if( isGet(request) ){
-            // prepare flow session (or clear out existing)
-            session[FLOWKEY] = [:]
-            
-            render( [ success:true, data:dto ] as JSON )
-        } else {
-            if( dto.hasErrors() ){
-                render( errorResponse(dto,request) as JSON )
-
-            } else {
-                getFlow(session).fetchResults = dto
-                render( [ success:true ] as JSON )
-            }
-        }
-    }
-
     private def populateDtos(flow, movie){
         flow.clear()
 
