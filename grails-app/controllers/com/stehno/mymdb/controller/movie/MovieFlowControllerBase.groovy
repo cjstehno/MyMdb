@@ -33,7 +33,7 @@ abstract class MovieFlowControllerBase {
     }
 
     protected def renderSuccess( dto = null ){
-        render( success() as JSON )
+        render( success(dto) as JSON )
     }
 
     protected def success( dto = null ){

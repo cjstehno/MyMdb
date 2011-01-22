@@ -29,7 +29,7 @@ class UrlMappings {
         // movie flow mappings
         //
 
-        "/movie/fetch/$id?"(controller:"movieFetch"){
+        "/movie/fetch"(controller:"movieFetch"){
             action = [GET:"show", POST:"save"]
         }
 

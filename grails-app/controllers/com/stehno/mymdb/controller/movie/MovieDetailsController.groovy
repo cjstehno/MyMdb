@@ -66,18 +66,24 @@ class MovieDetailsController extends MovieFlowControllerBase {
             description:movie.description
         ))
 
-        movieFlowService.store(new PosterDto(
-            posterType:PosterType.EXISTING,
-            posterId:movie.poster.id,
-            posterName:movie.poster.title
-        ))
+        if(movie.poster){
+            movieFlowService.store(new PosterDto(
+                posterType:PosterType.EXISTING,
+                posterId:movie.poster.id,
+                posterName:movie.poster.title
+            ))
+        }
 
-        movieFlowService.store(new GenreDto(
-            genres:movie.genres.collect { it.id }
-        ))
+        if(movie.genres){
+            movieFlowService.store(new GenreDto(
+                genres:movie.genres.collect { it.id }
+            ))
+        }
 
-        movieFlowService.store(new ActorDto(
-            actors:movie.actors.collect { it.id }
-        ))
+        if(movie.actors){
+            movieFlowService.store(new ActorDto(
+                actors:movie.actors.collect { it.id }
+            ))
+        }
     }
 }
