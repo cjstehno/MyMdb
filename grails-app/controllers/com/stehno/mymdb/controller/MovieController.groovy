@@ -77,32 +77,6 @@ class MovieController {
 //        render( contentType:'text/html', text:(outp as JSON).toString(false) )
 //    }
 
-//    def edit = {
-//        def outp = [:]
-//
-//        def movie = Movie.get(params.id)
-//        if (!movie){
-//            outp.success = false
-//            outp.errorMessage = "${message(code: 'default.not.found.message', args: [message(code: 'movie.label', default: 'Movie'), params.id])}"
-//
-//        } else {
-//            outp.success = true
-//            outp.data = [
-//                id:movie.id,
-//                version:movie.version,
-//                title:movie.title,
-//                description:movie.description,
-//                releaseYear:movie.releaseYear,
-//				'storage.name':movie.storage.name,
-//				'storage.index':movie.storage.index,
-//				'genres':movie.genres?.collect { g-> g.id },
-//				'actors':movie.actors?.collect {a-> a.id }
-//            ]
-//        }
-//
-//        render outp as JSON
-//    }
-	
     def delete = {
         def movie = Movie.get(params.id)
 
@@ -149,7 +123,9 @@ class MovieController {
 
     private def populateDtos(flow, movie){
         flow.clear()
-        
+
+        flow.movieId = movie.id
+
         flow.details = new DetailsDto(
             title:movie.title,
             releaseYear:movie.releaseYear,
@@ -175,6 +151,11 @@ class MovieController {
 
     def details = { DetailsDto dto ->
         def flow = getFlow(session)
+
+        if(!flow){
+            flow = [:]
+            session[FLOWKEY] = flow
+        }
 
         if( isGet(request) ){
             if(params.id) populateDtos( flow, Movie.get(params.id) )
@@ -296,14 +277,19 @@ class MovieController {
         if( isGet(request) ){
             def flow = getFlow(session)
 
-            def genres = flow.genre.genres?.collect { Genre.get(it) }
-            def actors = flow.actor.actors?.collect { Actor.get(it) }
+            if(!flow){
+                flow = [:]
+                session[FLOWKEY] = flow
+            }
+
+            def genres = flow.genre?.genres?.collect { Genre.get(it) }
+            def actors = flow.actor?.actors?.collect { Actor.get(it) }
 
             [
-                title:flow.details.title,
-                releaseYear:flow.details.releaseYear,
-                storage:"${flow.details.storageName}-${flow.details.storageIndex}",
-                description:flow.details.description,
+                title:flow.details?.title,
+                releaseYear:flow.details?.releaseYear,
+                storage:"${flow.details?.storageName}-${flow.details?.storageIndex}",
+                description:flow.details?.description,
                 genres:genres,
                 actors:actors
             ]
@@ -311,7 +297,9 @@ class MovieController {
         } else {
             def flow = getFlow(session)
 
-            def movie = new Movie()
+            // TODO: need to account for pessimistic locking version
+
+            def movie = flow.movieId ? Movie.get(flow.movieId) : new Movie()
             movie.title = flow.details.title
             movie.releaseYear = flow.details.releaseYear
             movie.storage = new Storage( name:flow.details.storageName?.toUpperCase(), index:flow.details.storageIndex )
@@ -335,12 +323,24 @@ class MovieController {
 
             }
 
+            i am having issues with session management... lets refactor into a service and bite the bullet
+            need to be able to update
+            need transactions
+            need both directions
+            need finish from any where
+
             flow.genre.genres?.each {
-                movie.addToGenres( Genre.get(it) )
+                def gen = Genre.get(it)
+                if( !movie.genres.contains(gen) ){
+                    movie.addToGenres( gen )
+                }
             }
 
             flow.actor.actors?.each {
-                movie.addToActors( Actor.get(it) )
+                def act = Actor.get(it)
+                if( !movie.actors.contains(act) ){
+                    movie.addToActors( act )    
+                }
             }
 
             def resp = [success:(movie.save(flush:true) != null)]

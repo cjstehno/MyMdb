@@ -6,7 +6,12 @@ mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     initComponent: function(){
         Ext.apply(this, {
             items:[
-                { xtype:'panel', itemId:'summary', border:false }
+                {
+                    xtype:'panel',
+                    itemId:'summary',
+                    border:false,
+                    autoLoad:this.formUrl
+                }
             ]
         });
 
@@ -16,12 +21,10 @@ mymdb.movie.flow.SummaryView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         },this);
 
         mymdb.movie.flow.SummaryView.superclass.initComponent.apply(this, arguments);
-
-        this.un('activate');
-
-        this.on('activate',function(p){ // TODO: try using autoload instead and then reloading... that is the difference
-            p.getComponent('summary').load({url:p.formUrl});
-        });
+    },
+    loadData:function(){
+        var p = this;
+        p.getComponent('summary').load({url:p.formUrl});
     }
 });
 Ext.reg('movieflow-summary', mymdb.movie.flow.SummaryView);

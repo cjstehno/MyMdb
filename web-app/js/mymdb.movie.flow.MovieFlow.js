@@ -92,16 +92,20 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
         mymdb.movie.flow.ViewPanel.superclass.initComponent.apply(this, arguments);
 
         this.on('activate',function(p){
-            p.load({
-                method:'GET',
-                url:p.formUrl,
-                params:{
-                    id:p.movieId
-                },
-                success:function(form,action){
-                    p.fireEvent('loaded',action);
-                }
-            });
+            this.loadData();
+        },this);
+    },
+    loadData:function(){
+        var self = this;
+        this.load({
+            method:'GET',
+            url:this.formUrl,
+            params:{
+                id:this.movieId
+            },
+            success:function(form,action){
+                self.fireEvent('loaded',action);
+            }
         });
     },
     next:function(){
@@ -127,6 +131,7 @@ mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
         var theUrl = this.formUrl;
         theForm.submit({
             url:theUrl,
+            params:{ finish:true },
             clientValidation: true,
             method:'POST',
             success:function(form,action){
