@@ -323,12 +323,6 @@ class MovieController {
 
             }
 
-            i am having issues with session management... lets refactor into a service and bite the bullet
-            need to be able to update
-            need transactions
-            need both directions
-            need finish from any where
-
             flow.genre.genres?.each {
                 def gen = Genre.get(it)
                 if( !movie.genres.contains(gen) ){
