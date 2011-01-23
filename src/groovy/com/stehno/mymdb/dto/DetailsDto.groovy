@@ -15,8 +15,6 @@
  */
 package com.stehno.mymdb.dto
 
-import com.stehno.mymdb.domain.Movie
-
 class DetailsDto {
 
     String title
@@ -26,10 +24,13 @@ class DetailsDto {
     Integer storageIndex
 
     static constraints = {
-        Movie.constraints.title
-//        title(blank:false, minSize:1)
-//        description(size:0..2000)
-//        releaseYear(range:1930..2020)
+        title(validator:{ it && (1..100).contains(it.size()) })
+        description(size:0..2000)
+        releaseYear(nullable:false, range:1900..2100)
+        storageName(validator:{ !it || (1..40).contains(it.size()) })
+        storageIndex(nullable:true, min:0)
     }
+
+    // TODO: see if there is a way to require both storage name and index if one is specified
 }
 

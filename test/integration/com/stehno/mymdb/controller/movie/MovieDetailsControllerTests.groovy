@@ -156,11 +156,12 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
 
         def jso = parseJsonResponse()
         assertNotNull jso
-        assertFalse jso.success still workign on this test -- need to test constraints of DTOs
+        assertFalse jso.success
 
         def errors = jso.errors
-        assertEquals 1, errors.size()
-        assertEquals '', errors.title
+        assertEquals 2, errors.size()
+        assertEquals 'Property [title] of class [class com.stehno.mymdb.dto.DetailsDto] with value [null] does not pass custom validation', errors.title
+        assertEquals 'Property [releaseYear] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.releaseYear
 
         assertNull controller.movieFlowService.flow[DetailsDto.class.name]
     }

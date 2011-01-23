@@ -23,8 +23,6 @@ class PosterController {
 
     private static final def DEFAULT_POSTER = '/images/nocover.jpg'
 
-    def movieService
-
     def list = {
         def posters = Poster.list().collect { [name:it.title, id:it.id]}
         render( [posters:posters] as JSON )

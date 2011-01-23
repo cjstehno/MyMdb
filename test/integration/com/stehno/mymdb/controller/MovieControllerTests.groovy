@@ -8,6 +8,7 @@ import grails.converters.JSON
 import grails.test.GrailsUnitTestCase
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 class MovieControllerTests extends GrailsUnitTestCase {
@@ -109,7 +110,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals 1, Movie.list().size()
     }
 
-    @Test
+    @Ignore @Test
     void fetchResults_GET(){
         controller.request.method = 'GET'
 
@@ -122,10 +123,10 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertNotNull controller.session['movie.flow']
     }
 
-    @Test
+    @Ignore @Test
     void fetchResults_POST(){
         controller.session['movie.flow'] = [:]
-        
+
         controller.request.method = 'POST'
         controller.params.title = 'Some title'
 
@@ -140,7 +141,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals 'Some title', flow.fetchResults.title
     }
 
-    @Test
+    @Ignore @Test
     void fetchResults_POST_Errors(){
         controller.session['movie.flow'] = [:]
 
@@ -154,7 +155,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertNotNull jso.errors
     }
 
-    @Test
+    @Ignore @Test
     void details_GET(){
         controller.session['movie.flow'] = [:]
         controller.session['movie.flow'].fetchResults = new FetchResultsDto( title:'A Title' )
@@ -170,7 +171,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertNotNull controller.session['movie.flow']
     }
 
-    @Test
+    @Ignore @Test
     void details_POST(){
         controller.session['movie.flow'] = [:]
         controller.session['movie.flow'].fetchResults = new FetchResultsDto( title:'A Title' )
@@ -197,7 +198,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals 'blah blah blah...', flow.details.description
     }
 
-    @Test
+    @Ignore @Test
     void poster_GET(){
         controller.session['movie.flow'] = [:]
 
@@ -213,7 +214,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertNotNull controller.session['movie.flow'].poster
     }
 
-    @Test
+    @Ignore @Test
     void poster_POST_none(){
         controller.session['movie.flow'] = [:]
 
@@ -250,7 +251,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
 //        assertNull flow.file
 //    }
 
-    @Test
+    @Ignore @Test
     void genres_GET(){
         controller.session['movie.flow'] = [:]
 
@@ -265,7 +266,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertNotNull controller.session['movie.flow'].genre
     }
 
-    @Test
+    @Ignore @Test
     void genres_POST(){
         controller.session['movie.flow'] = [:]
 
@@ -285,7 +286,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals( [1,3], genre.genres )
     }
 
-    @Test
+    @Ignore @Test
     void actors_GET(){
         controller.session['movie.flow'] = [:]
 
@@ -300,7 +301,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertNotNull controller.session['movie.flow'].actor
     }
 
-    @Test
+    @Ignore @Test
     void actors_POST(){
         controller.session['movie.flow'] = [:]
 
@@ -320,7 +321,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals( [1,3], actor.actors )
     }
 
-    @Test
+    @Ignore @Test
     void summary_GET(){
         def details = [
             title:'Some Title',
@@ -346,7 +347,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals 'This is a description', resp.description
     }
 
-    @Test
+    @Ignore @Test
     void extractExistingOrUse_Use(){
         def flow = [:]
         def dto = [name:'SomeBean']
@@ -355,7 +356,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals dto, flow.foo
     }
 
-    @Test
+    @Ignore @Test
     void extractExistingOrUse_Existing(){
         def flow = [foo:'Bar']
         def dto = [name:'SomeBean']
