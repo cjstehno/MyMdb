@@ -19,17 +19,44 @@ package com.stehno.mymdb.dto
  * MovieManager wizard DTO for the poster panel. The posterType field value will specify which of the other properties should be specified.
  *
  * NONE - no value
+ *
  * FILE - file property (uploaded file data)
+ *
  * URL - url property (url of image to be copied), should populate file data
- * EXISTING - posterId of existing poster
+ *
+ * EXISTING - posterId and posterName of existing poster
  */
 class PosterDto {
 
-    PosterType posterType
+    PosterType posterType = PosterType.URL
     String url = 'http://'
     byte[] file
     long posterId
     String posterName
+
+    static constraints = {
+        posterType(nullable:false)
+    }
+
+    /**
+     * Overridden to provide conversion to a Map. The map will not contain the file
+     * byte data, and the posterType property will be the name() value of the enum.
+     * 
+     * @param type only Map is suppored by the override
+     * @return
+     */
+    @Override
+    public Object asType( Class type ){
+        if(type == Map.class){
+            def map = [:]
+            map.posterType = posterType.name()
+            map.url = url
+            map.posterId = posterId
+            map.posterName = posterName
+            return map
+        }
+        super.asType( type )
+    }
 }
 
 enum PosterType {

@@ -14,31 +14,27 @@
  * limitations under the License.
  */
 
-class UrlMappings {
-    static mappings = {
-        "/$controller/$action?/$id?"{
-            constraints {
-                // apply constraints here
-            }
-        }
-        
-        "/"(view:"/index")
-        "500"(view:'/error')
+package com.stehno.mymdb.dto
 
-        //
-        // movie flow mappings
-        //
+import grails.test.GrailsUnitTestCase
+import org.junit.Test
 
-        "/movie/fetch"(controller:"movieFetch"){
-            action = [GET:"show", POST:"save"]
-        }
+class PosterDtoTests extends GrailsUnitTestCase {
 
-        "/movie/details/$id?"(controller:"movieDetails"){
-            action = [GET:"show", POST:"save"]
-        }
+    @Test
+    void asMap(){
+        def dto = dto(posterId:100, posterName:'Foo')
+        def map = dto as Map
 
-        "/movie/poster"(controller:"moviePoster"){
-            action = [GET:"show", POST:"save"]
-        }
+        assertEquals dto.posterType.name(), map.posterType
+        assertEquals dto.url, map.url
+        assertEquals dto.posterId, map.posterId
+        assertEquals dto.posterName, map.posterName
+    }
+
+	private PosterDto dto(params){
+		def dto = new PosterDto(params)
+		mockForConstraintsTests PosterDto.class, [ dto ]
+		return dto
 	}
 }
