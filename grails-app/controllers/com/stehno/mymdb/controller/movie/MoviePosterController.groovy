@@ -17,16 +17,17 @@
 package com.stehno.mymdb.controller.movie
 
 import com.stehno.mymdb.dto.PosterDto
+import com.stehno.mymdb.dto.PosterType
 import grails.converters.JSON
 
-/**
+ /**
  * 
  *
  * @author cjstehno
  */
 class MoviePosterController extends MovieFlowControllerBase {
 
-    static allowedMethods = [ save:"POST", show:"GET" ]
+    static allowedMethods = [ save:"POST", show:"GET", fetch:"GET", select:"POST", clear:"POST" ]
 
     def show = {
         def dto = movieFlowService.retrieve(PosterDto.class)
@@ -34,60 +35,45 @@ class MoviePosterController extends MovieFlowControllerBase {
     }
 
     def save = { PosterDto dto ->
-//            if( dto.hasErrors() ){
-//                render( contentType:'text/html', text:(errorResponse(dto,request) as JSON).toString(false) )
-//
-//            } else {
-//                getFlow(session).poster = dto
-//
-//                if( dto.posterType == PosterType.URL ){
-//                    dto.file = dto.url.toURL().getBytes()
-//                }
-//
-//                render( contentType:'text/html', text:([success:true] as JSON).toString(false) )
-//            }
         if( dto.hasErrors() ){
-            renderErrors(request, dto)
+            render( contentType:'text/html', text:(errorResponse( dto as Map ) as JSON).toString(false) )
 
         } else {
+            if( dto.posterType == PosterType.URL ){
+                dto.file = dto.url.toURL().getBytes()
+            }
+
             movieFlowService.store(dto)
-            renderSuccess()
+            render( contentType:'text/html', text:(success() as JSON).toString(false) )
         }
     }
 
-    // TODO: need url mappings for these
     def fetch = {
-//        def url = params.url
-//
-//        def flow = getFlow(session)
-//        if( !flow.poster ){
-//            flow.poster = new PosterDto()
-//        }
-//
-//        flow.poster.posterType = PosterType.URL
-//        flow.poster.file = url.toURL().getBytes()
-//
-//        render( [success:true] as JSON)
+        def url = params.url
+
+        def poster = movieFlowService.retrieve(PosterDto.class)
+
+        poster.posterType = PosterType.URL
+        poster.file = url.toURL().getBytes()
+
+        movieFlowService.store(poster)
+
+        renderSuccess()
     }
 
     def select = {
-//        def pid = params.id
-//
-//        def flow = getFlow(session)
-//        if( !flow.poster ){
-//            flow.poster = new PosterDto()
-//        }
-//
-//        flow.poster.posterType = PosterType.EXISTING
-//        flow.poster.posterId = pid as Long
-//
-//        render( [success:true] as JSON)
+        def poster = movieFlowService.retrieve(PosterDto.class)
+
+        poster.posterType = PosterType.EXISTING
+        poster.posterId = params.id as Long
+
+        movieFlowService.store(poster)
+
+        renderSuccess()
     }
 
     def clear = {
-//        def flow = getFlow(session)
-//        flow.remove('poster')
-//
-//        render( [success:true] as JSON)
+        movieFlowService.store(new PosterDto())
+        renderSuccess()
     }
 }

@@ -18,8 +18,11 @@ package com.stehno.mymdb.controller
 import com.stehno.mymdb.domain.Poster
 import com.stehno.mymdb.dto.PosterType
 import grails.converters.JSON
+import com.stehno.mymdb.dto.PosterDto
 
 class PosterController {
+
+    def movieFlowService
 
     private static final def DEFAULT_POSTER = '/images/nocover.jpg'
 
@@ -37,18 +40,15 @@ class PosterController {
         }
     }
 
-    // TODO: move this to a flow service
-    private static final def FLOWKEY = 'movie.flow'
-
     /**
      * Retrieves the poster image data that is currently held in the movie wizard
      * flow scope, PosterDto.
      */
     def flow = {
-        def f = session[FLOWKEY]
-        if( f == null || f.poster == null || f.poster.posterType == null || f.poster.posterType == PosterType.NONE ){
+        def poster = movieFlowService.retrieve(PosterDto.class)
+        if( poster.posterType == PosterType.NONE ){
             response.outputStream.withStream { it << servletContext.getResource(DEFAULT_POSTER).getBytes() }
-        } else if(f.poster.posterType == PosterType.EXISTING){
+        } else if( poster.posterType == PosterType.EXISTING ){
             response.outputStream.withStream { it << Poster.get(f.poster.posterId).content }
         } else {
             response.outputStream.withStream { it << f.poster.file }
