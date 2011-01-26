@@ -43,5 +43,13 @@ class UrlMappings {
         "/movie/poster/fetch"(controller:"moviePoster", action:'fetch')
         "/movie/poster/select"(controller:"moviePoster", action:'select')
         "/movie/poster/clear"(controller:"moviePoster", action:'clear')
+
+        "/movie/genres"(controller:"movieGenres"){
+            action = [GET:"show", POST:"save"]
+        }
+
+        "/movie/actors"(controller:"movieActors"){
+            action = [GET:"show", POST:"save"]
+        }
 	}
 }

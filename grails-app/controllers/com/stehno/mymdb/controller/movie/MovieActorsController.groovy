@@ -13,9 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stehno.mymdb.dto
 
-class GenreDto {
+package com.stehno.mymdb.controller.movie
 
-    long[] genres
+import com.stehno.mymdb.dto.ActorDto
+
+ /**
+ * 
+ *
+ * @author cjstehno
+ */
+class MovieActorsController extends MovieFlowControllerBase {
+
+    static allowedMethods = [ save:"POST", show:"GET" ]
+
+    def show = {
+        renderSuccess( movieFlowService.retrieve(ActorDto.class) )
+    }
+
+    def save = { ActorDto dto ->
+        if( dto.hasErrors() ){
+            renderErrors(request, dto)
+
+        } else {
+            movieFlowService.store(dto)
+            renderSuccess()
+        }
+    }
 }
