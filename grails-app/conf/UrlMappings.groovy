@@ -51,5 +51,9 @@ class UrlMappings {
         "/movie/actors"(controller:"movieActors"){
             action = [GET:"show", POST:"save"]
         }
+
+        "/movie/summary"(controller:"movieSummary"){
+            action = [GET:"show", POST:"save"]
+        }
 	}
 }

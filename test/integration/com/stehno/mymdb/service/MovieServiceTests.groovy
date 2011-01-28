@@ -3,6 +3,7 @@ package com.stehno.mymdb.service
 import grails.test.GrailsUnitTestCase
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import com.stehno.mymdb.domain.*
 
@@ -20,6 +21,19 @@ class MovieServiceTests extends GrailsUnitTestCase {
         horror = new Genre(name:'Horror').save()
         johnQPublic = new Actor(firstName:'John', middleName:'Quincy', lastName:'Public').save()
         moviePoster = new Poster(title:'Movie Poster', content:'foo'.getBytes()).save()
+    }
+
+    @Ignore @Test // TODO: figure out why deleteMovie is not accepting a movie id
+    void deleteAMovie(){
+        [ 'Charlie', 'Alpha', 'Bravo' ].each { addMovie it }
+
+        assertEquals 3, Movie.list().size()
+
+        def movieId = Movie.findByTitle('Alpha').id
+        movieService.deleteMovie( movieId )
+
+        def movieList = Movie.list()
+        assertEquals 2, movieList.size()
     }
 
 	@Test

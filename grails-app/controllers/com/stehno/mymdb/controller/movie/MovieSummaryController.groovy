@@ -13,68 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stehno.mymdb.service
 
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Storage
+package com.stehno.mymdb.controller.movie
+
+import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.dto.ActorDto
 import com.stehno.mymdb.dto.DetailsDto
+import com.stehno.mymdb.dto.GenreDto
 
-class MovieFlowService {
+ /**
+ * 
+ *
+ * @author cjstehno
+ */
+class MovieSummaryController extends MovieFlowControllerBase {
 
-    static scope = "session" // TODO: not entirely happy with this
-    static transactional = false
+    static allowedMethods = [ save:"POST", show:"GET" ]
 
-    private final flow = [:]
+    def show = {
+        def details = movieFlowService.retrieve(DetailsDto.class)
 
-    /**
-     * Starts the flow and cleans out any pre-existing data. IF a movieId
-     * is specified, it will be stored and the flow will be in "edit" mode.
-     *
-     * @param movieId id of movie being edited (null for new movie)
-     */
-    def start( movieId = null ){
-        flow.clear()
-        if(movieId) flow.movieId = (movieId as Long)
+        def genresDto = movieFlowService.retrieve(GenreDto.class)
+        def genres = genresDto?.genres?.collect { Genre.get(it) }
+
+        def actorsDto = movieFlowService.retrieve(ActorDto.class)
+        def actors = actorsDto?.actors?.collect { Actor.get(it) }
+
+        [
+            title:details?.title,
+            releaseYear:details?.releaseYear,
+            storage:"${details?.storageName}-${details?.storageIndex}",
+            description:details?.description,
+            genres:genres,
+            actors:actors
+        ]
     }
 
-    /**
-     * Retrieve the stored DTO, or an empty new instance if none exists for that
-     * type. IF a new DTO instance is created, it will not be stored automatically.
-     *
-     * @param dto the DTO type to be retrieved, should be a class instance
-     * @return either the existing populated reference or a new instance of the dto
-     */
-    def retrieve( Class dto ){
-        flow[dto.name] ?: dto.newInstance()
-    }
+    def save = {
+        movieFlowService.save()
 
-    /**
-     * Stores the given DTO in the flow, using its classname as its key. Any
-     * pre-existing data for the DTO will be over-written.
-     *
-     * @param dto the DTO to be stored
-     * @return the DTO object will be returned (as a convenience)
-     */
-    def store( dto ){
-        flow[dto.getClass().name] = dto
-    }
-
-    /**
-     * Saves or updates the movie current stored in the flow data.
-     *
-     * @param movie
-     * @return
-     */
-    def save(){
-        // TODO: need to account for pessimistic locking version
-
-        def movie = flow.movieId ? Movie.get(flow.movieId) : new Movie()
-
-        def details = retrieve(DetailsDto.class)
-        movie.title = details.title
-        movie.releaseYear = details.releaseYear
-        movie.storage = new Storage( name:details.storageName?.toUpperCase(), index:details.storageIndex )
-        movie.description = details.description
+//        def movie = flow.movieId ? Movie.get(flow.movieId) : new Movie()
+//        movie.title = flow.details.title
+//        movie.releaseYear = flow.details.releaseYear
+//        movie.storage = new Storage( name:flow.details.storageName?.toUpperCase(), index:flow.details.storageIndex )
+//        movie.description = flow.details.description
 //
 //        // set poster
 //        if( flow.poster.posterType == PosterType.URL || flow.poster.posterType == PosterType.FILE ){
@@ -117,5 +100,7 @@ class MovieFlowService {
 //                resp.errors[it.field] = messageSource.getMessage( it, request.locale)
 //            }
 //        }
+//
+//        render( resp as JSON )
     }
 }
