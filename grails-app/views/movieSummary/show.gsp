@@ -1,7 +1,7 @@
 <div>
     <h1 style='margin-bottom:5px;border-bottom:1px dashed gray;padding:4px;'>${title} (${releaseYear})</h1>
 
-    <div style='float:left'><img src='<g:createLink controller="poster" action="flow" />' style='margin:10px;border:1px solid gray;' width='160' /></div>
+    <div style='float:left'><img src='<g:createLink controller="poster" action="flow" />?${ Math.random() }' style='margin:10px;border:1px solid gray;' width='160' /></div>
 
     <div style='float:right;width:400px;'>
         <div style='margin-bottom:8px;'><b>Location:</b> ${storage}</div>

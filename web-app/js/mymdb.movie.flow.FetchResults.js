@@ -1,6 +1,6 @@
 
 mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
-    formUrl:'movie/fetchResults',
+    formUrl:'movie/fetch',
     nextId:1,
     initComponent: function(){
         Ext.apply(this, {

@@ -48,10 +48,15 @@ class PosterController {
         def poster = movieFlowService.retrieve(PosterDto.class)
         if( poster.posterType == PosterType.NONE ){
             response.outputStream.withStream { it << servletContext.getResource(DEFAULT_POSTER).getBytes() }
+
         } else if( poster.posterType == PosterType.EXISTING ){
-            response.outputStream.withStream { it << Poster.get(f.poster.posterId).content }
+            response.outputStream.withStream { it << Poster.get(poster.posterId).content }
+
+        } else if(poster.file && poster.file.size() > 0){
+            response.outputStream.withStream { it << poster.file }
+
         } else {
-            response.outputStream.withStream { it << f.poster.file }
+            response.outputStream.withStream { it << servletContext.getResource(DEFAULT_POSTER).getBytes() }
         }
     }
 }

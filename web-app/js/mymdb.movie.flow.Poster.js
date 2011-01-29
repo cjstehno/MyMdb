@@ -30,7 +30,8 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                         var imagePanel = b.findParentByType('movieflow-poster').findByType('mymdb-imagepanel')[0];
 
                         Ext.Ajax.request({
-                            url:'movie/fetchPosterUrl',
+                            method:'GET',
+                            url:'movie/poster/fetch',
                             params: { url:urlText },
                             success:function(){
                                 imagePanel.reload();
@@ -66,7 +67,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                                 var imagePanel = b.findParentByType('movieflow-poster').findByType('mymdb-imagepanel')[0];
 
                                 Ext.Ajax.request({
-                                    url:'movie/savePosterSelection',
+                                    url:'movie/poster/select',
                                     params: { id:sel.id },
                                     success:function(){
                                         imagePanel.reload();
@@ -92,7 +93,8 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                             var imagePanel = rdo.findParentByType('movieflow-poster').findByType('mymdb-imagepanel')[0];
 
                             Ext.Ajax.request({
-                                url:'movie/clearSelectedPoster',
+                                method:'POST',
+                                url:'movie/poster/clear',
                                 success:function(){
                                     imagePanel.reload();
                                 },

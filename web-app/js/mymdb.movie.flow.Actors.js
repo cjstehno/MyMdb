@@ -1,6 +1,6 @@
 
 mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
-    formUrl:'movie/actor',
+    formUrl:'movie/actors',
     nextId:5,
     previousId:3,
     initComponent: function(){

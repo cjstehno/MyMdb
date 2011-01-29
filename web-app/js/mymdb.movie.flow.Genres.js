@@ -1,6 +1,6 @@
 
 mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
-    formUrl:'movie/genre',
+    formUrl:'movie/genres',
     nextId:4,
     previousId:2,
     initComponent: function(){

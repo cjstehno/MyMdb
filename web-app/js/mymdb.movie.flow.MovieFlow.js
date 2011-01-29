@@ -81,6 +81,9 @@ mymdb.movie.flow.MovieManagerFlowPanel = Ext.extend( Ext.Panel, {
 });
 Ext.reg('movieflow-panel', mymdb.movie.flow.MovieManagerFlowPanel);
 
+/**
+ * This is the base form panel from which the movie flow panels are descended.
+ */
 mymdb.movie.flow.ViewPanel = Ext.extend(Ext.form.FormPanel, {
     formUrl:'',
     nextId:0,

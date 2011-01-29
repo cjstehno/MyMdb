@@ -96,7 +96,7 @@ class MovieFlowService {
                 movie.poster = thePoster
             }
 
-        } else if(flow.poster.posterType == PosterType.EXISTING){
+        } else if(poster.posterType == PosterType.EXISTING){
             movie.poster = Poster.get(poster.posterId)
 
         }
