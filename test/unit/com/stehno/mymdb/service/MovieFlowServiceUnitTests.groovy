@@ -20,7 +20,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class MovieFlowServiceTests extends GrailsUnitTestCase {
+class MovieFlowServiceUnitTests extends GrailsUnitTestCase {
 
     def movieFlowService
 

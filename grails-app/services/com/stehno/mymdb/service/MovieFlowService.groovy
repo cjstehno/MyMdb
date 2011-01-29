@@ -15,9 +15,17 @@
  */
 package com.stehno.mymdb.service
 
+import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.Poster
 import com.stehno.mymdb.domain.Storage
 import com.stehno.mymdb.dto.DetailsDto
+import com.stehno.mymdb.dto.PosterDto
+import com.stehno.mymdb.dto.PosterType
+import com.stehno.mymdb.dto.GenreDto
+import com.stehno.mymdb.dto.ActorDto
+import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.ServiceValidationException
 
 class MovieFlowService {
 
@@ -62,11 +70,11 @@ class MovieFlowService {
     /**
      * Saves or updates the movie current stored in the flow data.
      *
-     * @param movie
-     * @return
+     * @throws ServiceValidationException if there are validation errors
      */
-    def save(){
+    def void save(){
         // TODO: need to account for pessimistic locking version
+        // TODO: need to ensure that this is transactional
 
         def movie = flow.movieId ? Movie.get(flow.movieId) : new Movie()
 
@@ -75,47 +83,44 @@ class MovieFlowService {
         movie.releaseYear = details.releaseYear
         movie.storage = new Storage( name:details.storageName?.toUpperCase(), index:details.storageIndex )
         movie.description = details.description
-//
-//        // set poster
-//        if( flow.poster.posterType == PosterType.URL || flow.poster.posterType == PosterType.FILE ){
-//            // the content is already in the dto
-//            def thePoster = new Poster( title:movie.title, content:flow.poster.file )
-//            if( !thePoster.save(flush:true) ) {
-//               thePoster.errors.each {
-//                   // TODO: these need to be sent to front end!
-//                    println it
-//               }
-//            } else {
-//                movie.poster = thePoster
-//            }
-//
-//        } else if(flow.poster.posterType == PosterType.EXISTING){
-//            movie.poster = Poster.get(flow.poster.posterId)
-//
-//        }
-//
-//        flow.genre.genres?.each {
-//            def gen = Genre.get(it)
-//            if( !movie.genres.contains(gen) ){
-//                movie.addToGenres( gen )
-//            }
-//        }
-//
-//        flow.actor.actors?.each {
-//            def act = Actor.get(it)
-//            if( !movie.actors.contains(act) ){
-//                movie.addToActors( act )
-//            }
-//        }
-//
-//        def resp = [success:(movie.save(flush:true) != null)]
-//        if( movie.hasErrors() ){
-//            resp.success = false
-//
-//            resp.errors = [:]
-//            movie.errors.fieldErrors.each {
-//                resp.errors[it.field] = messageSource.getMessage( it, request.locale)
-//            }
-//        }
+
+        // set poster
+        def poster = retrieve(PosterDto.class)
+        if( poster.posterType == PosterType.URL || poster.posterType == PosterType.FILE ){
+            // the content is already in the dto
+            def thePoster = new Poster( title:details.title, content:poster.file )
+            if( !thePoster.save(flush:true) ) {
+                // since its been validated along the way this should rarely happen
+                throw new ServiceValidationException('Unable to persist poster.', thePoster.errors)
+            } else {
+                movie.poster = thePoster
+            }
+
+        } else if(flow.poster.posterType == PosterType.EXISTING){
+            movie.poster = Poster.get(poster.posterId)
+
+        }
+
+        def genre = retrieve(GenreDto.class)
+        genre.genres?.each {
+            def gen = Genre.get(it)
+            if( !movie.genres?.contains(gen) ){
+                movie.addToGenres( gen )
+            }
+        }
+
+        def actor = retrieve(ActorDto.class)
+        actor.actors?.each {
+            def act = Actor.get(it)
+            if( !movie.actors?.contains(act) ){
+                movie.addToActors( act )
+            }
+        }
+
+        movie.save(flush:true)
+        if( movie.hasErrors() ){
+            // since its been validated along the way this should rarely happen
+            throw new ServiceValidationException('Unable to persist movie.', movie.errors)
+        }
     }
 }

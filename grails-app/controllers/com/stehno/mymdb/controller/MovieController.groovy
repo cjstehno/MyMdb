@@ -32,16 +32,16 @@ class MovieController {
             outp.success = true
 
         } catch(DataRetrievalFailureException drfe){
-            populateErrors 'default.not.found.message', params.id
+            populateErrors outp, 'default.not.found.message', params.id
 
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            populateErrors 'default.not.deleted.message', params.id
+            populateErrors outp, 'default.not.deleted.message', params.id
         }
 
         render outp as JSON
     }
 
-    private def populateErrors(code, movieId){
+    private def populateErrors( outp, code, movieId){
         outp.success = false
         outp.errors = ['general': "${message(code:code, args:[message(code:'movie.label', default:'Movie'), movieId])}"]
     }

@@ -24,6 +24,8 @@ class MovieService {
 
     static transactional = true
 
+    private static def titleComparator = { a,b -> a.title <=> b.title } as Comparator
+
     /**
      * Deletes the movie with the given id. If no movie exists with the specified id,
      * an exception is thrown.
@@ -73,6 +75,4 @@ class MovieService {
     def findMoviesForBox( boxName ){
         Movie.findAll("from Movie m where m.storage.name=? order by m.title asc", [boxName])
     }
-
-    private static def titleComparator = { a,b -> a.title <=> b.title } as Comparator
 }

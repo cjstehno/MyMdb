@@ -16,19 +16,23 @@
 
 package com.stehno.mymdb.controller.movie
 
+import com.stehno.mymdb.ServiceValidationException
 import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.dto.ActorDto
 import com.stehno.mymdb.dto.DetailsDto
 import com.stehno.mymdb.dto.GenreDto
+import grails.converters.JSON
 
- /**
+/**
  * 
  *
  * @author cjstehno
  */
 class MovieSummaryController extends MovieFlowControllerBase {
 
+    def messageSource
+    
     static allowedMethods = [ save:"POST", show:"GET" ]
 
     def show = {
@@ -51,56 +55,17 @@ class MovieSummaryController extends MovieFlowControllerBase {
     }
 
     def save = {
-        movieFlowService.save()
+        def resp = success()
+        try {
+            movieFlowService.save()
 
-//        def movie = flow.movieId ? Movie.get(flow.movieId) : new Movie()
-//        movie.title = flow.details.title
-//        movie.releaseYear = flow.details.releaseYear
-//        movie.storage = new Storage( name:flow.details.storageName?.toUpperCase(), index:flow.details.storageIndex )
-//        movie.description = flow.details.description
-//
-//        // set poster
-//        if( flow.poster.posterType == PosterType.URL || flow.poster.posterType == PosterType.FILE ){
-//            // the content is already in the dto
-//            def thePoster = new Poster( title:movie.title, content:flow.poster.file )
-//            if( !thePoster.save(flush:true) ) {
-//               thePoster.errors.each {
-//                   // TODO: these need to be sent to front end!
-//                    println it
-//               }
-//            } else {
-//                movie.poster = thePoster
-//            }
-//
-//        } else if(flow.poster.posterType == PosterType.EXISTING){
-//            movie.poster = Poster.get(flow.poster.posterId)
-//
-//        }
-//
-//        flow.genre.genres?.each {
-//            def gen = Genre.get(it)
-//            if( !movie.genres.contains(gen) ){
-//                movie.addToGenres( gen )
-//            }
-//        }
-//
-//        flow.actor.actors?.each {
-//            def act = Actor.get(it)
-//            if( !movie.actors.contains(act) ){
-//                movie.addToActors( act )
-//            }
-//        }
-//
-//        def resp = [success:(movie.save(flush:true) != null)]
-//        if( movie.hasErrors() ){
-//            resp.success = false
-//
-//            resp.errors = [:]
-//            movie.errors.fieldErrors.each {
-//                resp.errors[it.field] = messageSource.getMessage( it, request.locale)
-//            }
-//        }
-//
-//        render( resp as JSON )
+        } catch( ServiceValidationException sve ){
+            resp.success = false
+            resp.errors = [:]
+            sve.errors.fieldErrors.each {
+                resp.errors[it.field] = messageSource.getMessage( it, request.locale)
+            }
+        }
+        render( resp as JSON )
     }
 }
