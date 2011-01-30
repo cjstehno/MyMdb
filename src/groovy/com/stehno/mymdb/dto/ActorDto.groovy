@@ -17,4 +17,8 @@ package com.stehno.mymdb.dto
 
 class ActorDto {
     long[] actors
+
+    static constraints = {
+        actors(nullable:true)
+    }
 }

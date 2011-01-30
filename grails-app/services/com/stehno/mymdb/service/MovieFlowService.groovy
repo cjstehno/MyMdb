@@ -15,22 +15,18 @@
  */
 package com.stehno.mymdb.service
 
+import com.stehno.mymdb.ServiceValidationException
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.Poster
 import com.stehno.mymdb.domain.Storage
-import com.stehno.mymdb.dto.DetailsDto
-import com.stehno.mymdb.dto.PosterDto
-import com.stehno.mymdb.dto.PosterType
-import com.stehno.mymdb.dto.GenreDto
-import com.stehno.mymdb.dto.ActorDto
+import com.stehno.mymdb.dto.*
 import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.ServiceValidationException
 
 class MovieFlowService {
 
     static scope = "session" // TODO: not entirely happy with this
-    static transactional = false
+    static transactional = true
 
     private final flow = [:]
 
@@ -101,20 +97,17 @@ class MovieFlowService {
 
         }
 
-        def genre = retrieve(GenreDto.class)
-        genre.genres?.each {
-            def gen = Genre.get(it)
-            if( !movie.genres?.contains(gen) ){
-                movie.addToGenres( gen )
-            }
+        // genres
+        movie.genres?.clear()
+        def selectedGenreIds = retrieve(GenreDto.class).genres ?: []
+        selectedGenreIds.each { gid->
+            movie.addToGenres Genre.get(gid)
         }
 
-        def actor = retrieve(ActorDto.class)
-        actor.actors?.each {
-            def act = Actor.get(it)
-            if( !movie.actors?.contains(act) ){
-                movie.addToActors( act )
-            }
+        movie.actors?.clear()
+        def selectedActorIds = retrieve(ActorDto.class).actors ?: []
+        selectedActorIds.each { aid->
+            movie.addToActors Actor.get(aid)
         }
 
         movie.save(flush:true)

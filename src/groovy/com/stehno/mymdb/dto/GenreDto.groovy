@@ -18,4 +18,8 @@ package com.stehno.mymdb.dto
 class GenreDto {
 
     long[] genres
+
+    static constraints = {
+        genres(nullable:true)
+    }
 }
