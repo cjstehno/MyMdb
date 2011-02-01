@@ -166,6 +166,36 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertNull controller.movieFlowService.flow[DetailsDto.class.name]
     }
 
+    @Test
+    void save_with_finish(){
+        request('POST','/movie/details')
+
+        controller.params.title = 'A Cool Title'
+        controller.params.releaseYear = '2007'
+        controller.params.description = 'Some cool movie!'
+        controller.params.storageName = 'T'
+        controller.params.storageIndex = '23'
+        controller.params.finish = true
+
+        controller.save()
+
+        assertEquals '', controller.response.contentAsString
+
+//        def jso = parseJsonResponse()
+//        assertNotNull jso
+//        assertTrue jso.success
+
+        def movie = Movie.findByTitle('A Cool Title')
+        assertNotNull movie
+        assertEquals 2007, movie.releaseYear
+        assertEquals 'Some cool movie!', movie.description
+        assertEquals 'T', movie.storage.name
+        assertEquals 23, movie.storage.index
+        assertNull movie.poster
+        assertNull movie.genres
+        assertNull movie.actors
+    }
+
     @After
     void after(){
         super.tearDown()

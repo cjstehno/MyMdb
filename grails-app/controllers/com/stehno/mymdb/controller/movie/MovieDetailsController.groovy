@@ -16,10 +16,9 @@
 
 package com.stehno.mymdb.controller.movie
 
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.dto.*
+import com.stehno.mymdb.dto.DetailsDto
 
-/**
+ /**
  * This controller handles the state for the movie details panel of the
  * movie flow.
  *
@@ -34,8 +33,6 @@ class MovieDetailsController extends MovieFlowControllerBase {
         if(movieId){
             // editing movie - this is flow start
             movieFlowService.start(movieId)
-
-            populateFlowData( Movie.get(movieId) )
         }
 
         renderSuccess( movieFlowService.retrieve(DetailsDto.class) )
@@ -47,43 +44,12 @@ class MovieDetailsController extends MovieFlowControllerBase {
 
         } else {
             movieFlowService.store(dto)
-            renderSuccess()
-        }
-    }
 
-    /**
-     * Copies the movie data into the appropriate DTO objects for use
-     * in the flow
-     *
-     * @param movie the movie being editied
-     */
-    private def void populateFlowData( movie ){
-        movieFlowService.store(new DetailsDto(
-            title:movie.title,
-            releaseYear:movie.releaseYear,
-            storageName:movie.storage.name,
-            storageIndex:movie.storage.index,
-            description:movie.description
-        ))
-
-        if(movie.poster){
-            movieFlowService.store(new PosterDto(
-                posterType:PosterType.EXISTING,
-                posterId:movie.poster.id,
-                posterName:movie.poster.title
-            ))
-        }
-
-        if(movie.genres){
-            movieFlowService.store(new GenreDto(
-                genres:movie.genres.collect { it.id }
-            ))
-        }
-
-        if(movie.actors){
-            movieFlowService.store(new ActorDto(
-                actors:movie.actors.collect { it.id }
-            ))
+            if(params.finish){
+                forward( controller:'movieSummary', action:'save' )
+            } else {
+                renderSuccess()
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ class MovieFlowService {
      */
     def start( movieId = null ){
         flow.clear()
-        if(movieId) flow.movieId = (movieId as Long)
+        if(movieId) populateFlowData( movieId as Long )
     }
 
     /**
@@ -64,6 +64,46 @@ class MovieFlowService {
     }
 
     /**
+     * Copies the movie data into the appropriate DTO objects for use
+     * in the flow
+     *
+     * @param movie the movie being edited
+     */
+    private def void populateFlowData( movieId ){
+        def movie = Movie.get(movieId)
+
+        flow.movieId = movieId
+        
+        store(new DetailsDto(
+            title:movie.title,
+            releaseYear:movie.releaseYear,
+            storageName:movie.storage.name,
+            storageIndex:movie.storage.index,
+            description:movie.description
+        ))
+
+        if(movie.poster){
+            store(new PosterDto(
+                posterType:PosterType.EXISTING,
+                posterId:movie.poster.id,
+                posterName:movie.poster.title
+            ))
+        }
+
+        if(movie.genres){
+            store(new GenreDto(
+                genres:movie.genres.collect { it.id }
+            ))
+        }
+
+        if(movie.actors){
+            store(new ActorDto(
+                actors:movie.actors.collect { it.id }
+            ))
+        }
+    }
+
+    /**
      * Saves or updates the movie current stored in the flow data.
      *
      * @throws ServiceValidationException if there are validation errors
@@ -82,7 +122,7 @@ class MovieFlowService {
 
         // set poster
         def poster = retrieve(PosterDto.class)
-        if( poster.posterType == PosterType.URL || poster.posterType == PosterType.FILE ){
+        if( (poster.posterType == PosterType.URL || poster.posterType == PosterType.FILE) && poster.file ){
             // the content is already in the dto
             def thePoster = new Poster( title:details.title, content:poster.file )
             if( !thePoster.save(flush:true) ) {
