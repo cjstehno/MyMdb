@@ -37,7 +37,11 @@ class MovieActorsController extends MovieFlowControllerBase {
 
         } else {
             movieFlowService.store(dto)
-            renderSuccess()
+            if(params.finish){
+                forward( controller:'movieSummary', action:'save' )
+            } else {
+                renderSuccess()
+            }
         }
     }
 }

@@ -109,7 +109,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         });
 
         this.on('activate',function(p){
-            this.disableNavButtons( ['finish-btn'] );
+            this.disableNavButtons( ['finish-btn'] );   // TODO: filed as issue (MYMDB-59)
             this.setDialogTitle('New Movie: Poster');
 
             p.findByType('mymdb-imagepanel')[0].reload();

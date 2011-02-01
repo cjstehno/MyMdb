@@ -44,7 +44,7 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         var panel = this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel);
         var nid = this.nextId;
 
-        var selectedRecs = (this.find('itemId','selector-selected')[0]).getStore().getRange();
+        var selectedRecs = (this.findByType('movieflow-itemselector')[0]).getSelectedRecords();
         var actorIds = [];
         Ext.each(selectedRecs, function(it){
             actorIds.push(it.data.id);
@@ -60,6 +60,33 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
             },
             failure:function(){
                 Ext.Msg.alert('Error','Unable to submit form');
+            }
+        });
+    },
+    finish:function(){
+        var thePanel = this;
+        var theForm = this.getForm();
+        var theUrl = this.formUrl;
+
+        var selectedRecs = (this.findByType('movieflow-itemselector')[0]).getSelectedRecords()
+        var actorIds = [];
+        Ext.each(selectedRecs, function(it){
+            actorIds.push(it.data.id);
+        });
+
+        theForm.submit({
+            url:theUrl,
+            params:{ finish:true, actors:actorIds },
+            clientValidation: true,
+            method:'POST',
+            success:function(form,action){
+               Ext.Msg.alert('Success', 'Movie saved successfully', function(){
+                   thePanel.findParentByType('window').close();
+                   Ext.StoreMgr.lookup('gridData').load();
+               });
+            },
+            failure:function(form,action){
+                Ext.Msg.alert('Failure', action.result.msg);
             }
         });
     }

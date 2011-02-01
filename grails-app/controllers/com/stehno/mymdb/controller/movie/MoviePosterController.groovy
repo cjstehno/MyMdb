@@ -44,7 +44,12 @@ class MoviePosterController extends MovieFlowControllerBase {
             }
 
             movieFlowService.store(dto)
-            render( contentType:'text/html', text:(success() as JSON).toString(false) )
+
+            if(params.finish){
+                forward( controller:'movieSummary', action:'save' )
+            } else {
+                render( contentType:'text/html', text:(success() as JSON).toString(false) )
+            }
         }
     }
 

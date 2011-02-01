@@ -44,7 +44,7 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         var panel = this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel);
         var nid = this.nextId;
 
-        var selectedRecs = (this.find('itemId','selector-selected')[0]).getStore().getRange();
+        var selectedRecs = (this.findByType('movieflow-itemselector')[0]).getSelectedRecords();
         var genreIds = [];
         Ext.each(selectedRecs, function(it){
             genreIds.push(it.data.id);
@@ -60,6 +60,33 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
             },
             failure:function(){
                 Ext.Msg.alert('Error','Unable to submit form');
+            }
+        });
+    },
+    finish:function(){
+        var thePanel = this;
+        var theForm = this.getForm();
+        var theUrl = this.formUrl;
+
+        var selectedRecs = (this.findByType('movieflow-itemselector')[0]).getSelectedRecords()
+        var genreIds = [];
+        Ext.each(selectedRecs, function(it){
+            genreIds.push(it.data.id);
+        });
+
+        theForm.submit({
+            url:theUrl,
+            params:{ finish:true, genres:genreIds },
+            clientValidation: true,
+            method:'POST',
+            success:function(form,action){
+               Ext.Msg.alert('Success', 'Movie saved successfully', function(){
+                   thePanel.findParentByType('window').close();
+                   Ext.StoreMgr.lookup('gridData').load();
+               });
+            },
+            failure:function(form,action){
+                Ext.Msg.alert('Failure', action.result.msg);
             }
         });
     }
@@ -130,6 +157,9 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
         });
 
         mymdb.movie.flow.ItemSelector.superclass.initComponent.apply(this, arguments);
+    },
+    getSelectedRecords:function(){
+        return (this.find('itemId','selector-selected')[0]).getStore().getRange();
     },
     setSelectedItems:function( items ){
         var fromStore = this.find('itemId', 'selector-available')[0].getStore();
