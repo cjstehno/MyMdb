@@ -166,7 +166,10 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
 
         var recs = [];
         Ext.each(items,function(it){
-            recs.push(fromStore.getById(it.toString()));
+            var rec = fromStore.getById(it.toString());
+            if(rec){
+                recs.push(rec);
+            }
         });
 
         this.moveItems(true, recs);

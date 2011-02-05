@@ -18,7 +18,7 @@ mymdb.movie.flow.PosterView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     
                 { xtype:'mymdb-imagepanel', url:'/mymdb/poster/flow', style:'margin:4px;', border:false, width:110, height:160, rowspan:4 },
 
-                { xtype: 'movieflow-poster-radio', boxLabel:'URL:', inputValue:'URL', targetItemIds:['url-text','url-button'], checked:true },
+                { xtype: 'movieflow-poster-radio', boxLabel:'URL:', inputValue:'URL', targetItemIds:['url-text','url-button'] },
                 { xtype:'textfield', itemId:'url-text', name:'url', value:'http://', width:325 },
                 {
                     xtype:'button',

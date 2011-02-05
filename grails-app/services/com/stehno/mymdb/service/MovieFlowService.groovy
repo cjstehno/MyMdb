@@ -88,6 +88,8 @@ class MovieFlowService {
                 posterId:movie.poster.id,
                 posterName:movie.poster.title
             ))
+        } else {
+            store(new PosterDto( posterType:PosterType.NONE ))
         }
 
         if(movie.genres){
