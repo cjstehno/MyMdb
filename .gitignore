@@ -2,6 +2,7 @@
 
 cobertura.ser
 mymdb-config.groovy
+/grails-app/conf/config-properties.properties
 
 #.classpath
 #.project
