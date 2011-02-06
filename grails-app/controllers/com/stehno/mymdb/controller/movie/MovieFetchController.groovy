@@ -28,7 +28,7 @@ class MovieFetchController extends MovieFlowControllerBase {
 
     def movieFetchService
     
-    static allowedMethods = [ save:"POST", show:"GET", search:'POST' ]
+    static allowedMethods = [ save:"POST", show:"GET", search:'POST', preview:'GET' ]
 
     def show = {
         movieFlowService.start()
@@ -55,5 +55,9 @@ class MovieFetchController extends MovieFlowControllerBase {
     def search = {
         def results = movieFetchService.search( params.title )
         render( [items:results] as JSON)
+    }
+
+    def preview = {
+        movieFetchService.fetch( params.id )
     }
 }

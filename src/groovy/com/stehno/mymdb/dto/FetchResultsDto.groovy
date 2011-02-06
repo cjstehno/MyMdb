@@ -18,8 +18,9 @@ package com.stehno.mymdb.dto
 class FetchResultsDto {
 
     String title
+    String selectedId
 
     static constraints = {
-        title(nullable:false,size:1..100)
+        title(nullable:true,size:1..100)
     }
 }

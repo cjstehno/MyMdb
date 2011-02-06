@@ -17,7 +17,15 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     xtype: 'textfield',
                     name:'title',
                     fieldLabel:'Title',
-                    width:510
+                    width:510,
+                    listeners:{
+                        specialkey:{
+                            scope:this,
+                            fn:function( field, e ){
+                                if(e.getKey() == 13) this.doSearch( field.getValue() );
+                            }
+                        }
+                    }
                 },
                 {
                     xtype:'button',
@@ -25,8 +33,7 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     style:'padding:4px',
                     scope:this,
                     handler:function(b,e){
-                        var title = this.findByType('textfield')[0].getValue();
-                        this.findByType('movieflow-fetchresults-grid')[0].searchFor(title);
+                        this.doSearch( this.findByType('textfield')[0].getValue() );
                     }
                 },
                     
@@ -40,10 +47,32 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         }, this);
 
         mymdb.movie.flow.FetchResultsView.superclass.initComponent.apply(this, arguments);
+    },
+    doSearch:function(value){
+        this.findByType('movieflow-fetchresults-grid')[0].searchFor(value);
+    },
+    next:function(){
+        i need to populate the selected id if there is one...
+                
+        var panel = this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel);
+        var nid = this.nextId;
+
+        this.getForm().submit({
+            method:'POST', url:this.formUrl,
+            success:function(){
+                panel.getLayout().setActiveItem(nid);
+            },
+            failure:function(){
+                Ext.Msg.alert('Error','Unable to submit form');
+            }
+        });
     }
 });
 Ext.reg('movieflow-fetchresults', mymdb.movie.flow.FetchResultsView);
 
+/**
+ * List view where movie fetch results are displayed for selection.
+ */
 mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
     emptyText: 'No results found.',
     loadingText:'Searching...',
@@ -68,6 +97,12 @@ mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
             })
         });
 
+        this.on('dblclick', function( view, index, node, e ){
+            var selRec = view.getSelectedRecords()[0];
+            var preview = new mymdb.movie.flow.ResultPreview({ movieId:selRec.data.movieId });
+            preview.show();
+        });
+
         mymdb.movie.flow.ResultsView.superclass.initComponent.apply(this, arguments);
     },
     searchFor:function(title){
@@ -75,3 +110,33 @@ mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
     }
 });
 Ext.reg('movieflow-fetchresults-grid', mymdb.movie.flow.ResultsView);
+
+/**
+ * Dialog window used to display the preview of a selected fetched movie's data.
+ */
+mymdb.movie.flow.ResultPreview = Ext.extend(Ext.Window, {
+    title:'Movie Preview',
+    modal:true,
+    width:600,
+    height:500,
+    layout:'fit',
+    initComponent: function(){
+        Ext.apply(this, {
+            buttons:[
+                {
+                    text:'Close',
+                    scope:this,
+                    handler:function(b,e){ this.close(); }
+                }
+            ],
+            items:[
+                {
+                    xtype:'panel',
+                    autoLoad:'movie/fetch/preview/' + this.movieId
+                }
+            ]
+        });
+
+        mymdb.movie.flow.ResultPreview.superclass.initComponent.apply(this, arguments);
+    }
+});

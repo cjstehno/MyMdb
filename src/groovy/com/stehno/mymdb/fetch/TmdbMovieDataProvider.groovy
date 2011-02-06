@@ -33,6 +33,8 @@ class TmdbMovieDataProvider implements MovieDataProvider {
      */
     def searchFor( String movieTitle ){
         def results = api.movieSearch( movieTitle )
+
+        // when no results the first element is a string message
         results[0] instanceof String ? [] : results
     }
 
@@ -44,6 +46,6 @@ class TmdbMovieDataProvider implements MovieDataProvider {
      * @return
      */
     def fetch( movieId ){
-        api.movieGetInfo( movieId )
+        api.movieGetInfo( movieId )[0]
     }
 }
