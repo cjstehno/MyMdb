@@ -16,6 +16,8 @@
 
 package com.stehno.mymdb.service
 
+import org.apache.commons.lang.WordUtils
+
 /**
  * 
  *
@@ -26,6 +28,21 @@ class MovieFetchService {
     def movieDataProvider
 
     def search( title ){
+        movieDataProvider.searchFor( title ).collect { dat->
+            [ movieId:dat.id, title:dat.name.trim(), releaseYear:released(dat), description:description(dat) ]
+        }
+    }
 
+    private def released( entry ){
+        entry.released.split('-')[0]
+    }
+
+    private def description( entry ){
+        def text = entry.overview
+        if( !text || text.size() < 25 ){
+            return text
+        } else {
+            return WordUtils.abbreviate( text, 55, 60, '...')
+        }
     }
 }

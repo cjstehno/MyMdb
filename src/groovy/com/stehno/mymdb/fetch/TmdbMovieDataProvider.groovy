@@ -32,7 +32,8 @@ class TmdbMovieDataProvider implements MovieDataProvider {
      * @return
      */
     def searchFor( String movieTitle ){
-        api.movieSearch( movieTitle ).collect { [title:it.name, movieId:it.id] }
+        def results = api.movieSearch( movieTitle )
+        results[0] instanceof String ? [] : results
     }
 
     /**
@@ -43,8 +44,6 @@ class TmdbMovieDataProvider implements MovieDataProvider {
      * @return
      */
     def fetch( movieId ){
-        def info = api.movieGetInfo( movieId )
-
-        [ title:info.name ]
+        api.movieGetInfo( movieId )
     }
 }

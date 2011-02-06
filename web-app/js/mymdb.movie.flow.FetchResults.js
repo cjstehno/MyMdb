@@ -2,26 +2,35 @@
 mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     formUrl:'movie/fetch',
     nextId:1,
+    layout:'table',
+    layoutConfig:{
+        columns: 3
+    },
+    defaults:{
+        height:30
+    },
     initComponent: function(){
         Ext.apply(this, {
             items:[
+                { xtype:'label', text:'Title:', style:'padding:4px' },
                 {
-                    xtype:'compositefield',
-                    items:[
-                        {
-                            xtype: 'textfield',
-                            name:'title',
-                            fieldLabel:'Title',
-                            width:300
-                        },
-                        {
-                            xtype:'button',
-                            text:'Fetch',
-                            handler:function(){ Ext.Msg.alert('Not Supported', 'Sorry, this feature is not supported yet.'); }
-                        }
-                    ]
+                    xtype: 'textfield',
+                    name:'title',
+                    fieldLabel:'Title',
+                    width:510
                 },
-                { xtype:'movieflow-fetchresults-grid' }
+                {
+                    xtype:'button',
+                    text:'Search',
+                    style:'padding:4px',
+                    scope:this,
+                    handler:function(b,e){
+                        var title = this.findByType('textfield')[0].getValue();
+                        this.findByType('movieflow-fetchresults-grid')[0].searchFor(title);
+                    }
+                },
+                    
+                { xtype:'movieflow-fetchresults-grid', colspan:3, height:355 }
             ]
         });
 
@@ -42,18 +51,27 @@ mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
     hideHeaders:false,
     multiSelect:false,
     singleSelect:true,
-    columns: [{header:'Title', dataIndex:'title'}],
+    columns:[
+        {header:'Title', dataIndex:'title', width:0.4 },
+        {header:'Year', dataIndex:'releaseYear', width:0.08 },
+        {header:'Description', dataIndex:'description', width:0.52 }
+    ],
     initComponent: function(){
         Ext.apply(this, {
-            store:new Ext.data.ArrayStore({
-                idIndex:0,
-                autoLoad:false,
-                fields:['title'],
-                data:[] // FIXME: pull search result data on 'search' click
+            store:new Ext.data.JsonStore({
+                url:'movie/fetch/search',
+                autoLoad: false,
+                autoDestroy: true,
+                root: 'items',
+                idProperty: 'movieId',
+                fields: ['movieId','title', 'releaseYear', 'description']
             })
         });
 
         mymdb.movie.flow.ResultsView.superclass.initComponent.apply(this, arguments);
+    },
+    searchFor:function(title){
+        this.getStore().load({ params:{ title:title } });
     }
 });
 Ext.reg('movieflow-fetchresults-grid', mymdb.movie.flow.ResultsView);

@@ -32,6 +32,7 @@ class UrlMappings {
         "/movie/fetch"(controller:"movieFetch"){
             action = [GET:"show", POST:"save"]
         }
+        "/movie/fetch/search"(controller:"movieFetch", action:'search')
 
         "/movie/details/$id?"(controller:"movieDetails"){
             action = [GET:"show", POST:"save"]

@@ -17,15 +17,18 @@ package com.stehno.mymdb.controller.movie
 
 import com.stehno.mymdb.dto.DetailsDto
 import com.stehno.mymdb.dto.FetchResultsDto
+import grails.converters.JSON
 
-/**
+ /**
  * This controller handles the state of the Movie Fetch panel of the movie flow.
  *
  * @author cjstehno
  */
 class MovieFetchController extends MovieFlowControllerBase {
 
-    static allowedMethods = [ save:"POST", show:"GET" ]
+    def movieFetchService
+    
+    static allowedMethods = [ save:"POST", show:"GET", search:'POST' ]
 
     def show = {
         movieFlowService.start()
@@ -47,5 +50,10 @@ class MovieFetchController extends MovieFlowControllerBase {
 
             renderSuccess()
         }
+    }
+
+    def search = {
+        def results = movieFetchService.search( params.title )
+        render( [items:results] as JSON)
     }
 }
