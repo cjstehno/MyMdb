@@ -10,6 +10,9 @@ mymdb-config.groovy
 /*.launch
 /*.tmproj
 
+.idea/*
+mymdb.iml
+
 stacktrace.log
 /test/reports
 /web-app/WEB-INF/classes
