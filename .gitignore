@@ -12,6 +12,8 @@ mymdb-config.groovy
 
 .idea/*
 *.iml
+*.iws
+*.ipr
 
 stacktrace.log
 /test/reports
