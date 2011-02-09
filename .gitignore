@@ -11,7 +11,7 @@ mymdb-config.groovy
 /*.tmproj
 
 .idea/*
-mymdb.iml
+*.iml
 
 stacktrace.log
 /test/reports
