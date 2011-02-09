@@ -205,7 +205,7 @@ mymdb.movie.flow.PosterSelector = Ext.extend(Ext.Window, {
                             scope:this,
                             fn:function(pl){
                                 var preSel = this.preSelectedId;
-                                if(preSel != undefined && preSel != null){
+                                if(preSel !== undefined && preSel !== null){
                                     var dv = pl.findByType('dataview')[0];
                                     var rec = dv.getStore().getById(preSel.toString());
                                     dv.select(rec);

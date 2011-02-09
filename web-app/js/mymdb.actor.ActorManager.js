@@ -26,7 +26,7 @@ mymdb.actor.ActorManagerDialog = Ext.extend( Ext.Window ,{
                     })
                 })
             ],
-            tbar:[ mymdb.actor.NewActorActionFactory('button'), ]
+            tbar:[ mymdb.actor.NewActorActionFactory('button') ]
         });
         mymdb.actor.ActorManagerDialog.superclass.initComponent.apply(this, arguments);
     }
@@ -39,7 +39,7 @@ mymdb.actor.NewActorActionFactory = function(xt){
         icon:'/mymdb/images/icons/add.png',
         handler: function(){ new mymdb.actor.ActorDialog(); }
     };
-}
+};
 
 mymdb.actor.OpenActorEditDialogHandler = function(dataView,idx){
     var actorId = dataView.getStore().getAt( idx ).data.id;
@@ -53,7 +53,7 @@ mymdb.actor.OpenActorEditDialogHandler = function(dataView,idx){
         }
     });
     dialog.show();
-}
+};
 
 mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
     id:'actorListView',
@@ -177,7 +177,7 @@ mymdb.actor.ActorFormPanel = Ext.extend( Ext.FormPanel, {
                         var idValue = theForm.findField('id').getValue();
                         theForm.submit({
                             clientValidation: true,
-                            url: 'actor/' + ( idValue == null || idValue == '' ? 'save' : 'update'),
+                            url: 'actor/' + ( idValue === null || idValue === '' ? 'save' : 'update'),
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Actor saved successfully', function(){

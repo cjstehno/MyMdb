@@ -43,7 +43,7 @@ mymdb.genre.NewGenreActionFactory = function(xt){
             new mymdb.genre.GenreDialog();
         }
     };
-}
+};
 
 mymdb.genre.OpenGenreEditDialogHandler = function(dataView,idx){
     var genreId = dataView.getStore().getAt( idx ).data.id;
@@ -57,7 +57,7 @@ mymdb.genre.OpenGenreEditDialogHandler = function(dataView,idx){
         }
     });
     dialog.show();
-}
+};
 
 mymdb.genre.ContextPopupFactory = function( dataView, idx ){
     return new Ext.menu.Menu({
@@ -98,7 +98,7 @@ mymdb.genre.ContextPopupFactory = function( dataView, idx ){
             }
         ]
     });
-}
+};
 
 mymdb.genre.GenreListView = Ext.extend( Ext.list.ListView, {
     id:'genreListView',
@@ -169,7 +169,7 @@ mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                         var idValue = theForm.findField('id').getValue();
                         theForm.submit({
                             clientValidation: true,
-                            url: 'genre/' + ( idValue == null || idValue == '' ? 'save' : 'update'),
+                            url: 'genre/' + ( idValue === null || idValue === '' ? 'save' : 'update'),
                             method:'POST',
                             success: function(form, action) {
                                Ext.Msg.alert('Success', 'Genre saved successfully', function(){

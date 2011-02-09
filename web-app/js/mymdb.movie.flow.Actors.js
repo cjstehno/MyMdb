@@ -68,7 +68,7 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         var theForm = this.getForm();
         var theUrl = this.formUrl;
 
-        var selectedRecs = (this.findByType('movieflow-itemselector')[0]).getSelectedRecords()
+        var selectedRecs = (this.findByType('movieflow-itemselector')[0]).getSelectedRecords();
         var actorIds = [];
         Ext.each(selectedRecs, function(it){
             actorIds.push(it.data.id);

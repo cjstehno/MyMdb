@@ -74,7 +74,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
         Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
 
         this.on( 'rowcontextmenu', function( grid, idx, evt ){
-        	mymdb.MovieListContextPopupFactory( grid,idx).showAt( evt.getXY() );
+            mymdb.MovieListContextPopupFactory( grid,idx).showAt( evt.getXY() );
         });        
     }
 });
@@ -96,7 +96,7 @@ mymdb.MovieListContextPopupFactory = function( grid, idx ){
                 text:'Delete Movie',
                 icon:'/mymdb/images/icons/delete.png',
                 handler:function(b,e){
-                	var movieStore = grid.getStore();
+                    var movieStore = grid.getStore();
                     var itemData = movieStore.getAt( idx ).data;
                     Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.ti + '"?', function(sel){
                         if( sel == 'yes' ){
@@ -119,7 +119,7 @@ mymdb.MovieListContextPopupFactory = function( grid, idx ){
             }
         ]
     });
-}
+};
 
 mymdb.ContentPanel = Ext.extend( Ext.TabPanel, {
     id:'contentPanel',
