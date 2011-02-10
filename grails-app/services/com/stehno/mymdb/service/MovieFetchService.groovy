@@ -26,6 +26,8 @@ import org.apache.commons.lang.StringUtils
  */
 class MovieFetchService {
 
+    static transactional = false
+
     def movieDataProvider
 
     def search( title ){

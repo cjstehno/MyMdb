@@ -38,7 +38,7 @@ class MovieFlowService {
      */
     def start( movieId = null ){
         flow.clear()
-        if(movieId) populateFlowData( movieId as Long )
+        if(movieId) populateFlowFromMovie( movieId as Long )
     }
 
     /**
@@ -69,7 +69,7 @@ class MovieFlowService {
      *
      * @param movie the movie being edited
      */
-    private def void populateFlowData( movieId ){
+    private def void populateFlowFromMovie( movieId ){
         def movie = Movie.get(movieId)
 
         flow.movieId = movieId
@@ -103,6 +103,72 @@ class MovieFlowService {
                 actors:movie.actors.collect { it.id }
             ))
         }
+    }
+
+    /**
+     * Uses the given data to populate the movie flow DTOs.
+     * 
+     * @param movieData
+     */
+    def void populate( movieData ){
+        store(new DetailsDto(
+            title:movieData.title,
+            releaseYear:movieData.releaseYear as Integer,
+            description:movieData.description
+        ))
+
+        if(movieData.poster){
+            store(new PosterDto(
+                posterType:PosterType.URL,
+                url:movieData.poster,
+                posterName:movieData.title
+            ))
+        } else {
+            store(new PosterDto( posterType:PosterType.NONE ))
+        }
+
+        if(movieData.genres){
+            store(new GenreDto(
+                genres:movieData.genres.collect { genreName->
+                    def gen = Genre.findByName(genreName)
+                    if(gen){
+                        return gen.id
+                    } else {
+                        // TODO: would like to make creation conditional based on save of movie
+                        gen = new Genre(name:genreName)
+                        gen.save(flush:true)
+                        return gen.id
+                    }
+                }
+            ))
+        }
+
+        if(movieData.actors){
+            store(new ActorDto(
+                actors:movieData.actors.collect { actorName->
+                    def aname = parseName(actorName as String)
+                    def act = Actor.findWhere( firstName:aname.first, middleName:aname.middle, lastName:aname.last )
+                    if(act){
+                        return act.id
+                    } else {
+                        // TODO: would like to make creation conditional based on save of movie
+                        act = new Actor( firstName:aname.first, middleName:aname.middle, lastName:aname.last )
+                        act.save(flush:true)
+                        return act.id
+                    }
+                }
+            ))
+        }
+    }
+
+    private def parseName( name ){
+        def parts = name.split(' ')
+
+        [
+            first:(parts.size() > 1 ? parts[0] : ''),
+            middle:(parts.size() > 2 ? parts[1] : ''),
+            last:parts[ parts.size() == 1 ? 0 : (parts.size()-1) ]
+        ]
     }
 
     /**

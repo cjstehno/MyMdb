@@ -108,7 +108,7 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
                             columns: [{header:'Available', dataIndex:'label'}],
                             store:new Ext.data.JsonStore({
                                 url:this.availableUrl,
-                                autoLoad: true,
+                                autoLoad: false,
                                 autoDestroy: true,
                                 root: 'items',
                                 idProperty: 'id',

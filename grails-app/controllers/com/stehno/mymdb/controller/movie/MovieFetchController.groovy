@@ -40,15 +40,24 @@ class MovieFetchController extends MovieFlowControllerBase {
             renderErrors(request, dto)
 
         } else {
-            movieFlowService.store(dto)
+            if(dto.selectedId){
 
-            // TODO: movie fetch data will populate other DTOs here
+                println "Found Selected id = $dto.selectedId"
 
-            def detailsDto = movieFlowService.retrieve(DetailsDto.class)
-            detailsDto.title = dto.title
-            movieFlowService.store(detailsDto)
+                def movieData = movieFetchService.fetch(dto.selectedId)
+                movieFlowService.populate(movieData)
 
-            renderSuccess()
+                renderSuccess()
+
+            } else {
+                movieFlowService.store(dto)
+
+                def detailsDto = movieFlowService.retrieve(DetailsDto.class)
+                detailsDto.title = dto.title
+                movieFlowService.store(detailsDto)
+
+                renderSuccess()
+            }
         }
     }
 

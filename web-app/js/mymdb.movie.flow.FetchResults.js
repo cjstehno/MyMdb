@@ -52,14 +52,24 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         this.findByType('movieflow-fetchresults-grid')[0].searchFor(value);
     },
     next:function(){
-        i need to populate the selected id if there is one...
+        var selectedId = null;
+
+        var grid = this.findByType('movieflow-fetchresults-grid')[0];
+        if(grid.getSelectionCount() > 0){
+            selectedId = grid.getSelectedRecords()[0].data.movieId;
+        }
                 
         var panel = this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel);
         var nid = this.nextId;
 
         this.getForm().submit({
             method:'POST', url:this.formUrl,
+            params:{
+                selectedId:selectedId
+            },
             success:function(){
+                
+
                 panel.getLayout().setActiveItem(nid);
             },
             failure:function(){

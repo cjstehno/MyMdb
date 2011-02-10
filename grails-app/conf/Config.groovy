@@ -54,6 +54,7 @@ log4j = {
 
 	appenders {
 		console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+        'null' name:"stacktrace"
 	}
 
     warn  'org.codehaus.groovy.grails.web.servlet',  //  controllers
@@ -68,10 +69,9 @@ log4j = {
 	       'org.hibernate',
            'net.sf.ehcache.hibernate'
 
-    error stdout:"StackTrace"
-
     warn   'org.mortbay.log'
 }
+
 
 //log4j.logger.org.springframework.security='off,stdout'
 

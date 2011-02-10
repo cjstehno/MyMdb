@@ -2,12 +2,12 @@
   <head>
     <meta name="layout" content="browser" />
     <style type="text/css">
-      .icon-about { background-image: url(/mymdb/images/icons/info.png)!important; }
-      .icon-help { background-image: url(/mymdb/images/icons/help.png)!important; }
-      .icon-genre { background-image: url(/mymdb/images/icons/film.png)!important; }
-      .icon-actor { background-image: url(/mymdb/images/icons/search_user.png)!important; }
-      .icon-add-movie { background-image: url(/mymdb/images/icons/add.png)!important; }
-      .icon-movie { background-image: url(/mymdb/images/icons/office_folders.png)!important; }
+      .icon-about { background-image: url('${fam.icon(name:'information')}')!important; }
+      .icon-help { background-image: url('${fam.icon(name:'help')}')!important; }
+      .icon-genre { background-image: url('${fam.icon(name:'package')}')!important; }
+      .icon-actor { background-image: url('${fam.icon(name:'group')}')!important; }
+      .icon-add-movie { background-image: url('${fam.icon(name:'film_add')}')!important; }
+      .icon-movie { background-image: url('${fam.icon(name:'film')}')!important; }
 
       .x-list-selected { background-color:#F5ECC6; border: 1px dashed gray; }
       .x-view-selected { background-color:#F5ECC6; border: 1px dashed gray; }
