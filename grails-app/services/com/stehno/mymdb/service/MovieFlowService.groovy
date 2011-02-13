@@ -178,7 +178,6 @@ class MovieFlowService {
      */
     def void save(){
         // TODO: need to account for pessimistic locking version
-        // TODO: need to ensure that this is transactional
 
         def movie = flow.movieId ? Movie.get(flow.movieId) : new Movie()
 

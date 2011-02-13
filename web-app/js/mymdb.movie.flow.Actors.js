@@ -10,6 +10,7 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     scope:this,
                     fn:function(action){
                         var actors = action.result.data.actors;
+                        console.log('loaded actors');
                         this.findByType('movieflow-itemselector')[0].setSelectedItems(actors);
                     }
                 }
@@ -36,6 +37,9 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         this.on('activate',function(p){
             this.disableNavButtons( [] );
             this.setDialogTitle('New Movie: Actors');
+
+            this.find('itemId','selector-available')[0].getStore().reload();
+            console.log('reload called');
         },this);
 
         mymdb.movie.flow.ActorsView.superclass.initComponent.apply(this, arguments);

@@ -36,6 +36,8 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         this.on('activate',function(p){
             this.disableNavButtons( [] );
             this.setDialogTitle('New Movie: Genres');
+
+            this.find('itemId','selector-available')[0].getStore().reload();
         },this);
 
         mymdb.movie.flow.GenresView.superclass.initComponent.apply(this, arguments);

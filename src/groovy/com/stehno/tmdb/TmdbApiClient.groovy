@@ -27,8 +27,9 @@ import grails.converters.JSON
  */
 class TmdbApiClient {
 
-    def apiKey
+    def configPropertyService
 
+    private static final String API_KEY_CONFIG = 'tmdb.ApiKey'
     private static final def URL_BASE = 'http://api.themoviedb.org/2.1/'
 
     /**
@@ -55,6 +56,10 @@ class TmdbApiClient {
     }
 
     private def buildUrl( action, param ){
-        "${URL_BASE}${action}/en/json/${apiKey}/${URLEncoder.encode(param)}".toURL()
-    }    
+        "${URL_BASE}${action}/en/json/${getApiKey()}/${URLEncoder.encode(param)}".toURL()
+    }
+
+    private String getApiKey(){
+        configPropertyService.getProperty(API_KEY_CONFIG)
+    }
 }
