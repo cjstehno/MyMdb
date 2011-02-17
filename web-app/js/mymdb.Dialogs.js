@@ -35,8 +35,14 @@ mymdb.AboutDialog = Ext.extend( Ext.Window ,{
                             closable:false
                         },
                         {
-                            title:'DryIcons Free',
-                            autoLoad:'dryicons-license.html',
+                            title:'Silk Icons',
+                            autoLoad:'icons-license.html',
+                            autoScroll:true,
+                            closable:false
+                        },
+                        {
+                            title:'TMDB',
+                            autoLoad:'tmdb-panel.html',
                             autoScroll:true,
                             closable:false
                         }
