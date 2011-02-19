@@ -17,11 +17,19 @@
 package com.stehno.mymdb.fetch
 
 /**
- * 
+ * Interface for providers of movie meta information from external sources.
  *
  * @author cjstehno
  */
 public interface MovieDataProvider {
+
+    /**
+     * Retrieves the unique id for this provider. This id is used to tie results back to the
+     * provider.
+     *
+     * @return a unique provider id
+     */
+    String getProviderId()
 
     /**
      * Searches the data provider for movies with (or close to) the given title.
@@ -29,7 +37,7 @@ public interface MovieDataProvider {
      * @param movieTitle
      * @return
      */
-    def searchFor( String movieTitle )
+    MovieSearchResult[] searchFor( String movieTitle )
 
     /**
      * Retrieves the data for the movie with the specified id. The id is specific to the underlying
@@ -38,5 +46,5 @@ public interface MovieDataProvider {
      * @param movieId
      * @return
      */
-    def fetch( movieId )
+    MovieData fetch( movieId )
 }

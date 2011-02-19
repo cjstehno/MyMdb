@@ -5,7 +5,9 @@ beans = {
         configPropertyService = ref('configPropertyService')
     }
 
-    movieDataProvider(com.stehno.mymdb.fetch.TmdbMovieDataProvider){
+    tmdbMovieDataProvider(com.stehno.mymdb.fetch.TmdbMovieDataProvider){
         api = ref('tmdbApi')
     }
+
+    localMovieDataProvider(com.stehno.mymdb.fetch.LocalMovieDataProvider)
 }

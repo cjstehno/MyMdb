@@ -1,21 +1,21 @@
 /*
-   Copyright 2010 Christopher J. Stehno (chris@stehno.com)
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+ * Copyright (c) 2011 Christopher J. Stehno (chris@stehno.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.stehno.mymdb.domain
 
-import org.grails.taggable.*
+import org.grails.taggable.Taggable
 
 class Movie implements Taggable {
 	
@@ -24,8 +24,11 @@ class Movie implements Taggable {
     int releaseYear
     Storage storage
     Poster poster
-    
-    static hasMany = [genres:Genre, actors:Actor]
+    MpaaRating mpaaRating
+    Format format
+    Integer runtime
+
+    static hasMany = [genres:Genre, actors:Actor, sites:WebSite]
     static embedded = ['storage']
 	
     Date dateCreated
@@ -39,10 +42,7 @@ class Movie implements Taggable {
         dateCreated(nullable:true)
         storage(nullable:true)  // TODO: make this required when I do the storage refactoring
         poster(nullable:true)
-    }
-	
-    static mapping = {
-        cache true
+        runtime(nullable:true)
     }
 
     static transients = ['storageLabel']
@@ -51,3 +51,12 @@ class Movie implements Taggable {
         storage != null ? "${storage.name}-${storage.index}" : 'N/A'
     }
 }
+
+enum MpaaRating {
+    UNKNOWN, G, PG, PG_13, R, NC_17, UNRATED
+}
+
+enum Format {
+    UNKNOWN, VCD, DVD, DVD_R, BLUERAY
+}
+

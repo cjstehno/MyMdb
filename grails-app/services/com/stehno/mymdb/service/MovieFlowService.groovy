@@ -22,6 +22,7 @@ import com.stehno.mymdb.domain.Poster
 import com.stehno.mymdb.domain.Storage
 import com.stehno.mymdb.dto.*
 import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.Format
 
 class MovieFlowService {
 
@@ -114,7 +115,10 @@ class MovieFlowService {
         store(new DetailsDto(
             title:movieData.title,
             releaseYear:movieData.releaseYear as Integer,
-            description:movieData.description
+            description:movieData.description,
+            mpaaRating:,
+            runtime:movieData.runtime,
+            format:Format.UNKNOWN
         ))
 
         if(movieData.poster){
@@ -159,6 +163,8 @@ class MovieFlowService {
                 }
             ))
         }
+
+        need to add sites panel and pre populate
     }
 
     private def parseName( name ){

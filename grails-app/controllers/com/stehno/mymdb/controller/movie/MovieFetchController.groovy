@@ -40,11 +40,9 @@ class MovieFetchController extends MovieFlowControllerBase {
             renderErrors(request, dto)
 
         } else {
-            if(dto.selectedId){
-
-                println "Found Selected id = $dto.selectedId"
-
-                def movieData = movieFetchService.fetch(dto.selectedId)
+            if( dto.selectedId && dto.providerId ){
+                def movieData = movieFetchService.fetch(dto.providerId, dto.selectedId)
+                
                 movieFlowService.populate(movieData)
 
                 renderSuccess()
@@ -67,6 +65,6 @@ class MovieFetchController extends MovieFlowControllerBase {
     }
 
     def preview = {
-        movieFetchService.fetch( params.id )
+        movieFetchService.fetch( params.provider, params.id )
     }
 }
