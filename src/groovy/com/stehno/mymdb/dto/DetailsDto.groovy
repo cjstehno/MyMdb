@@ -15,6 +15,9 @@
  */
 package com.stehno.mymdb.dto
 
+import com.stehno.mymdb.domain.MpaaRating
+import com.stehno.mymdb.domain.Format
+
 class DetailsDto {
 
     String title
@@ -22,6 +25,9 @@ class DetailsDto {
     Integer releaseYear
     String storageName
     Integer storageIndex
+    MpaaRating mpaaRating = MpaaRating.UNKNOWN
+    Integer runtime
+    Format format = Format.UNKNOWN
 
     static constraints = {
         title(validator:{ it && (1..100).contains(it.size()) })
@@ -29,6 +35,7 @@ class DetailsDto {
         releaseYear(nullable:false, range:1900..2100)
         storageName(validator:{ !it || (1..40).contains(it.size()) })
         storageIndex(nullable:true, min:0)
+        runtime(nullable:true)
     }
 
     // TODO: see if there is a way to require both storage name and index if one is specified

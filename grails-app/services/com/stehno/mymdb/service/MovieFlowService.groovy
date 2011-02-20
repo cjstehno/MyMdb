@@ -114,26 +114,26 @@ class MovieFlowService {
     def void populate( movieData ){
         store(new DetailsDto(
             title:movieData.title,
-            releaseYear:movieData.releaseYear as Integer,
+            releaseYear:movieData.releaseYear,
             description:movieData.description,
-            mpaaRating:,
+            mpaaRating:movieData.rating,
             runtime:movieData.runtime,
             format:Format.UNKNOWN
         ))
 
-        if(movieData.poster){
+        if(movieData.posterUrl){
             store(new PosterDto(
                 posterType:PosterType.URL,
-                url:movieData.poster,
+                url:movieData.posterUrl,
                 posterName:movieData.title
             ))
         } else {
             store(new PosterDto( posterType:PosterType.NONE ))
         }
 
-        if(movieData.genres){
+        if(movieData.genreNames){
             store(new GenreDto(
-                genres:movieData.genres.collect { genreName->
+                genres:movieData.genreNames.collect { genreName->
                     def gen = Genre.findByName(genreName)
                     if(gen){
                         return gen.id
@@ -147,9 +147,9 @@ class MovieFlowService {
             ))
         }
 
-        if(movieData.actors){
+        if(movieData.actorNames){
             store(new ActorDto(
-                actors:movieData.actors.collect { actorName->
+                actors:movieData.actorNames.collect { actorName->
                     def aname = parseName(actorName as String)
                     def act = Actor.findWhere( firstName:aname.first, middleName:aname.middle, lastName:aname.last )
                     if(act){
@@ -164,7 +164,7 @@ class MovieFlowService {
             ))
         }
 
-        need to add sites panel and pre populate
+        // FIXME: need to add sites panel and pre populate
     }
 
     private def parseName( name ){

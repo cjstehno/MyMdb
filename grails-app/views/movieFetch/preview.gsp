@@ -14,36 +14,36 @@
   - limitations under the License.
   --}%
 <div>
-    <h1 style='margin-bottom:5px;border-bottom:1px dashed gray;padding:4px;'>${title} (${releaseYear})</h1>
+    <h1 style='margin-bottom:5px;border-bottom:1px dashed gray;padding:4px;'>${movie.title} (${movie.releaseYear})</h1>
 
-    <div style='float:left'><img src='${poster}' style='margin:10px;border:1px solid gray;' width='160' /></div>
+    <div style='float:left'><img src='${movie.posterUrl}' style='margin:10px;border:1px solid gray;' width='160' /></div>
 
     <div style='float:right;width:400px;'>
-        <div style='margin-bottom:8px;'><b>MPAA Rating:</b> ${mpaaRating}</div>
-        <div style='margin-bottom:8px;'><b>Runtime:</b> ${runtime} min</div>
+        <div style='margin-bottom:8px;'><b>MPAA Rating:</b> ${movie.rating}</div>
+        <div style='margin-bottom:8px;'><b>Runtime:</b> ${movie.runtime} min</div>
 
         <div><b>Genre:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
-            <g:each in="${genres}" var="g">
+            <g:each in="${movie.genreNames}" var="g">
                 <span>${g}</span>,
             </g:each>
         </div>
 
         <div><b>Actors:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
-            <g:each in="${actors}" var="a">
+            <g:each in="${movie.actorNames}" var="a">
                 <span>${a}</span>,
             </g:each>
         </div>
 
         <div><b>Sites:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
-            <g:each in="${sites}" var="s">
-                <div><b>${s.name}:</b> <a href="${s.url}" target="_blank">${s.url}</a></div>
+            <g:each in="${movie.sites}" var="s">
+                <div><b>${s.key}:</b> <a href="${s.value}" target="_blank">${s.value}</a></div>
             </g:each>
         </div>
 
         <div><b>Description:</b></div>
-        <div style='margin-left:8px;'>${description}</div>
+        <div style='margin-left:8px;'>${movie.description}</div>
     </div>
 </div>

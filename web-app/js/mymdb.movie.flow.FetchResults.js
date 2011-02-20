@@ -53,10 +53,13 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     },
     next:function(){
         var selectedId = null;
+        var providerId = null;
 
         var grid = this.findByType('movieflow-fetchresults-grid')[0];
         if(grid.getSelectionCount() > 0){
-            selectedId = grid.getSelectedRecords()[0].data.movieId;
+            var rec = grid.getSelectedRecords()[0];
+            selectedId = rec.data.id;
+            providerId = rec.data.providerId;
         }
                 
         var panel = this.findParentByType(mymdb.movie.flow.MovieManagerFlowPanel);
@@ -65,11 +68,10 @@ mymdb.movie.flow.FetchResultsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         this.getForm().submit({
             method:'POST', url:this.formUrl,
             params:{
-                selectedId:selectedId
+                selectedId:selectedId,
+                providerId:providerId
             },
             success:function(){
-                
-
                 panel.getLayout().setActiveItem(nid);
             },
             failure:function(){
@@ -91,9 +93,10 @@ mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
     multiSelect:false,
     singleSelect:true,
     columns:[
-        {header:'Title', dataIndex:'title', width:0.4 },
+        {header:'Title', dataIndex:'title', width:0.3 },
         {header:'Year', dataIndex:'releaseYear', width:0.08 },
-        {header:'Description', dataIndex:'description', width:0.52 }
+        {header:'Provider', dataIndex:'providerId', width:0.12 },
+        {header:'Description', dataIndex:'description', width:0.50 }
     ],
     initComponent: function(){
         Ext.apply(this, {
@@ -102,14 +105,14 @@ mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
                 autoLoad: false,
                 autoDestroy: true,
                 root: 'items',
-                idProperty: 'movieId',
-                fields: ['movieId','title', 'releaseYear', 'description']
+                idProperty: 'id',
+                fields: ['id','title', 'releaseYear', 'description', 'providerId']
             })
         });
 
         this.on('dblclick', function( view, index, node, e ){
             var selRec = view.getSelectedRecords()[0];
-            var preview = new mymdb.movie.flow.ResultPreview({ movieId:selRec.data.movieId });
+            var preview = new mymdb.movie.flow.ResultPreview({ movieId:selRec.data.id, providerId:selRec.data.providerId });
             preview.show();
         });
 
@@ -142,7 +145,7 @@ mymdb.movie.flow.ResultPreview = Ext.extend(Ext.Window, {
             items:[
                 {
                     xtype:'panel',
-                    autoLoad:'movie/fetch/preview/' + this.movieId
+                    autoLoad:'movie/fetch/preview/' + this.providerId + '/' + this.movieId
                 }
             ]
         });

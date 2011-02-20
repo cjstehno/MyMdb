@@ -20,55 +20,23 @@ import grails.test.GrailsUnitTestCase
 import org.junit.Before
 import org.junit.Test
 import com.stehno.mymdb.domain.*
+import com.stehno.mymdb.MovieTestFixture
+import org.junit.After
 
- /**
+/**
  * 
  *
  * @author cjstehno
  */
 class LocalMovieDataProviderTests extends GrailsUnitTestCase {
 
-    def movieId, posterId
+    private movieTestFixture = new MovieTestFixture()
     def provider
 
     @Before
     void before(){
         super.setUp()
-
-        def movie = new Movie(
-            title:'A-Team: Unrated',
-            releaseYear:2010,
-            storage:new Storage(name:'A',index:2),
-            description:'They were acused of a crime they didnt commit',
-            mpaaRating:MpaaRating.UNRATED,
-            format:Format.BLUERAY
-        )
-        movie.save(flush:true)
-
-        def poster = new Poster( title:'A-Team', content:'fakedata'.getBytes() )
-        poster.save(flush:true)
-
-        posterId = poster.id
-        
-        def actor = new Actor( firstName:'Liam', middleName:'', lastName:'Neason' )
-        actor.save(flush:true)
-
-        def genre = new Genre( name:'Action' )
-        genre.save(flush:true)
-
-        def web = new WebSite( label:'TMDB', url:'http://tmdb.com')
-        web.save(flush:true)
-
-        movie.runtime = 120
-        movie.poster = poster
-        movie.addToActors(actor)
-        movie.addToGenres(genre)
-        movie.addToSites(web)
-        movie.save(flush:true)
-
-        movieId = movie.id
-
-        new Movie( title:'Kung Fu Panda', releaseYear:2000, storage:new Storage(name:'B',index:6), description:'A Panda movie', mpaaRating: MpaaRating.G, format:Format.DVD ).save(flush:true)
+        movieTestFixture.before()
 
         this.provider = new LocalMovieDataProvider()
     }
@@ -81,7 +49,7 @@ class LocalMovieDataProviderTests extends GrailsUnitTestCase {
         assertEquals 1, results.size()
 
         assertEquals 'Local', results[0].providerId
-        assertEquals movieId, results[0].id
+        assertEquals movieTestFixture.movieId, results[0].id
         assertEquals 'A-Team: Unrated', results[0].title
         assertEquals 2010, results[0].releaseYear
         assertEquals 'They were acused of a crime they didnt commit', results[0].description
@@ -96,7 +64,7 @@ class LocalMovieDataProviderTests extends GrailsUnitTestCase {
 
     @Test
     void fetch(){
-        def mov = provider.fetch(movieId)
+        def mov = provider.fetch(movieTestFixture.movieId)
 
         assertNotNull mov
 
@@ -106,9 +74,15 @@ class LocalMovieDataProviderTests extends GrailsUnitTestCase {
         assertEquals 'They were acused of a crime they didnt commit', mov.description
         assertEquals( ['Action'], mov.genreNames )
         assertEquals( ['Liam  Neason'], mov.actorNames )
-        assertEquals "/poster/show/${posterId}", mov.posterUrl
+        assertEquals "/poster/show/${movieTestFixture.posterId}", mov.posterUrl
         assertEquals MpaaRating.UNRATED, mov.rating
         assertEquals 120, mov.runtime
         assertEquals( ['TMDB':'http://tmdb.com'], mov.sites )
+    }
+
+    @After
+    void after(){
+        super.tearDown()
+        movieTestFixture.after()
     }
 }

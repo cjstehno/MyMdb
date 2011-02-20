@@ -15,18 +15,21 @@
  */
 package com.stehno.mymdb.controller.movie
 
-import com.stehno.mymdb.dto.FetchResultsDto
+import com.stehno.mymdb.MovieTestFixture
 import com.stehno.mymdb.service.MovieFlowService
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import com.stehno.mymdb.dto.DetailsDto
+import com.stehno.mymdb.dto.*
 
 class MovieFetchControllerTests extends MovieFlowIntegrationTestBase {
+
+    private movieFixture = new MovieTestFixture()
 
     @Before
     void before(){
         super.setUp()
+        movieFixture.before()
 
         controller = new MovieFetchController()
         controller.movieFlowService = new MovieFlowService()
@@ -44,7 +47,7 @@ class MovieFetchControllerTests extends MovieFlowIntegrationTestBase {
     }
 
     @Test
-    void save(){
+    void save_create(){
         request('POST','/movie/fetch')
 
         controller.params.title = 'A Cool Title'
@@ -65,24 +68,30 @@ class MovieFetchControllerTests extends MovieFlowIntegrationTestBase {
     }
 
     @Test
-    void save_with_no_title(){
+    void save_fetched(){
         request('POST','/movie/fetch')
+
+        controller.params.selectedId = movieFixture.movieId
+        controller.params.providerId = 'Local'
 
         controller.save()
 
-        def jso = parseJsonResponse()
-        assertNotNull jso
-        assertFalse jso.success
+        def details = controller.movieFlowService.flow[DetailsDto.class.name]
+        assertNotNull details
 
-        def errors = jso.errors
-        assertEquals 1, errors.size()
-        assertEquals 'Property [title] of class [class com.stehno.mymdb.dto.FetchResultsDto] cannot be null', errors.title
+        def poster = controller.movieFlowService.flow[PosterDto.class.name]
+        assertNotNull poster
 
-        assertNull controller.movieFlowService.flow[FetchResultsDto.class.name]
+        def genres = controller.movieFlowService.flow[GenreDto.class.name]
+        assertNotNull genres
+
+        def actors = controller.movieFlowService.flow[ActorDto.class.name]
+        assertNotNull actors
     }
 
     @After
     void after(){
         super.tearDown()
+        movieFixture.after()
     }
 }

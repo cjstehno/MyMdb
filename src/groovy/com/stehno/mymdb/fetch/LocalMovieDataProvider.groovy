@@ -19,6 +19,7 @@ package com.stehno.mymdb.fetch
 import com.stehno.mymdb.domain.Movie
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.WordUtils
+import com.stehno.mymdb.domain.MpaaRating
 
 /**
  * MovieDataProvider that provides data from the local database of existing movies.
@@ -30,7 +31,8 @@ class LocalMovieDataProvider implements MovieDataProvider {
     private static final String PROVIDER_ID = 'Local'
 
     MovieSearchResult[] searchFor(String movieTitle) {
-        Movie.findByTitleLike("%$movieTitle%").collect { mov->
+//        Movie.findByTitleILike("%$movieTitle%").collect { mov-> TODO: may file bug about this ILike should work
+        Movie.find('from Movie as m where upper(m.title) like ?',"%${movieTitle.toUpperCase()}%").collect { mov->
             new MovieSearchResult(
                 providerId:PROVIDER_ID,
                 id:mov.id,
@@ -44,7 +46,7 @@ class LocalMovieDataProvider implements MovieDataProvider {
     MovieData fetch(Object movieId) {
         def mov = Movie.get(movieId)
 
-        new MovieData(
+        def movieData = new MovieData(
             providerId:PROVIDER_ID,
             title:mov.title,
             releaseYear:mov.releaseYear,
@@ -52,16 +54,25 @@ class LocalMovieDataProvider implements MovieDataProvider {
             genreNames:genres(mov),
             actorNames:actors(mov),
             posterUrl:poster(mov),
-            rating:mov.mpaaRating,
-            runtime:mov.runtime,
-            sites:sites( mov)
+            rating:mov.mpaaRating?:MpaaRating.UNKNOWN,
+            runtime:mov.runtime?:0
         )
+
+        movieData.sites = new HashMap<String,String>()
+
+        if(mov.sites){
+            mov.sites.each {
+                movieData.put(it.label, it.url)
+            }
+        }
+
+        return movieData
     }
 
     String getProviderId() { PROVIDER_ID }
 
-    private poster( movie ){
-        "/poster/show/${movie.poster.id}"
+    private poster( movie ){ // TODO: this needs to be more generic
+        "/mymdb/poster/show/${movie.poster.id}"
     }
 
     private String description( str ){
@@ -82,8 +93,10 @@ class LocalMovieDataProvider implements MovieDataProvider {
 
     private sites( movie ){
         def s = [:]
-        movie.sites.each {
-            s[it.label] = it.url
+        if(movie.sites){
+            movie.sites.each {
+                s[it.label] = it.url
+            }
         }
         return s
     }
