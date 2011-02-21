@@ -50,7 +50,10 @@ class MovieSummaryController extends MovieFlowControllerBase {
             storage:"${details?.storageName}-${details?.storageIndex}",
             description:details?.description,
             genres:genres,
-            actors:actors
+            actors:actors,
+            rating:details.mpaaRating.name(),
+            runtime:details.runtime,
+            format:details.format.name()
         ]
     }
 

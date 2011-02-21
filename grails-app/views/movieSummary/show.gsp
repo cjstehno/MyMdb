@@ -6,6 +6,12 @@
     <div style='float:right;width:400px;'>
         <div style='margin-bottom:8px;'><b>Location:</b> ${storage}</div>
 
+        <div style='margin-bottom:8px;'><b>Format:</b> ${format}</div>
+
+        <div style='margin-bottom:8px;'><b>Runtime:</b> ${runtime} mins</div>
+
+        <div style='margin-bottom:8px;'><b>Rating:</b> ${rating}</div>
+
         <div><b>Genre:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
             <g:each in="${genres}" var="g">

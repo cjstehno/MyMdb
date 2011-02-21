@@ -35,7 +35,9 @@ class MovieDetailsController extends MovieFlowControllerBase {
             movieFlowService.start(movieId)
         }
 
-        renderSuccess( movieFlowService.retrieve(DetailsDto.class) )
+        def dto = movieFlowService.retrieve(DetailsDto.class)
+
+        renderSuccess( dto as Map )
     }
 
     def save = { DetailsDto dto ->

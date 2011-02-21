@@ -39,5 +39,29 @@ class DetailsDto {
     }
 
     // TODO: see if there is a way to require both storage name and index if one is specified
+
+    /**
+     * Overridden to provide conversion to a Map. The map converts the enum properties
+     * to their name() values.
+     *
+     * @param type only Map is supported by the override
+     * @return
+     */
+    @Override
+    public Object asType( Class type ){
+        if(type == Map.class){
+            def map = [:]
+            map.title = title
+            map.desctiption = description
+            map.releaseYear = releaseYear
+            map.storageName = storageName
+            map.storageIndex = storageIndex
+            map.mpaaRating = mpaaRating.name()
+            map.runtime = runtime
+            map.format = format.name()
+            return map
+        }
+        super.asType( type )
+    }
 }
 

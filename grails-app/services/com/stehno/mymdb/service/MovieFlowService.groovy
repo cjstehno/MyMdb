@@ -80,7 +80,10 @@ class MovieFlowService {
             releaseYear:movie.releaseYear,
             storageName:movie.storage.name,
             storageIndex:movie.storage.index,
-            description:movie.description
+            description:movie.description,
+            mpaaRating:movie.mpaaRating,
+            runtime:movie.runtime,
+            format:movie.format
         ))
 
         if(movie.poster){
@@ -192,6 +195,9 @@ class MovieFlowService {
         movie.releaseYear = details.releaseYear
         movie.storage = new Storage( name:details.storageName?.toUpperCase(), index:details.storageIndex )
         movie.description = details.description
+        movie.mpaaRating = details.mpaaRating
+        movie.runtime = details.runtime
+        movie.format = details.format
 
         // set poster
         def poster = retrieve(PosterDto.class)

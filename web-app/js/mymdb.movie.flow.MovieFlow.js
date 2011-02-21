@@ -7,8 +7,8 @@ mymdb.movie.MovieDialog = Ext.extend( Ext.Window, {
     closable:true,
     initHidden:false,
     modal:true,
-    width:625,
-    height:500,
+    width:640,
+    height:580,
     title:'New Movie',
     layout:'fit',
     initComponent: function(){
