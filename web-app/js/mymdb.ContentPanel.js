@@ -13,7 +13,7 @@ mymdb.MovieDetailsTab = Ext.extend( Ext.Panel, {
                         {
                             xtype:'button',
                             text:'Edit Movie',
-                            icon:'/mymdb/images/icons/edit.png',
+                            iconCls:'icon-edit-movie',
                             handler:function(){
                                 new mymdb.movie.MovieDialog({ movieId:this.movieId });
                             }
@@ -86,7 +86,7 @@ mymdb.MovieListContextPopupFactory = function( grid, idx ){
             {
                 xtype:'menuitem',
                 text:'Edit Movie',
-                icon:'/mymdb/images/icons/edit.png',
+                iconCls:'icon-edit-movie',
                 handler:function(){
                     new mymdb.movie.MovieDialog({ movieId:grid.getStore().getAt( idx ).data.mid });
                 }
@@ -94,7 +94,7 @@ mymdb.MovieListContextPopupFactory = function( grid, idx ){
             {
                 xtype:'menuitem',
                 text:'Delete Movie',
-                icon:'/mymdb/images/icons/delete.png',
+                iconCls:'icon-delete-movie',
                 handler:function(b,e){
                     var movieStore = grid.getStore();
                     var itemData = movieStore.getAt( idx ).data;

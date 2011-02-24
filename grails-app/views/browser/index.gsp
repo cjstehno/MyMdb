@@ -4,10 +4,24 @@
     <style type="text/css">
       .icon-about { background-image: url('${fam.icon(name:'information')}')!important; }
       .icon-help { background-image: url('${fam.icon(name:'help')}')!important; }
+
       .icon-genre { background-image: url('${fam.icon(name:'package')}')!important; }
+      .icon-add-genre { background-image: url('${fam.icon(name:'package_add')}')!important; }
+      .icon-edit-genre { background-image: url('${fam.icon(name:'package')}')!important; }
+      .icon-delete-genre { background-image: url('${fam.icon(name:'package_delete')}')!important; }
+
       .icon-actor { background-image: url('${fam.icon(name:'group')}')!important; }
+      .icon-add-actor { background-image: url('${fam.icon(name:'group_add')}')!important; }
+      .icon-edit-actor { background-image: url('${fam.icon(name:'group_edit')}')!important; }
+      .icon-delete-actor { background-image: url('${fam.icon(name:'group_delete')}')!important; }
+
       .icon-add-movie { background-image: url('${fam.icon(name:'film_add')}')!important; }
+      .icon-edit-movie { background-image: url('${fam.icon(name:'film_edit')}')!important; }
+      .icon-delete-movie { background-image: url('${fam.icon(name:'film_delete')}')!important; }
       .icon-movie { background-image: url('${fam.icon(name:'film')}')!important; }
+
+      .icon-right { background-image: url('${fam.icon(name:'arrow_right')}')!important; }
+      .icon-left { background-image: url('${fam.icon(name:'arrow_left')}')!important; }
 
       .x-list-selected { background-color:#F5ECC6; border: 1px dashed gray; }
       .x-view-selected { background-color:#F5ECC6; border: 1px dashed gray; }

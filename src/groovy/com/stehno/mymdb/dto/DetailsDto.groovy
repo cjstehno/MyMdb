@@ -52,7 +52,7 @@ class DetailsDto {
         if(type == Map.class){
             def map = [:]
             map.title = title
-            map.desctiption = description
+            map.description = description
             map.releaseYear = releaseYear
             map.storageName = storageName
             map.storageIndex = storageIndex

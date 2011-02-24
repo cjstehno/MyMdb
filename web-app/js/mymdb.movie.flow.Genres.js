@@ -21,7 +21,7 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     xtype:'button',
                     text:'New Genre',
                     style:{padding:'4px'},
-                    icon:'/mymdb/images/icons/add.png',
+                    iconCls:'icon-add-genre',
                     handler: function(b,e){
                         new mymdb.genre.GenreDialog({
                             onSave:function(){
@@ -127,7 +127,7 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
                     items:[
                         {
                             xtype:'button',
-                            icon:'/mymdb/images/icons/next.png',
+                            iconCls:'icon-right',
                             style:{padding:'11px'},
                             handler:function(b,e){
                                 b.findParentByType('movieflow-itemselector').moveSelectedItems(true);
@@ -135,7 +135,7 @@ mymdb.movie.flow.ItemSelector = Ext.extend( Ext.Panel, {
                         },
                         {
                             xtype:'button',
-                            icon:'/mymdb/images/icons/back.png',
+                            iconCls:'icon-left',
                             style:{padding:'11px'},
                             handler:function(b,e){
                                 b.findParentByType('movieflow-itemselector').moveSelectedItems(false);

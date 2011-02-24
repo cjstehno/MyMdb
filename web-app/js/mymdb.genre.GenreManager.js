@@ -38,7 +38,7 @@ mymdb.genre.NewGenreActionFactory = function(xt){
     return {
         xtype:xt,
         text:'New Genre',
-        icon:'/mymdb/images/icons/add.png',
+        iconCls:'icon-add-genre',
         handler: function(b,e){
             new mymdb.genre.GenreDialog();
         }
@@ -65,7 +65,7 @@ mymdb.genre.ContextPopupFactory = function( dataView, idx ){
             {
                 xtype:'menuitem',
                 text:'Edit',
-                icon:'/mymdb/images/icons/edit.png',
+                iconCls:'icon-edit-genre',
                 handler:function(){
                     mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
                 }
@@ -74,7 +74,7 @@ mymdb.genre.ContextPopupFactory = function( dataView, idx ){
             {
                 xtype:'menuitem',
                 text:'Delete',
-                icon:'/mymdb/images/icons/delete.png',
+                iconCls:'icon-delete-genre',
                 handler:function(b,e){
                     var itemData = dataView.getStore().getAt( idx ).data;
                     Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.label + '"?', function(sel){

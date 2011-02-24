@@ -36,7 +36,7 @@ mymdb.actor.NewActorActionFactory = function(xt){
     return {
         xtype:xt,
         text:'New Actor',
-        icon:'/mymdb/images/icons/add.png',
+        iconCls:'icon-add-actor',
         handler: function(){ new mymdb.actor.ActorDialog(); }
     };
 };
@@ -79,7 +79,7 @@ mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
                     {
                         xtype:'menuitem',
                         text:'Edit',
-                        icon:'/mymdb/images/icons/edit.png',
+                        iconCls:'icon-edit-actor',
                         handler:function(){
                             mymdb.actor.OpenActorEditDialogHandler(dataView,idx);
                         }
@@ -88,7 +88,7 @@ mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
                     {
                         xtype:'menuitem',
                         text:'Delete',
-                        icon:'/mymdb/images/icons/delete.png',
+                        iconCls:'icon-delete-actor',
                         handler:function(b,e){
                             var itemData = dataView.getStore().getAt( idx ).data;
                             Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + itemData.label + '"?', function(sel){

@@ -17,11 +17,11 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     name:'mpaaRating',
                     mode:'local',
                     width:100,
-                    editable:false,
-                    autoSelect:true,
+                    forceSelection:true,
                     allowBlank:false,
-                    lazyInit:false,
+                    typeAhead:false,
                     store:new Ext.data.ArrayStore({
+                        idIndex:0,
                         fields:[ 'rid', 'rlabel' ],
                         data:[ ['UNKNOWN','Unknown'], ['G','G'], ['PG','PG'], ['PG_13','PG-13'], ['R','R'], ['NC_17','NC-17'], ['UNRATED','Unrated'] ]
                     }),
@@ -35,11 +35,11 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     name:'format',
                     mode:'local',
                     width:100,
-                    editable:false,
-                    autoSelect:true,
+                    forceSelection:true,
                     allowBlank:false,
-                    lazyInit:false,
+                    typeAhead:false,
                     store:new Ext.data.ArrayStore({
+                        idIndex:0,
                         fields:[ 'fid', 'flabel' ],
                         data:[ ['UNKNOWN','Unknown'], ['DVD','DVD'], ['BLUERAY','BlueRay'], ['DVD_R','DVD-R'], ['VCD','VCD'] ]
                     }),

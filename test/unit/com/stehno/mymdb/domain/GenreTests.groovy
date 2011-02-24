@@ -34,7 +34,7 @@ class GenreTests extends GrailsUnitTestCase {
 
 	@Test
     void validation_name_too_long() {
-		def genre = genre(name:'xxxxxxxxxxx')
+		def genre = genre(name:('x'*21))
 		assertFalse genre.validate()
 		assertLength 1, genre.errors
     }

@@ -6,6 +6,12 @@
     <div>
         <div style='margin-bottom:8px;'><b>Location:</b> ${movieInstance.storage.name}-${movieInstance.storage.index}</div>
 
+        <div style='margin-bottom:8px;'><b>Format:</b> ${movieInstance.format}</div>
+
+        <div style='margin-bottom:8px;'><b>Runtime:</b> ${movieInstance.runtime} mins</div>
+
+        <div style='margin-bottom:8px;'><b>Rating:</b> ${movieInstance.mpaaRating}</div>
+
         <div><b>Genre:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
             <g:each in="${movieInstance.genres}" var="g">

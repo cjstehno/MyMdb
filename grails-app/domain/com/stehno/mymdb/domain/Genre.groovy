@@ -23,7 +23,7 @@ class Genre {
     static hasMany = [movies:Movie]
     
     static constraints = {
-        name(validator:{ return it != null && (2..10).containsWithinBounds(it.size()) })
+        name(validator:{ return it != null && (2..20).containsWithinBounds(it.size()) })
     }
 	
 	static mapping = {
