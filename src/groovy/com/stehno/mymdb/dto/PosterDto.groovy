@@ -28,7 +28,7 @@ package com.stehno.mymdb.dto
  */
 class PosterDto {
 
-    PosterType posterType = PosterType.URL
+    PosterType posterType = PosterType.NONE
     String url = 'http://'
     byte[] file
     long posterId

@@ -20,6 +20,8 @@
       .icon-delete-movie { background-image: url('${fam.icon(name:'film_delete')}')!important; }
       .icon-movie { background-image: url('${fam.icon(name:'film')}')!important; }
 
+      .icon-add-site { background-image: url('${fam.icon(name:'world_add')}')!important; }
+
       .icon-right { background-image: url('${fam.icon(name:'arrow_right')}')!important; }
       .icon-left { background-image: url('${fam.icon(name:'arrow_left')}')!important; }
 
@@ -36,6 +38,7 @@
     <g:javascript library="mymdb.movie.flow.Poster" />
     <g:javascript library="mymdb.movie.flow.Genres" />
     <g:javascript library="mymdb.movie.flow.Actors" />
+    <g:javascript library="mymdb.movie.flow.WebSites" />
     <g:javascript library="mymdb.movie.flow.Summary" />
     <g:javascript library="mymdb.ContentPanel" />
     <g:javascript library="mymdb.CategoriesPanel" />

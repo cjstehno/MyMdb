@@ -26,6 +26,13 @@
             </g:each>
         </div>
 
+        <div><b>Sites:</b></div>
+        <div style='margin-bottom:8px;margin-left:8px;'>
+            <g:each in="${sites}" var="s">
+                <div><b>${s.key}:</b> <a href="${s.value}" target="_blank">${s.value}</a></div>
+            </g:each>
+        </div>
+
         <div><b>Description:</b></div>
         <div style='margin-left:8px;'>${description}</div>
     </div>

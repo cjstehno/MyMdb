@@ -23,6 +23,7 @@ import com.stehno.mymdb.dto.ActorDto
 import com.stehno.mymdb.dto.DetailsDto
 import com.stehno.mymdb.dto.GenreDto
 import grails.converters.JSON
+import com.stehno.mymdb.dto.WebSiteDto
 
 /**
  * 
@@ -44,6 +45,8 @@ class MovieSummaryController extends MovieFlowControllerBase {
         def actorsDto = movieFlowService.retrieve(ActorDto.class)
         def actors = actorsDto?.actors?.collect { Actor.get(it) }
 
+        def sitesDto = movieFlowService.retrieve(WebSiteDto.class)
+
         [
             title:details?.title,
             releaseYear:details?.releaseYear,
@@ -53,7 +56,8 @@ class MovieSummaryController extends MovieFlowControllerBase {
             actors:actors,
             rating:details.mpaaRating.name(),
             runtime:details.runtime,
-            format:details.format.name()
+            format:details.format.name(),
+            sites:sitesDto.sites
         ]
     }
 

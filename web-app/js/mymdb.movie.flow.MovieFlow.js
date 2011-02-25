@@ -67,12 +67,13 @@ mymdb.movie.flow.MovieManagerFlowPanel = Ext.extend( Ext.Panel, {
         Ext.apply(this, {
             activeItem:this.movieId !== undefined && this.movieId !== null ? 1 : 0,
             items:[
-               {xtype:'movieflow-fetchresults'},
-               {xtype:'movieflow-details', movieId:this.movieId },
-               {xtype:'movieflow-poster', movieId:this.movieId },
-               {xtype:'movieflow-genre', movieId:this.movieId },
-               {xtype:'movieflow-actor', movieId:this.movieId },
-               {xtype:'movieflow-summary', movieId:this.movieId }
+                {xtype:'movieflow-fetchresults'},
+                {xtype:'movieflow-details', movieId:this.movieId },
+                {xtype:'movieflow-poster', movieId:this.movieId },
+                {xtype:'movieflow-genre', movieId:this.movieId },
+                {xtype:'movieflow-actor', movieId:this.movieId },
+                {xtype:'movieflow-websites', movieId:this.movieId },
+                {xtype:'movieflow-summary', movieId:this.movieId }
             ]
         });
 
