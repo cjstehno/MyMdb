@@ -26,7 +26,7 @@ class DetailsDto {
     String storageName
     Integer storageIndex
     MpaaRating mpaaRating = MpaaRating.UNKNOWN
-    Integer runtime
+    Integer runtime = 0
     Format format = Format.UNKNOWN
 
     static constraints = {

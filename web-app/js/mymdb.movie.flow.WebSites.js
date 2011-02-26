@@ -52,6 +52,11 @@ mymdb.movie.flow.WebSitesListPanel = Ext.extend(Ext.Panel, {
                     xtype:'listview',
                     singleSelect:true,
                     columns:[ { header:'Name', dataIndex:'label' }, { header:'Url', dataIndex:'url' } ],
+                    listeners:{
+                        contextmenu:function( dataView, idx, node, evt ){
+                            new mymdb.movie.flow.WebSiteListContextMenu({target:dataView.ownerCt}).showAt(evt.getXY());
+                        }
+                    },
                     store:new Ext.data.JsonStore({
                         url: 'movie/websites/sites',
                         root: 'sites',
@@ -70,13 +75,7 @@ mymdb.movie.flow.WebSitesListPanel = Ext.extend(Ext.Panel, {
                     text:'Add Site',
                     iconCls:'icon-add-site',
                     scope:this,
-                    handler:function(b){
-                        var store = this.findByType('listview')[0].getStore();
-
-                        var WebSiteRecord = Ext.data.Record.create([ 'label','url' ]);
-
-                        store.add([ new WebSiteRecord({ label:'Foo', url:'http://foo.com' }) ])
-                    }
+                    handler:function(){this.addSite();}
                 }
             ]
         });
@@ -85,9 +84,126 @@ mymdb.movie.flow.WebSitesListPanel = Ext.extend(Ext.Panel, {
     },
     reload:function(){
         this.findByType('listview')[0].getStore().load();
+    },
+    addSite:function(){
+        var store = this.findByType('listview')[0].getStore();
+
+        new mymdb.movie.flow.WebSiteDialog({ onSave:function(lbl,url){
+            var WebSiteRecord = Ext.data.Record.create([ 'label','url' ]);
+            store.add([ new WebSiteRecord({ label:lbl, url:url }) ])
+        } }).show();
+    },
+    editSite:function(){
+        var listView = this.findByType('listview')[0];
+        if( listView.getSelectionCount() > 0 ){
+            var rec = listView.getSelectedRecords()[0];
+
+            new mymdb.movie.flow.WebSiteDialog({
+                siteData:{ label:rec.data.label, url:rec.data.url },
+                onSave:function(lbl,url){
+                    rec.beginEdit();
+                    rec.set('label',lbl);
+                    rec.set('url',url);
+                    rec.endEdit();
+                }
+            }).show();
+        }
+    },
+    deleteSite:function(){
+        var listView = this.findByType('listview')[0];
+        if( listView.getSelectionCount() > 0 ){
+            var rec = listView.getSelectedRecords()[0];
+
+            Ext.MessageBox.confirm('Delete Web Site','Are you sure you want to delete this Web Site?',function(btn){
+                if(btn == 'Yes'){
+                    listView.getStore().remove(rec);
+                }
+            }, this);
+        }
     }
 });
 Ext.reg('movieflow-websites-listpanel', mymdb.movie.flow.WebSitesListPanel);
 
 
+/**
+ * Context menu for web site manager.
+ */
+mymdb.movie.flow.WebSiteListContextMenu = Ext.extend(Ext.menu.Menu, {
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                {
+                    xtype:'menuitem',
+                    text:'Edit',
+                    iconCls:'icon-edit-site',
+                    scope:this.target,
+                    handler:function(b){ this.editSite(); }
+                },
+                {
+                    text:'Add Site',
+                    iconCls:'icon-add-site',
+                    scope:this.target,
+                    handler:function(){ this.addSite(); }
+                },
+                {
+                    xtype:'menuitem',
+                    text:'Delete',
+                    iconCls:'icon-delete-site',
+                    scope:this.target,
+                    handler:function(b){ this.deleteSite(); }
+                }
+            ]
+        });
+
+        mymdb.movie.flow.WebSiteListContextMenu.superclass.initComponent.apply(this, arguments);
+    }
+});
+Ext.reg('movieflow-websites-listpanel-menu',mymdb.movie.flow.WebSiteListContextMenu);
+
+
+mymdb.movie.flow.WebSiteDialog = Ext.extend(Ext.Window, {
+    title:'Web Site',
+    width:300,
+    height:125,
+    layout:'fit',
+    siteData:{ label:'', url:'' },
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                {
+                    xtype:'form',
+                    labelWidth:50,
+                    padding:4,
+                    items:[
+                        { xtype:'textfield', fieldLabel:'Label', name:'label', anchor:'100%', value:this.siteData.label },
+                        { xtype:'textfield', fieldLabel:'Url', name:'url', anchor:'100%', value:this.siteData.url }
+                    ]
+                }
+            ],
+            buttons:[
+                {
+                    text:'Save',
+                    scope:this,
+                    handler:function(){
+                        var form = this.findByType('form')[0].getForm();
+
+                        var labelValue = form.findField('label').getValue();
+
+                        var urlValue = form.findField('url').getValue();
+                        if(urlValue.indexOf('http') == -1){
+                            urlValue = 'http://' + urlValue;
+                        }
+
+                        this.onSave( labelValue, urlValue );
+                        this.close();
+                    }
+                },
+                { text:'Cancel', scope:this, handler:function(b){ this.close(); } }
+            ]
+        });
+
+        mymdb.movie.flow.WebSiteDialog.superclass.initComponent.apply(this, arguments);
+    }
+});
+Ext.reg('movieflow-website-dialog',mymdb.movie.flow.WebSiteDialog);
 

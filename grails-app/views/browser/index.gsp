@@ -21,6 +21,8 @@
       .icon-movie { background-image: url('${fam.icon(name:'film')}')!important; }
 
       .icon-add-site { background-image: url('${fam.icon(name:'world_add')}')!important; }
+      .icon-edit-site { background-image: url('${fam.icon(name:'world_edit')}')!important; }
+      .icon-delete-site { background-image: url('${fam.icon(name:'world_delete')}')!important; }
 
       .icon-right { background-image: url('${fam.icon(name:'arrow_right')}')!important; }
       .icon-left { background-image: url('${fam.icon(name:'arrow_left')}')!important; }

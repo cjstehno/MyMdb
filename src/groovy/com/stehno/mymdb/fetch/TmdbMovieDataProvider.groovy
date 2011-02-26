@@ -93,7 +93,7 @@ class TmdbMovieDataProvider implements MovieDataProvider {
     }
 
     private int released( entry ){
-        entry.released.split('-')[0] as Integer
+        entry.isNull('released') ? 0 : entry.released.split('-')[0] as Integer
     }
 
     private String description( entry ){

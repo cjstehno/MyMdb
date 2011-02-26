@@ -26,6 +26,15 @@
             </g:each>
         </div>
 
+        <div><b>Sites:</b></div>
+        <div style='margin-bottom:8px;margin-left:8px;'>
+            <ul>
+            <g:each in="${movieInstance.sites}" var="s">
+                <li><a href="${s.url}" target="_blank">${s.label}</a></li>
+            </g:each>
+            </ul>
+        </div>
+
         <div><b>Description:</b></div>
         <div style='margin-left:8px;'>${movieInstance.description}</div>
     </div>

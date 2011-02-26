@@ -23,6 +23,7 @@ import com.stehno.mymdb.domain.Storage
 import com.stehno.mymdb.dto.*
 import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Format
+import com.stehno.mymdb.domain.WebSite
 
 class MovieFlowService {
 
@@ -107,6 +108,14 @@ class MovieFlowService {
                 actors:movie.actors.collect { it.id }
             ))
         }
+
+        if(movie.sites){
+            def dto = new WebSiteDto()
+            movie.sites.each { site ->
+                dto.sites[site.label] = site.url
+            }
+            store(dto)
+        }
     }
 
     /**
@@ -167,7 +176,9 @@ class MovieFlowService {
             ))
         }
 
-        // FIXME: need to add sites panel and pre populate
+        if(movieData.sites){
+            store(new WebSiteDto( sites:movieData.sites ))
+        }
     }
 
     private def parseName( name ){
@@ -227,6 +238,15 @@ class MovieFlowService {
         def selectedActorIds = retrieve(ActorDto.class).actors ?: []
         selectedActorIds.each { aid->
             movie.addToActors Actor.get(aid)
+        }
+
+        movie.sites?.clear()
+        def selectedSites = retrieve(WebSiteDto.class).sites ?: []
+        selectedSites.each { lbl,url->
+            def ws = new WebSite( label:lbl, url:url )
+            ws.save(flush:true)
+
+            movie.addToSites ws
         }
 
         movie.save(flush:true)

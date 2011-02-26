@@ -18,8 +18,9 @@ package com.stehno.mymdb.controller.movie
 
 import com.stehno.mymdb.dto.WebSiteDto
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONArray
 
- /**
+/**
  * 
  *
  * @author cjstehno
@@ -41,25 +42,25 @@ class MovieWebSiteController extends MovieFlowControllerBase {
 
         } else if(params.xaction == 'create'){
             def jso = JSON.parse(params.sites)
-            dto.sites[jso.label] = jso.url
-            
+            if(jso instanceof JSONArray){
+                jso.each {
+                    dto.sites[it.label] = it.url
+                }
+            } else {
+                dto.sites[jso.label] = jso.url
+            }
+
             movieFlowService.store(dto)
             
             renderSuccess()
         }
     }
 
-    def save = { WebSiteDto dto ->
-        if( dto.hasErrors() ){
-            renderErrors(request, dto)
-
+    def save = {
+        if(params.finish){
+            forward( controller:'movieSummary', action:'save' )
         } else {
-            movieFlowService.store(dto)
-            if(params.finish){
-                forward( controller:'movieSummary', action:'save' )
-            } else {
-                renderSuccess()
-            }
+            renderSuccess()
         }
     }
 }
