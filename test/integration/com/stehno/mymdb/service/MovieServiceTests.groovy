@@ -156,6 +156,8 @@ class MovieServiceTests extends GrailsUnitTestCase {
     private def addMovie( title, Closure c = defaultMovieBuilder ){
         def movie = new Movie( title:title, description:'something...', poster:moviePoster )
         c.call movie
+        movie.mpaaRating = MpaaRating.PG
+        movie.format = Format.DVD
         movie.addToGenres horror
         movie.addToActors johnQPublic
         movie.save()

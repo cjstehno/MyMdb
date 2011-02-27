@@ -23,12 +23,16 @@ import org.junit.Test
 import com.stehno.mymdb.domain.*
 import com.stehno.mymdb.dto.*
 import org.junit.Ignore
+import com.stehno.mymdb.MovieTestFixture
 
 class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
+
+    def fixture = new MovieTestFixture()
 
     @Before
     void before(){
         super.setUp()
+        fixture.before()
 
         controller = new MovieDetailsController()
         controller.movieFlowService = new MovieFlowService()
@@ -48,15 +52,7 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
 
     @Test
     void show_edit(){
-        def movie = new Movie(
-            title:'The Thing!',
-            releaseYear: 1984,
-            storage: new Storage(name:'A', index:1),
-            description: 'A cool movie!'
-        )
-        movie.save(flush:true)
-
-        controller.params.id = movie.id as String
+        controller.params.id = fixture.movieId as String
 
         request('GET', "/movie/details")
 
@@ -66,62 +62,20 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertNotNull jso
         assertTrue jso.success
         assertNotNull jso.data
-        assertEquals movie.title, jso.data.title
-        assertEquals movie.releaseYear, jso.data.releaseYear
-        assertEquals movie.storage.name, jso.data.storageName
-        assertEquals movie.storage.index, jso.data.storageIndex
-        assertEquals movie.description, jso.data.description
+        assertEquals 'A-Team: Unrated', jso.data.title
+        assertEquals 2010, jso.data.releaseYear
+        assertEquals 'A', jso.data.storageName
+        assertEquals 2, jso.data.storageIndex
+        assertEquals 'They were acused of a crime they didnt commit', jso.data.description
+        assertEquals MpaaRating.UNRATED.name(), jso.data.mpaaRating
+        assertEquals Format.BLUERAY.name(), jso.data.format
 
-        assertEquals movie.id, controller.movieFlowService.flow.movieId
-        assertNotNull controller.movieFlowService.flow[DetailsDto.class.name]
-        assertNull controller.movieFlowService.flow[PosterDto.class.name]
-        assertNull controller.movieFlowService.flow[GenreDto.class.name]
-        assertNull controller.movieFlowService.flow[ActorDto.class.name]
-    }
-
-    @Test
-    void show_edit_full(){
-        def genre = new Genre(name: 'Horror')
-        genre.save(flush:true);
-
-        def actor = new Actor(firstName:'Wilford', middleName:'', lastName:'Brimley')
-        actor.save(flush:true)
-
-        def poster = new Poster(title:'Thing', content:'fake'.getBytes() )
-        poster.save(flush:true)
-
-        def movie = new Movie(
-            title:'The Thing!',
-            releaseYear: 1984,
-            storage: new Storage(name:'A', index:1),
-            description: 'A cool movie!'
-        )
-        movie.addToGenres genre
-        movie.addToActors actor
-        movie.poster = poster
-        movie.save(flush:true)
-
-        controller.params.id = movie.id as String
-
-        request('GET', "/movie/details")
-
-        controller.show()
-
-        def jso = parseJsonResponse()
-        assertNotNull jso
-        assertTrue jso.success
-        assertNotNull jso.data
-        assertEquals movie.title, jso.data.title
-        assertEquals movie.releaseYear, jso.data.releaseYear
-        assertEquals movie.storage.name, jso.data.storageName
-        assertEquals movie.storage.index, jso.data.storageIndex
-        assertEquals movie.description, jso.data.description
-
-        assertEquals movie.id, controller.movieFlowService.flow.movieId
+        assertEquals fixture.movieId, controller.movieFlowService.flow.movieId
         assertNotNull controller.movieFlowService.flow[DetailsDto.class.name]
         assertNotNull controller.movieFlowService.flow[PosterDto.class.name]
         assertNotNull controller.movieFlowService.flow[GenreDto.class.name]
         assertNotNull controller.movieFlowService.flow[ActorDto.class.name]
+        assertNotNull controller.movieFlowService.flow[WebSiteDto.class.name]
     }
 
     @Test

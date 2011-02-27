@@ -9,5 +9,7 @@ beans = {
         api = ref('tmdbApi')
     }
 
-    localMovieDataProvider(com.stehno.mymdb.fetch.LocalMovieDataProvider)
+    localMovieDataProvider(com.stehno.mymdb.fetch.LocalMovieDataProvider){
+        appName = "${application.metadata['app.name']}"
+    }
 }

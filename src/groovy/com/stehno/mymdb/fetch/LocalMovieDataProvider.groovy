@@ -28,6 +28,8 @@ import com.stehno.mymdb.domain.MpaaRating
  */
 class LocalMovieDataProvider implements MovieDataProvider {
 
+    String appName
+
     private static final String PROVIDER_ID = 'Local'
 
     MovieSearchResult[] searchFor(String movieTitle) {
@@ -62,7 +64,7 @@ class LocalMovieDataProvider implements MovieDataProvider {
 
         if(mov.sites){
             mov.sites.each {
-                movieData.put(it.label, it.url)
+                movieData.sites[it.label] = it.url
             }
         }
 
@@ -71,8 +73,8 @@ class LocalMovieDataProvider implements MovieDataProvider {
 
     String getProviderId() { PROVIDER_ID }
 
-    private poster( movie ){ // TODO: this needs to be more generic
-        "/mymdb/poster/show/${movie.poster.id}"
+    private poster( movie ){
+        "/${appName}/poster/show/${movie.poster.id}"
     }
 
     private String description( str ){

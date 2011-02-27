@@ -74,7 +74,7 @@ class LocalMovieDataProviderTests extends GrailsUnitTestCase {
         assertEquals 'They were acused of a crime they didnt commit', mov.description
         assertEquals( ['Action'], mov.genreNames )
         assertEquals( ['Liam  Neason'], mov.actorNames )
-        assertEquals "/poster/show/${movieTestFixture.posterId}", mov.posterUrl
+        assertEquals "/null/poster/show/${movieTestFixture.posterId}", mov.posterUrl
         assertEquals MpaaRating.UNRATED, mov.rating
         assertEquals 120, mov.runtime
         assertEquals( ['TMDB':'http://tmdb.com'], mov.sites )

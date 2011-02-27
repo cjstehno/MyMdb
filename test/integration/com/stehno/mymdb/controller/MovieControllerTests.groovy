@@ -1,8 +1,7 @@
 package com.stehno.mymdb.controller
 
-import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.MovieTestFixture
 import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Storage
 import grails.converters.JSON
 import grails.test.GrailsUnitTestCase
 import org.junit.After
@@ -12,24 +11,19 @@ import org.junit.Test
 class MovieControllerTests extends GrailsUnitTestCase {
 	
     def controller
+    def fixture = new MovieTestFixture()
 
     @Before
     void before() {
         super.setUp()
-		
-        [ new Genre(name:'Horror'), new Genre(name:'Action') ]*.save(flush:true)
-		
-        def mov = new Movie(title:'Some Movie', releaseYear:2000, description:'A movie.')
-        mov.storage = new Storage(name:'A', index:100)
-        mov.poster = null
-        mov.save(flush:true)
+        fixture.before()
 		
         controller = new MovieController()
     }
 
     @Test
     void delete(){
-        controller.params.id = Movie.findByTitle('Some Movie').id
+        controller.params.id = fixture.movieId
 
         controller.delete()
 
@@ -37,7 +31,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertTrue jso.success
 
         def movies = Movie.list()
-        assertEquals 0, movies.size()
+        assertEquals 1, movies.size()
     }
 
     @Test
@@ -50,7 +44,7 @@ class MovieControllerTests extends GrailsUnitTestCase {
         assertEquals 1, jso.errors.size()
         assertEquals 'Movie not found with id null', jso.errors.general
 
-        assertEquals 1, Movie.list().size()
+        assertEquals 2, Movie.list().size()
     }
   
     @After

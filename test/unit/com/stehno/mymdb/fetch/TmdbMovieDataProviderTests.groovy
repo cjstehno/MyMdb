@@ -114,7 +114,7 @@ class TmdbMovieDataProviderTests extends GroovyTestCase {
             if(ustr == 'http://api.themoviedb.org/2.1/Movie.search/en/json/testing/Brewsters+Millions'){
                 return [
                     [ name:'Brewsters Millions', id:100, released:'1983-02-25', overview:'A movie about a guy who spends a lot of money.', isNull:{ false } ],
-                    [ name:'Brewsters Millions', id:300, released:'1983-02-25', isNull:{ true } ],
+                    [ name:'Brewsters Millions', id:300, released:'1983-02-25', isNull:{n-> n != 'released' } ],
                     [ name:'Brewsters Millions: Uncut', id:200, released:'2000-02-25', overview:'A movie about a guy who spends a lot of money.', isNull:{ false } ],
                 ]
             } else if(ustr == 'http://api.themoviedb.org/2.1/Movie.search/en/json/testing/Intelligent+Life'){
@@ -132,7 +132,7 @@ class TmdbMovieDataProviderTests extends GroovyTestCase {
                         genres:[ [name:'Comedy'] ],
                         cast:[ [job:'Actor', name:'Richard Pryor'] ],
                         url:'http://tmdb.url',
-                        isNull:{ it != 'url' }, getString:{'http://tmdb.url'}
+                        isNull:{ it != 'url' && it != 'released' }, getString:{'http://tmdb.url'}
                     ]
                 ]
             } else {

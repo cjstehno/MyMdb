@@ -16,16 +16,12 @@
 
 package com.stehno.mymdb.controller.movie
 
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.service.MovieFlowService
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import com.stehno.mymdb.domain.*
 import com.stehno.mymdb.dto.*
-import com.stehno.mymdb.domain.Poster
-import com.stehno.mymdb.domain.Storage
 
 class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
 
@@ -115,7 +111,10 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
             releaseYear:1984,
             description:'A pirate movie.',
             storage:new Storage( name:'A', index:102 ),
-            poster:yellowBeardPoster
+            poster:yellowBeardPoster,
+            mpaaRating:MpaaRating.R,
+            runtime:120,
+            format:Format.DVD
         )
         existingMovie.addToGenres horror
         existingMovie.addToActors johnDoe
