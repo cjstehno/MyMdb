@@ -15,6 +15,9 @@
  */
 package com.stehno.mymdb.domain
 
+import static com.stehno.mymdb.constraints.Constraints.notNullAndBetween
+import static com.stehno.mymdb.constraints.Constraints.nullOrBetween
+
 class Actor {
 
     String firstName
@@ -25,9 +28,9 @@ class Actor {
     static hasMany = [movies:Movie]
     
     static constraints = {
-		firstName(validator:{ it == null || (0..25).containsWithinBounds(it.size()) })
-		middleName(validator:{ it == null || (0..25).containsWithinBounds(it.size()) })
-        lastName(validator:{ it != null && (1..25).containsWithinBounds(it.size()) })
+        firstName( nullOrBetween(1..25) )
+        middleName( nullOrBetween(1..25) )
+        lastName( notNullAndBetween(1..25) )
     }
 	
 	static mapping = {
@@ -37,10 +40,14 @@ class Actor {
     static transients = ['displayName', 'fullName']
 
     def getDisplayName(){
-        "$lastName, $firstName $middleName"
+        def dn = lastName
+        if( firstName || middleName ){
+            dn += ", $firstName${firstName && middleName ? ' ' : ''}$middleName"
+        }
+        return dn
     }
 
     def getFullName(){
-        "$firstName $middleName $lastName"
+        "${firstName ? firstName + ' ' : ''}${middleName ? middleName + ' ' : ''}$lastName"
     }
 }

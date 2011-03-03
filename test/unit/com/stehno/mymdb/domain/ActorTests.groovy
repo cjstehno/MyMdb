@@ -1,82 +1,89 @@
 package com.stehno.mymdb.domain
 
-import grails.test.*
+import org.junit.Test
 
-class ActorTests extends GrailsUnitTestCase {
+class ActorTests extends DomainTestCase {
 
-    void testValidation_valid() {
-		assertTrue actor(firstName:'Larry',middleName:'Q',lastName:'Stooge').validate()
+    @Test
+    void validation_valid() {
+		assertValid actor(firstName:'Larry',middleName:'Q',lastName:'Stooge')
     }
-	
-	void testValidation_single_name_actor(){
-		def actor = new Actor(firstName:'',middleName:'',lastName:'Cher')
-		mockForConstraintsTests Actor.class, [ actor ]	
-		assertTrue actor.validate()
+
+    @Test
+	void validation_single_name_actor(){
+		assertValid actor(firstName:'',middleName:'',lastName:'Cher')
 	}
 
-	void testValidation_firstName_missing() {
-		def actor = actor(firstName:'',middleName:'Q',lastName:'Stooge')
-		assertTrue actor.validate()
+    @Test
+	void validation_firstName_missing() {
+		assertValid actor(firstName:'',middleName:'Q',lastName:'Stooge')
     }
 
-	void testValidation_firstName_empty() {
-		def actor = actor(firstName:'',middleName:'Q',lastName:'Stooge')
-		assertTrue actor.validate()
+    @Test
+	void validation_middleName_missing() {
+		assertValid actor(firstName:'Larry',middleName:'',lastName:'Stooge')
     }
 
-	void testValidation_firstName_too_short() {
-		def actor = actor(firstName:'x',middleName:'Q',lastName:'Stooge')
-		assertTrue actor.validate()
+    @Test
+	void validation_firstName_too_long() {
+		assertInvalid actor(firstName:('x'*126),middleName:'Q',lastName:'Stooge'), 'firstName', 'not.nullorbetween'
     }
 
-	void testValidation_firstName_too_long() {
-		def actor = actor(firstName:('x'*26),middleName:'Q',lastName:'Stooge')
-		assertInvalidWithOneError actor
+    @Test
+	void validation_lastName_empty() {
+		assertInvalid actor(firstName:'Larry',middleName:'Q',lastName:''), 'lastName', 'not.notnullandbetween'
     }
 
-	void testValidation_middleName_missing() {
-		def actor = actor(firstName:'Larry',lastName:'Stooge')
-		assertInvalidWithOneError actor
+
+    @Test
+	void validation_middleName_too_long() {
+		assertInvalid actor(firstName:'Larry',middleName:('x'*26),lastName:'Stooge'), 'middleName', 'not.nullorbetween'
     }
 
-	void testValidation_middleName_empty() {
-		def actor = actor(firstName:'Larry',middleName:'',lastName:'Stooge')
-		assertTrue actor.validate()
-    }
-
-	void testValidation_middleName_too_long() {
-		def actor = actor(firstName:'Larry',middleName:('x'*26),lastName:'Stooge')
-		assertInvalidWithOneError actor
-    }
-
-	private void assertInvalidWithOneError( dom ){
-		assertFalse dom.validate()
-		assertLength 1, dom.errors
-	}
-
-	void testValidation_lastName_missing() {
-		def actor = actor(firstName:'Larry',middleName:'Q')
-		assertInvalidWithOneError actor
-    }
-
-	void testValidation_lastName_empty() {
-		def actor = actor(firstName:'Larry',middleName:'Q',lastName:'')
-		assertInvalidWithOneError actor
-    }
-
-	void testValidation_lastName_short() {
+    @Test
+	void validation_lastName_short() {
 		def actor = actor(firstName:'Larry',middleName:'Q',lastName:'x')
 		assertTrue actor.validate()
     }
 
-	void testValidation_lastName_too_long() {
-		def actor = actor(firstName:'Larry',middleName:'Q',lastName:('x'*26))
-		assertInvalidWithOneError actor
+    @Test
+	void validation_lastName_too_long() {
+		assertInvalid actor(firstName:'Larry',middleName:'Q',lastName:('x'*26)), 'lastName', 'not.notnullandbetween'
+    }
+
+    @Test
+    void displayName(){
+        def actor = new Actor( firstName:'Abe', middleName:'Arthur', lastName:'Abraham' )
+        assertEquals 'Abraham, Abe Arthur', actor.displayName
+
+        actor.middleName = ''
+        assertEquals 'Abraham, Abe', actor.displayName
+
+        actor.firstName = ''
+        assertEquals 'Abraham', actor.displayName
+
+        actor.middleName = 'Q'
+        assertEquals 'Abraham, Q', actor.displayName
+    }
+
+    @Test
+    void fullName(){
+        def actor = new Actor( firstName:'Abe', middleName:'Arthur', lastName:'Abraham' )
+        assertEquals 'Abe Arthur Abraham', actor.fullName
+
+        actor.middleName = ''
+        assertEquals 'Abe Abraham', actor.fullName
+
+        actor.firstName = ''
+        assertEquals 'Abraham', actor.fullName
+
+        actor.middleName = 'Q'
+        assertEquals 'Q Abraham', actor.fullName
     }
 
 	private Actor actor(params){
-		def actor = new Actor(params)
-		mockForConstraintsTests Actor.class, [ actor ]
-		return actor
+		def act = new Actor(params)
+        mockForConstraintsTests Actor.class, [ act ]
+        return act
 	}
 }

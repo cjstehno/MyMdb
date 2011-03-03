@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.constraints
+package com.stehno.mymdb.domain
+
+import grails.test.GrailsUnitTestCase
 
 /**
- * Constraint requiring that a String value be null, or have a size between two specified values.
+ * 
  *
- * Params:
- *  start (int) starting value of range
- *  end (int) ending value of range
+ * @author cjstehno
  */
-class NullOrSizeBetweenConstraint {
+class DomainTestCase extends GrailsUnitTestCase {
 
-    static expectsParams = ['start', 'end']
-    static defaultMessageCode = 'default.not.nullorbetween.message'
+	protected void assertInvalid( dom, fieldName, code ){
+		assertFalse dom.validate()
+		assertLength 1, dom.errors
+        assertEquals code, dom.errors.getFieldError(fieldName).code
+	}
 
-    def supports = { type ->
-        return type!= null && String.class.isAssignableFrom(type);
-    }
-
-    def validate = { propertyValue ->
-        propertyValue != null && (start..end).containsWithinBounds(propertyValue.size())
+    protected void assertValid( dom ){
+        assertTrue dom.validate()
     }
 }
