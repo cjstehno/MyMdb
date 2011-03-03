@@ -15,14 +15,10 @@
  */
 package com.stehno.mymdb.controller
 
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Storage
-import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Movie
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
-
-@Secured(['ROLE_ADMIN'])
 class PrintableController {
 
 	def titlesection = {
