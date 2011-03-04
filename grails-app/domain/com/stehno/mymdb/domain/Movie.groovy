@@ -38,11 +38,12 @@ class Movie implements Taggable {
         title(size:1..100)
         description(size:0..2000)
         releaseYear(range:1900..2100)
-        lastUpdate(nullable:true)
-        dateCreated(nullable:true)
         storage(nullable:true)  // TODO: make this required when I do the storage refactoring
         poster(nullable:true)
         runtime(nullable:true)
+
+        lastUpdate(nullable:true)
+        dateCreated(nullable:true)
     }
 
     static transients = ['storageLabel']

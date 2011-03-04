@@ -15,14 +15,12 @@
  */
 package com.stehno.mymdb.domain
 
-class Genre {
+class Storage {
 
     String name
-    
-    static belongsTo = Movie
-    static hasMany = [movies:Movie]
-    
+    int index
+	
     static constraints = {
-        name( blank:false, size:2..25 )
+        index(range:1..120)
     }
 }

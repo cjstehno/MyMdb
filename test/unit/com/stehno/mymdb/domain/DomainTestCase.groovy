@@ -31,6 +31,8 @@ class DomainTestCase extends GrailsUnitTestCase {
         assertEquals code, dom.errors.getFieldError(fieldName).code
 	}
 
+    protected String str( n ){ 'x'*n }
+
     protected void assertValid( dom ){
         assertTrue dom.validate()
     }

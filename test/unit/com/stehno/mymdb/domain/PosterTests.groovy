@@ -15,43 +15,31 @@
  */
 package com.stehno.mymdb.domain
 
-import grails.test.GrailsUnitTestCase
 import org.junit.Test
 
-class PosterTests extends GrailsUnitTestCase {
+class PosterTests extends DomainTestCase {
 
 	@Test
     void validation_valid() {
-		assertTrue poster( title:'Testing', content:content(10) ).validate()
-        assertTrue poster( title:'xx', content:content(10) ).validate()
-        assertTrue poster( title:('x'*100), content:content(10) ).validate()
-        assertTrue poster( title:'Testing', content:content(2) ).validate()
-        assertTrue poster( title:'Testing', content:content(1024000) ).validate()
+		assertValid poster( title:'Testing', content:content(10) )
+        assertValid poster( title:'xx', content:content(10) )
+        assertValid poster( title:('x'*100), content:content(10) )
+        assertValid poster( title:'Testing', content:content(2) )
+        assertValid poster( title:'Testing', content:content(1024000) )
     }
 
 	@Test
-    void validation_invalid_notitle() {
-		assertFalse poster( content:content(10) ).validate()
-    }
-
-    @Test
-    void validation_invalid_titletooshort() {
-		assertFalse poster( title:'x', content:content(10) ).validate()
-    }
-
-    @Test
-    void validation_invalid_titletoolong() {
-		assertFalse poster( title:('x'*101), content:content(10) ).validate()
+    void validation_title() {
+		assertInvalid poster( content:content(10) ), 'title', 'nullable'
+        assertInvalid poster( title:'', content:content(10) ), 'title', 'blank'
+        assertInvalid poster( title:'x', content:content(10) ), 'title', 'size.toosmall'
+        assertInvalid poster( title:str(101), content:content(10) ), 'title', 'size.toobig'
     }
 
 	@Test
-    void validation_invalid_nocontent() {
-		assertFalse poster( title:'Foo' ).validate()
-    }
-
-    @Test
-    void validation_invalid_contenttoolong() {
-		assertFalse poster( title:'Foo', content:content(1024001) ).validate()
+    void validation_content() {
+		assertInvalid poster( title:'Foo' ), 'content', 'nullable'
+        assertInvalid poster( title:'Foo', content:content(1024001) ), 'content', 'maxSize.exceeded'
     }
 
 	private Poster poster(params){

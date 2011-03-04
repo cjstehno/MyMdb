@@ -16,8 +16,8 @@
 
 package com.stehno.mymdb.domain
 
-/**
- * 
+ /**
+ * Represents a movie web site reference.
  *
  * @author cjstehno
  */
@@ -27,7 +27,7 @@ class WebSite {
     String url
 
     static constraints = {
-        label(size:1..20)
-        url(size:7..100)
+        label( blank:false, size:2..25 )
+        url( blank:false, url:true, size:7..100 )
     }
 }

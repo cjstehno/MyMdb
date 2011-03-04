@@ -15,7 +15,6 @@
  */
 package com.stehno.mymdb.domain
 
-import grails.test.GrailsUnitTestCase
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -25,7 +24,7 @@ import org.junit.Test
  *
  * @author cjstehno
  */
-class MovieTests extends GrailsUnitTestCase {
+class MovieTests extends DomainTestCase {
 
     def movie
 
@@ -33,48 +32,55 @@ class MovieTests extends GrailsUnitTestCase {
     void before(){
         setUp()
 
-        this.movie = movie( title:'Testing', releaseYear:2000, storage:new Storage(name:'A',index:2), description:'Something interesting', mpaaRating: MpaaRating.UNKNOWN, format:Format.UNKNOWN )
+        this.movie = movie(
+            title:'Testing',
+            releaseYear:2000,
+            storage:new Storage(name:'A',index:2),
+            description:'Something interesting',
+            mpaaRating:MpaaRating.UNKNOWN,
+            format:Format.UNKNOWN
+        )
     }
 
 	@Test
     void validation_valid() {
-        assertTrue movie.validate()
+        assertValid movie
     }
 
     @Test
     void validation_title(){
         movie.title = ('x'*101)
-        assertFalse movie.validate()
+        assertInvalid movie, 'title', 'size.toobig'
 
         movie.title = 'x'
-        assertTrue movie.validate()
+        assertValid movie
 
         movie.title = null
-        assertFalse movie.validate()
+        assertInvalid movie, 'title', 'nullable'
     }
 
     @Test
     void validation_description(){
         movie.description = null
-        assertFalse movie.validate()
+        assertInvalid movie, 'description', 'nullable'
 
         movie.description = ('x'*2001)
-        assertFalse movie.validate()
+        assertInvalid movie, 'description', 'size.toobig'
     }
 
     @Test
     void validation_releaseYear(){
         movie.releaseYear = 1899
-        assertFalse movie.validate()
+        assertInvalid movie, 'releaseYear', 'range.toosmall'
 
         movie.releaseYear = 2101
-        assertFalse movie.validate()
+        assertInvalid movie, 'releaseYear', 'range.toobig'
     }
 
     @Test
     void validation_sites(){
         movie.sites = [ new WebSite( label:'Foo', url:'http://foo.com') ]
-        assertTrue movie.validate()
+        assertValid movie
     }
 
     @After

@@ -21,7 +21,7 @@ class Poster {
     byte[] content
 
     static constraints = {
-        title(size:2..100)
-        content(maxSize:1024000)
+        title( blank:false, size:2..100)
+        content( maxSize:1024000 )
     }
 }
