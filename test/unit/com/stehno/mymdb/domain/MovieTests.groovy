@@ -84,6 +84,9 @@ class MovieTests extends GrailsUnitTestCase {
 
         movie.releaseYear = 2101
         assertInvalid movie, 'releaseYear', 'range.toobig'
+
+        movie.releaseYear = null
+        assertValid movie
     }
 
     @Test
@@ -114,12 +117,18 @@ class MovieTests extends GrailsUnitTestCase {
     void validation_rating(){
         movie.mpaaRating = null
         assertInvalid movie, 'mpaaRating', 'nullable'
+
+        movie.mpaaRating = MpaaRating.PG
+        assertValid movie
     }
 
     @Test
     void validation_format(){
         movie.format = null
         assertInvalid movie, 'format', 'nullable'
+
+        movie.format = Format.DVD
+        assertValid movie
     }
 
     @Test

@@ -19,4 +19,5 @@ package com.stehno.mymdb.dto
 class WebSiteDto {
 
     Map<String,String> sites = [:]
+    
 }

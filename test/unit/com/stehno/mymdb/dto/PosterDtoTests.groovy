@@ -54,15 +54,10 @@ class PosterDtoTests extends GrailsUnitTestCase {
 
     @Test
     void asMap(){
-        assertEquals( [posterType:'NONE', url:null, posterId:null, posterName:null ], dto( posterType:PosterType.NONE ) as Map )
-
-//        def dto = dto(posterId:100, posterName:'Foo')
-//        def map = dto as Map
-//
-//        assertEquals dto.posterType.name(), map.posterType
-//        assertEquals dto.url, map.url
-//        assertEquals dto.posterId, map.posterId
-//        assertEquals dto.posterName, map.posterName
+        assertEquals( [posterType:'NONE' ], dto( posterType:PosterType.NONE ) as Map )
+        assertEquals( [posterType:'FILE' ], dto( posterType:PosterType.FILE, content:str(10).bytes ) as Map )
+        assertEquals( [posterType:'URL', url:'http://foo.com' ], dto( posterType:PosterType.URL, url:'http://foo.com') as Map )
+        assertEquals( [posterType:'EXISTING', posterId:103L, posterName:'Some Movie' ], dto( posterType:PosterType.EXISTING, posterId:103, posterName:'Some Movie' ) as Map )
     }
 
 	private PosterDto dto(params){

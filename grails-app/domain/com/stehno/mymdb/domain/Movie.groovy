@@ -21,7 +21,7 @@ class Movie implements Taggable {
 	
     String title
     String description
-    int releaseYear
+    Integer releaseYear
     Storage storage
     Poster poster
     MpaaRating mpaaRating
@@ -37,7 +37,7 @@ class Movie implements Taggable {
     static constraints = {
         title( blank:false, size:1..100 )
         description( nullable:true, blank:true, maxSize:2000)
-        releaseYear( range:1900..2100 )
+        releaseYear( nullable:true, range:1900..2100 )
         storage( nullable:true )  // TODO: make this required when I do the storage refactoring
         poster( nullable:true )
         runtime( nullable:true, min:0 )

@@ -30,19 +30,21 @@ class DetailsDto {
     Format format = Format.UNKNOWN
 
     static constraints = {
-        title(validator:{ it && (1..100).contains(it.size()) })
-        description(size:0..2000)
-        releaseYear(nullable:false, range:1900..2100)
-        storageName(validator:{ !it || (1..40).contains(it.size()) })
-        storageIndex(nullable:true, min:0)
-        runtime(nullable:true)
+        title( nullable:false, blank:false, size:1..100 )
+        description( nullable:true, blank:true, maxSize:2000)
+        releaseYear( nullable:true, range:1900..2100 )
+        storageName( nullable:false, blank:false, size:1..20 )
+        storageIndex( nullable:false, range:1..120 )
+        runtime( nullable:true, min:0 )
+        mpaaRating( nullable:false )
+        format( nullable:false )
     }
 
     // TODO: see if there is a way to require both storage name and index if one is specified
 
     /**
      * Overridden to provide conversion to a Map. The map converts the enum properties
-     * to their name() values.
+     * to their name() values. Properties with null values will be omitted from the map.
      *
      * @param type only Map is supported by the override
      * @return
@@ -51,14 +53,16 @@ class DetailsDto {
     public Object asType( Class type ){
         if(type == Map.class){
             def map = [:]
-            map.title = title
-            map.description = description
-            map.releaseYear = releaseYear
-            map.storageName = storageName
-            map.storageIndex = storageIndex
+
+            if(title) map.title = title
+            if(description) map.description = description
+            if(releaseYear) map.releaseYear = releaseYear
+            if(storageName) map.storageName = storageName
+            if(storageIndex) map.storageIndex = storageIndex
             map.mpaaRating = mpaaRating.name()
-            map.runtime = runtime
+            if(runtime) map.runtime = runtime
             map.format = format.name()
+
             return map
         }
         super.asType( type )

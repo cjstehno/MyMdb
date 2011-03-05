@@ -43,6 +43,8 @@ class PosterDto {
     /**
      * Overridden to provide conversion to a Map. The map will not contain the file
      * byte data, and the posterType property will be the name() value of the enum.
+     *
+     * Properties with null values will not be written to the resulting map.
      * 
      * @param type only Map is suppored by the override
      * @return
@@ -50,12 +52,13 @@ class PosterDto {
     @Override
     public Object asType( Class type ){
         if(type == Map.class){
-            return [
-                posterType: posterType.name(),
-                url: url,
-                posterId: posterId,
-                posterName: posterName
-            ]
+            def map = [ posterType:posterType.name() ]
+            
+            if(url) map.url = url
+            if(posterId) map.posterId = posterId
+            if(posterName) map.posterName = posterName
+
+            return map
         }
         super.asType( type )
     }

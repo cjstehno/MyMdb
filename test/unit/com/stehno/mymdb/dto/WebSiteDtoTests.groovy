@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.stehno.mymdb.dto
 
-/**
- * DTO for the Movie fetch panel of the movie flow. This DTO has two modes:
- *
- * Created Mode:
- *  User enters a title which is passed forward.
- *
- * Fetched Mode
- *  User selects fetched movie (selectedId, and providerId) which will be
- *  used to fetch the movie data.
- */
-class FetchResultsDto {
+import com.stehno.mymdb.ValidationTestCategory
+import grails.test.GrailsUnitTestCase
+import org.junit.Test
 
-    String title
+@Mixin(ValidationTestCategory)
+class WebSiteDtoTests extends GrailsUnitTestCase {
 
-    String selectedId
-    String providerId
-
-    static constraints = {
-        title( nullable:false, blank:false, size:1..100 )
-        selectedId( nullable:true, blank:true )
-        providerId( nullable:true, blank:true )
+    @Test
+    void validate(){
+        assertValid dto( [:] )
+        assertValid dto( sites:[ 'IMDB':'http://imdb.com' ] )
     }
+
+	private WebSiteDto dto(params){
+		def dto = new WebSiteDto(params)
+		mockForConstraintsTests WebSiteDto.class, [ dto ]
+		return dto
+	}
 }
