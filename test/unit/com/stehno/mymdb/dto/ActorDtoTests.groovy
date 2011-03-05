@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.domain
+package com.stehno.mymdb.dto
 
+import com.stehno.mymdb.ValidationTestCategory
 import grails.test.GrailsUnitTestCase
+import org.junit.Test
 
-/**
- * 
- *
- * @author cjstehno
- */
-class DomainTestCase extends GrailsUnitTestCase {
+@Mixin(ValidationTestCategory)
+class ActorDtoTests extends GrailsUnitTestCase {
 
-	protected void assertInvalid( dom, fieldName, code ){
-		assertFalse dom.validate()
-		assertLength 1, dom.errors
-        assertEquals code, dom.errors.getFieldError(fieldName).code
-	}
-
-    protected String str( n ){ 'x'*n }
-
-    protected void assertValid( dom ){
-        assertTrue dom.validate()
+    @Test
+    void validation(){
+        assertValid dto( actors:null )
+        assertValid dto( actors:[ 1, 22, 3000 ] )
     }
+
+	private ActorDto dto(params){
+		def dto = new ActorDto(params)
+		mockForConstraintsTests ActorDto.class, [ dto ]
+		return dto
+	}
 }

@@ -21,6 +21,7 @@ class Storage {
     int index
 	
     static constraints = {
-        index(range:1..120)
+        name( nullable:false, blank:false, size:1..20 )
+        index( range:1..120 )
     }
 }

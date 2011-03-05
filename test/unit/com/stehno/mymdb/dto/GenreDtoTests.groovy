@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.stehno.mymdb.dto
 
-class ActorDto {
-    long[] actors
+import com.stehno.mymdb.ValidationTestCategory
+import grails.test.GrailsUnitTestCase
+import org.junit.Test
 
-    static constraints = {
-        actors( nullable:true )
+@Mixin(ValidationTestCategory)
+class GenreDtoTests extends GrailsUnitTestCase {
+
+    @Test
+    void validation(){
+        assertValid dto( genres:null )
+        assertValid dto( genres:[ 1, 22, 3000 ] )
     }
+
+	private GenreDto dto(params){
+		def dto = new GenreDto(params)
+		mockForConstraintsTests GenreDto.class, [ dto ]
+		return dto
+	}
 }

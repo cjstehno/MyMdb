@@ -16,20 +16,53 @@
 
 package com.stehno.mymdb.dto
 
+import com.stehno.mymdb.ValidationTestCategory
 import grails.test.GrailsUnitTestCase
 import org.junit.Test
 
+@Mixin(ValidationTestCategory)
 class PosterDtoTests extends GrailsUnitTestCase {
 
     @Test
-    void asMap(){
-        def dto = dto(posterId:100, posterName:'Foo')
-        def map = dto as Map
+    void validation_invalid(){
+        assertInvalid dto( posterType:null ), 'posterType', 'nullable'
+    }
 
-        assertEquals dto.posterType.name(), map.posterType
-        assertEquals dto.url, map.url
-        assertEquals dto.posterId, map.posterId
-        assertEquals dto.posterName, map.posterName
+    @Test
+    void validation_none(){
+        assertValid dto( posterType:PosterType.NONE )
+    }
+
+    @Test
+    void validation_url(){
+        assertValid dto( posterType:PosterType.URL, url:'' )
+        assertValid dto( posterType:PosterType.URL, url:'http://www.foo.com' )
+        assertInvalid dto( posterType:PosterType.URL, url:'www.foo.com' ), 'url', 'url.invalid'
+        assertInvalid dto( posterType:PosterType.URL, url:'sdfgsdfg' ), 'url', 'url.invalid'
+    }
+
+    @Test
+    void validation_existing(){
+        assertValid dto( posterType:PosterType.EXISTING, posterId:123, posterName:'Some poster' )
+        assertInvalid dto( posterType:PosterType.EXISTING, posterId:123, posterName:str(101) ), 'posterName', 'size.toobig'
+    }
+
+    @Test
+    void validation_file(){
+        assertValid dto( posterType:PosterType.FILE, file:'somebytes'.getBytes() )
+    }
+
+    @Test
+    void asMap(){
+        assertEquals( [posterType:'NONE', url:null, posterId:null, posterName:null ], dto( posterType:PosterType.NONE ) as Map )
+
+//        def dto = dto(posterId:100, posterName:'Foo')
+//        def map = dto as Map
+//
+//        assertEquals dto.posterType.name(), map.posterType
+//        assertEquals dto.url, map.url
+//        assertEquals dto.posterId, map.posterId
+//        assertEquals dto.posterName, map.posterName
     }
 
 	private PosterDto dto(params){

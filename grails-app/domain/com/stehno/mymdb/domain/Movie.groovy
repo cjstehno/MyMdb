@@ -35,15 +35,18 @@ class Movie implements Taggable {
     Date lastUpdate
 
     static constraints = {
-        title(size:1..100)
-        description(size:0..2000)
-        releaseYear(range:1900..2100)
-        storage(nullable:true)  // TODO: make this required when I do the storage refactoring
-        poster(nullable:true)
-        runtime(nullable:true)
+        title( blank:false, size:1..100 )
+        description( nullable:true, blank:true, maxSize:2000)
+        releaseYear( range:1900..2100 )
+        storage( nullable:true )  // TODO: make this required when I do the storage refactoring
+        poster( nullable:true )
+        runtime( nullable:true, min:0 )
 
-        lastUpdate(nullable:true)
-        dateCreated(nullable:true)
+        mpaaRating( inList:MpaaRating.values() as List )
+        format( inList:Format.values() as List )
+
+        lastUpdate( nullable:true )
+        dateCreated( nullable:true )
     }
 
     static transients = ['storageLabel']
@@ -53,11 +56,47 @@ class Movie implements Taggable {
     }
 }
 
+/**
+ * Simple enumeration of available MPAA Ratings.
+ */
 enum MpaaRating {
-    UNKNOWN, G, PG, PG_13, R, NC_17, UNRATED
+    UNKNOWN('Unknown'),
+    G('G'),
+    PG('PG'),
+    PG_13('PG-13'),
+    R('R'),
+    NC_17('NC-17'),
+    UNRATED('Unrated')
+
+    final String label
+
+    private MpaaRating( String label ){
+        this.label = label
+    }
+
+    static MpaaRating fromLabel( String label ){
+        MpaaRating.values().find { it.label == label }
+    }
 }
 
+/**
+ * Simple enumeration of movie formats.
+ */
 enum Format {
-    UNKNOWN, VCD, DVD, DVD_R, BLUERAY
+    UNKNOWN('Unknown'),
+    VCD('VCD'),
+    DVD('DVD'),
+    DVD_R('DVD-R'),
+    BLUERAY('BlueRay')
+
+    final String label
+
+    private Format( String label ){
+        this.label = label
+    }
+
+    static Format fromLabel( String label ){
+        Format.values().find { it.label == label }
+    }
 }
 

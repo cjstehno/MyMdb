@@ -15,9 +15,12 @@
  */
 package com.stehno.mymdb.domain
 
+import com.stehno.mymdb.ValidationTestCategory
+import grails.test.GrailsUnitTestCase
 import org.junit.Test
 
-class PosterTests extends DomainTestCase {
+@Mixin(ValidationTestCategory)
+class PosterTests extends GrailsUnitTestCase {
 
 	@Test
     void validation_valid() {

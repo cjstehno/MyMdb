@@ -20,6 +20,6 @@ class GenreDto {
     long[] genres
 
     static constraints = {
-        genres(nullable:true)
+        genres( nullable:true )
     }
 }

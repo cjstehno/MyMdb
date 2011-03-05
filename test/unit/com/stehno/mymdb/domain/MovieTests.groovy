@@ -18,13 +18,16 @@ package com.stehno.mymdb.domain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import grails.test.GrailsUnitTestCase
+import com.stehno.mymdb.ValidationTestCategory
 
- /**
+/**
  * 
  *
  * @author cjstehno
  */
-class MovieTests extends DomainTestCase {
+@Mixin(ValidationTestCategory)
+class MovieTests extends GrailsUnitTestCase {
 
     def movie
 
@@ -49,8 +52,11 @@ class MovieTests extends DomainTestCase {
 
     @Test
     void validation_title(){
-        movie.title = ('x'*101)
+        movie.title = str(101)
         assertInvalid movie, 'title', 'size.toobig'
+
+        movie.title = ''
+        assertInvalid movie, 'title', 'blank'
 
         movie.title = 'x'
         assertValid movie
@@ -62,10 +68,13 @@ class MovieTests extends DomainTestCase {
     @Test
     void validation_description(){
         movie.description = null
-        assertInvalid movie, 'description', 'nullable'
+        assertValid movie
 
-        movie.description = ('x'*2001)
-        assertInvalid movie, 'description', 'size.toobig'
+        movie.description = ''
+        assertValid movie
+
+        movie.description = str(2001)
+        assertInvalid movie, 'description', 'maxSize.exceeded'
     }
 
     @Test
@@ -81,6 +90,56 @@ class MovieTests extends DomainTestCase {
     void validation_sites(){
         movie.sites = [ new WebSite( label:'Foo', url:'http://foo.com') ]
         assertValid movie
+    }
+
+    @Test
+    void validation_storage(){
+        movie.storage = null
+        assertValid movie
+    }
+
+    @Test
+    void validation_runtime(){
+        movie.runtime = -1
+        assertInvalid movie, 'runtime', 'min.notmet'
+
+        movie.runtime = 0
+        assertValid movie
+
+        movie.runtime = 1231241
+        assertValid movie
+    }
+
+    @Test
+    void validation_rating(){
+        movie.mpaaRating = null
+        assertInvalid movie, 'mpaaRating', 'nullable'
+    }
+
+    @Test
+    void validation_format(){
+        movie.format = null
+        assertInvalid movie, 'format', 'nullable'
+    }
+
+    @Test
+    void ratings(){
+        assertEquals MpaaRating.UNKNOWN, MpaaRating.fromLabel('Unknown')
+        assertEquals MpaaRating.G, MpaaRating.fromLabel('G')
+        assertEquals MpaaRating.PG, MpaaRating.fromLabel('PG')
+        assertEquals MpaaRating.PG_13, MpaaRating.fromLabel('PG-13')
+        assertEquals MpaaRating.R, MpaaRating.fromLabel('R')
+        assertEquals MpaaRating.NC_17, MpaaRating.fromLabel('NC-17')
+        assertEquals MpaaRating.UNRATED, MpaaRating.fromLabel('Unrated')
+    }
+
+    @Test
+    void formats(){
+        assertEquals Format.UNKNOWN, Format.fromLabel('Unknown')
+        assertEquals Format.VCD, Format.fromLabel('VCD')
+        assertEquals Format.DVD, Format.fromLabel('DVD')
+        assertEquals Format.DVD_R, Format.fromLabel('DVD-R')
+        assertEquals Format.BLUERAY, Format.fromLabel('BlueRay')
     }
 
     @After
