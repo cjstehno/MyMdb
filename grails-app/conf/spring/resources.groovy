@@ -2,7 +2,7 @@
 beans = {
 
     tmdbApi(com.stehno.tmdb.TmdbApiClient){
-        configPropertyService = ref('configPropertyService')
+        mymdbConfigService = ref('mymdbConfigService')
     }
 
     tmdbMovieDataProvider(com.stehno.mymdb.fetch.TmdbMovieDataProvider){

@@ -17,9 +17,9 @@
 package com.stehno.tmdb
 
 import grails.converters.JSON
+import com.stehno.mymdb.service.MymdbConfigService
 
-
- /**
+/**
  * This is not meant to be a general-use client for the TMDB API. It implements only
  * the functionality that I need.
  *
@@ -27,9 +27,8 @@ import grails.converters.JSON
  */
 class TmdbApiClient {
 
-    def configPropertyService
+    MymdbConfigService mymdbConfigService
 
-    private static final String API_KEY_CONFIG = 'tmdb.ApiKey'
     private static final def URL_BASE = 'http://api.themoviedb.org/2.1/'
 
     /**
@@ -56,10 +55,6 @@ class TmdbApiClient {
     }
 
     private def buildUrl( action, param ){
-        "${URL_BASE}${action}/en/json/${getApiKey()}/${URLEncoder.encode(param)}".toURL()
-    }
-
-    private String getApiKey(){
-        configPropertyService.getProperty(API_KEY_CONFIG)
+        "${URL_BASE}${action}/en/json/${mymdbConfigService.getTmdbApiKey()}/${URLEncoder.encode(param)}".toURL()
     }
 }
