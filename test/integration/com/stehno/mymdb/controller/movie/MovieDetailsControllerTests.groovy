@@ -114,9 +114,10 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertFalse jso.success
 
         def errors = jso.errors
-        assertEquals 2, errors.size()
-        assertEquals 'Property [title] of class [class com.stehno.mymdb.dto.DetailsDto] with value [null] does not pass custom validation', errors.title
-        assertEquals 'Property [releaseYear] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.releaseYear
+        assertEquals 3, errors.size()
+        assertEquals 'Property [title] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.title
+        assertEquals 'Property [storageName] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.storageName
+        assertEquals 'Property [storageIndex] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.storageIndex
 
         assertNull controller.movieFlowService.flow[DetailsDto.class.name]
     }

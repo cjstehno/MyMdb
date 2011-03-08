@@ -16,11 +16,11 @@
 
 package com.stehno.mymdb.fetch
 
-import com.stehno.plugins.config.service.ConfigPropertyService
+import com.stehno.mymdb.domain.MpaaRating
+import com.stehno.mymdb.service.MymdbConfigService
 import com.stehno.tmdb.TmdbApiClient
 import org.junit.Before
 import org.junit.Test
-import com.stehno.mymdb.domain.MpaaRating
 
 class TmdbMovieDataProviderTests extends GroovyTestCase {
 
@@ -107,7 +107,7 @@ class TmdbMovieDataProviderTests extends GroovyTestCase {
     private mockTmdbApi(){
         def api = new TmdbApiClient()
 
-        api.configPropertyService = ['getProperty':{ 'testing' }] as ConfigPropertyService
+        api.mymdbConfigService = ['getTmdbApiKey':{ 'testing' }] as MymdbConfigService
 
         api.metaClass.call = { url->
             def ustr = url as String

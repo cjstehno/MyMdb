@@ -35,7 +35,7 @@ class Actor {
     def getDisplayName(){
         def dn = lastName
         if( firstName || middleName ){
-            dn += ", $firstName${firstName && middleName ? ' ' : ''}$middleName"
+            dn += ", ${firstName?:''}${firstName && middleName ? ' ' : ''}${middleName?:''}"
         }
         return dn
     }

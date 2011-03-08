@@ -76,6 +76,9 @@ class ActorTests extends GrailsUnitTestCase {
         actor.middleName = ''
         assertEquals 'Abraham, Abe', actor.displayName
 
+        actor.middleName = null
+        assertEquals 'Abraham, Abe', actor.displayName
+
         actor.firstName = ''
         assertEquals 'Abraham', actor.displayName
 
@@ -89,6 +92,9 @@ class ActorTests extends GrailsUnitTestCase {
         assertEquals 'Abe Arthur Abraham', actor.fullName
 
         actor.middleName = ''
+        assertEquals 'Abe Abraham', actor.fullName
+
+        actor.middleName = null
         assertEquals 'Abe Abraham', actor.fullName
 
         actor.firstName = ''

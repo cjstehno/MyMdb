@@ -16,59 +16,91 @@
 
 package com.stehno.mymdb.controller
 
-import grails.test.*
-import grails.converters.JSON
+import com.stehno.mymdb.MovieTestFixture
 import com.stehno.mymdb.domain.Actor
+import org.junit.Before
+import org.junit.Test
 
-class ActorControllerTests extends GrailsUnitTestCase {
+class ActorControllerTests extends ControllerTestCase {
 
-    def controller
+    private MovieTestFixture fixture = new MovieTestFixture()
 
-    protected void setUp() {
-        super.setUp()
-
-        [
-            new Actor(firstName:'Larry',middleName:'L',lastName:'Stooge'),
-            new Actor(firstName:'Moe',middleName:'M',lastName:'Stooge')
-        ]*.save(flush:true)
+    @Before
+    void before(){
+        fixture.before()
 
         controller = new ActorController()
     }
 
-    void testList(){
+    @Test
+    void list(){
         controller.list()
 
-        assertEquals 'application/json;charset=UTF-8', controller.response.contentType
-
         def jso = parseJsonResponse()
-        assertEquals 'Stooge, Larry L', jso.items[0].label
-        assertEquals 'Stooge, Moe M', jso.items[1].label
+        assertEquals 'Fox, Michael J', jso.items[0].label
+        assertEquals 'Neason, Liam', jso.items[1].label
     }
 
-    void testSave(){
-        controller.params.firstName = 'Curley'
-        controller.params.middleName = 'C'
-        controller.params.lastName = 'Stooge'
+    @Test
+    void save(){
+        nameParams( 'Curley', 'C', 'Stooge' )
 
         controller.save()
 
-        def jso = parseJsonResponse()
-        assertTrue jso.success
-        assertNull jso.errors
+        assertSuccessful parseJsonResponse()
+
+        assertNotNull Actor.findByLastName('Stooge')
     }
 
-    void testSave_NoName(){
+    @Test
+    void save_firstName_null(){
+        nameParams( null, 'C', 'Stooge' )
+
         controller.save()
 
-        def jso = parseJsonResponse()
-        assertFalse jso.success
-        assertNotNull jso.errors
-        assertEquals 3, jso.errors.size()
-        assertEquals 'Property [lastName] of class [class com.stehno.mymdb.domain.Actor] cannot be null', jso.errors.lastName
+        assertSuccessful parseJsonResponse()
+
+        assertNotNull Actor.findByLastName('Stooge')
     }
 
-    void testUpdate(){
-        def theActor = Actor.findByMiddleName('M')
+    @Test
+    void save_firstName_empty(){
+        nameParams( '', 'C', 'Stooge' )
+
+        controller.save()
+
+        assertSuccessful parseJsonResponse()
+
+        assertNotNull Actor.findByLastName('Stooge')
+    }
+
+    @Test
+    void save_firstName_toolong(){
+        nameParams( ('x'*26), 'C', 'Stooge' )
+
+        controller.save()
+
+        assertFailure parseJsonResponse(), 'firstName', 'Actor property first name length must be between 1 and 25.'
+    }
+
+    private nameParams( first, middle, last){
+        controller.params.firstName = first
+        controller.params.middleName = middle
+        controller.params.lastName = last
+    }
+
+    @Test
+    void save_NoName(){
+        controller.save()
+
+        assertFailure parseJsonResponse(), 'lastName', 'Actor last name is required.'
+    }
+
+    @Test
+    void update(){
+        assertEquals 2, Actor.count()
+        
+        def theActor = Actor.findByFirstName('Michael')
         controller.params.id = theActor.id
         controller.params.version = theActor.version
         controller.params.firstName = 'Moester'
@@ -77,13 +109,16 @@ class ActorControllerTests extends GrailsUnitTestCase {
 
         controller.update()
 
-        def jso = parseJsonResponse()
-        assertTrue jso.success
-        assertNull jso.errors
+        assertSuccessful parseJsonResponse()
+
+        assertEquals 2, Actor.count()
     }
 
-    void testJDelete(){
-        controller.params.id = Actor.findByMiddleName('M').id
+    @Test
+    void delete(){
+        assertEquals 2, Actor.count()
+
+        controller.params.id = Actor.findByFirstName('Michael').id
 
         controller.delete()
 
@@ -92,26 +127,19 @@ class ActorControllerTests extends GrailsUnitTestCase {
 
         def actors = Actor.list()
         assertEquals 1, actors.size()
-        assertEquals 'Larry', actors[0].firstName
+        assertEquals 'Liam', actors[0].firstName
+
+        assertEquals 1, Actor.count()
     }
 
-    void testDelete_NotFound(){
+    @Test
+    void delete_NotFound(){
+        assertEquals 2, Actor.count()
+        
         controller.delete()
 
-        def jso = parseJsonResponse()
-        assertFalse jso.success
-        assertNotNull jso.errors
-        assertEquals 1, jso.errors.size()
-        assertEquals 'Actor not found with id null', jso.errors.general
+        assertFailure parseJsonResponse(), 'general', 'Actor not found with id null'
 
-        assertEquals 2, Actor.list().size()
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-    }
-
-    private def parseJsonResponse(){
-        JSON.parse( new StringReader(controller.response.contentAsString) )
+        assertEquals 2, Actor.count()
     }
 }

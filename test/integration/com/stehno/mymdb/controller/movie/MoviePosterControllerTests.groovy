@@ -112,8 +112,8 @@ class MoviePosterControllerTests extends MovieFlowIntegrationTestBase {
         def dto = controller.movieFlowService.flow[PosterDto.class.name]
         assertNotNull dto
         assertEquals PosterType.NONE, dto.posterType
-        assertEquals 'http://', dto.url
-        assertEquals 0, dto.posterId
+        assertNull dto.url
+        assertNull dto.posterId
     }
 
     @After

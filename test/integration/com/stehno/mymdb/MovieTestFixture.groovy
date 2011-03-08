@@ -47,6 +47,8 @@ class MovieTestFixture {
         def actor = new Actor( firstName:'Liam', middleName:'', lastName:'Neason' )
         actor.save(flush:true)
 
+        new Actor( firstName:'Michael', middleName:'J', lastName:'Fox' ).save(flush:true)
+
         def genre = new Genre( name:'Action' )
         genre.save(flush:true)
 
