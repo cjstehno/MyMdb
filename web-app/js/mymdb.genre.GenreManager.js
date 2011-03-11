@@ -1,18 +1,21 @@
 // mymdb.genre
 
 mymdb.genre.GenreManagerDialog = Ext.extend( Ext.Window ,{
-    autoShow:true,
+    title:'Genre Manager',
     iconCls:'icon-genre',
+    autoShow:true,
     closable:true,
     initHidden:false,
     modal:true,
     width:400,
     height:300,
-    title:'Genre Manager',
     layout:'fit',
     autoScroll:true,
     initComponent: function(){
         Ext.apply(this, {
+            buttons:[
+                { text:'Close', scope:this, handler:function(){ this.close(); } }
+            ],
             items:[
                 new mymdb.genre.GenreListView({
                     store:new Ext.data.JsonStore({
@@ -27,10 +30,17 @@ mymdb.genre.GenreManagerDialog = Ext.extend( Ext.Window ,{
                 })
             ],
             tbar:[
-                mymdb.genre.NewGenreActionFactory('button')
+                {
+                    text:'New Genre',
+                    iconCls:'icon-add-genre',
+                    handler:this.showGenreDialog
+                }
             ]
         });
         mymdb.genre.GenreManagerDialog.superclass.initComponent.apply(this, arguments);
+    },
+    showGenreDialog:function(){
+        new mymdb.genre.GenreDialog();
     }
 });
 
@@ -70,7 +80,13 @@ mymdb.genre.ContextPopupFactory = function( dataView, idx ){
                     mymdb.genre.OpenGenreEditDialogHandler(dataView,idx);
                 }
             },
-            mymdb.genre.NewGenreActionFactory('menuitem'),
+            {
+                text:'New Genre',
+                iconCls:'icon-add-genre',
+                handler: function(b,e){
+                    new mymdb.genre.GenreDialog();
+                }
+            },
             {
                 xtype:'menuitem',
                 text:'Delete',
@@ -84,9 +100,7 @@ mymdb.genre.ContextPopupFactory = function( dataView, idx ){
                                method:'POST',
                                params: { id:itemData.id },
                                success: function(resp,opts){
-                                   Ext.Msg.alert('Success','Genre successfully deleted.',function(){
-                                       Ext.getCmp('genreListView').getStore().load();
-                                   });
+                                   Ext.getCmp('genreListView').getStore().load();
                                },
                                failure: function(resp,opts){
                                    Ext.Msg.alert('Delete Failure','Unable to deleted selected genre.');
@@ -172,11 +186,9 @@ mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
                             url: 'genre/' + ( idValue === null || idValue === '' ? 'save' : 'update'),
                             method:'POST',
                             success: function(form, action) {
-                               Ext.Msg.alert('Success', 'Genre saved successfully', function(){
-                                   var dia = formPanel.findParentByType('genre-dialog');
-                                   dia.close();
-                                   dia.onSave();
-                               });
+                               var dia = formPanel.findParentByType('genre-dialog');
+                               dia.close();
+                               dia.onSave();
                             },
                             failure: function(form, action) {
                                 switch (action.failureType) {

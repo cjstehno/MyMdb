@@ -26,13 +26,12 @@ class FetchResultsDtoTests extends GrailsUnitTestCase {
     @Test
     void validation_valid(){
         assertValid dto( title:'Some Movie' )
-        assertValid dto( title:'Foo', selectedId:'someid', providerId:'provider' )
+        assertValid dto( selectedId:'someid', providerId:'provider' )
     }
 
     @Test
     void validation_title(){
-        assertInvalid dto( title:null ), 'title', 'nullable'
-        assertInvalid dto( title:'' ), 'title', 'blank'
+        assertValid dto( title:null )
         assertInvalid dto( title:str(101) ), 'title', 'size.toobig'
     }
 

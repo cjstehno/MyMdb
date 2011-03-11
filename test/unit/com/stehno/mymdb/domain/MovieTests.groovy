@@ -140,6 +140,7 @@ class MovieTests extends GrailsUnitTestCase {
         assertEquals MpaaRating.R, MpaaRating.fromLabel('R')
         assertEquals MpaaRating.NC_17, MpaaRating.fromLabel('NC-17')
         assertEquals MpaaRating.UNRATED, MpaaRating.fromLabel('Unrated')
+        assertEquals MpaaRating.UNKNOWN, MpaaRating.fromLabel('blah')
     }
 
     @Test
@@ -149,6 +150,7 @@ class MovieTests extends GrailsUnitTestCase {
         assertEquals Format.DVD, Format.fromLabel('DVD')
         assertEquals Format.DVD_R, Format.fromLabel('DVD-R')
         assertEquals Format.BLUERAY, Format.fromLabel('BlueRay')
+        assertEquals Format.UNKNOWN, Format.fromLabel('blah')
     }
 
     @After

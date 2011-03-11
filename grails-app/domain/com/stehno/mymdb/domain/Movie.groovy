@@ -75,7 +75,7 @@ enum MpaaRating {
     }
 
     static MpaaRating fromLabel( String label ){
-        MpaaRating.values().find { it.label == label }
+        (MpaaRating.values().find { it.label == label }) ?: MpaaRating.UNKNOWN
     }
 }
 
@@ -96,7 +96,7 @@ enum Format {
     }
 
     static Format fromLabel( String label ){
-        Format.values().find { it.label == label }
+        (Format.values().find { it.label == label }) ?: Format.UNKNOWN
     }
 }
 

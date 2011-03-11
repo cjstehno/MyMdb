@@ -33,7 +33,7 @@ class FetchResultsDto {
     String providerId
 
     static constraints = {
-        title( nullable:false, blank:false, size:1..100 )
+        title( nullable:true, size:1..100 )
         selectedId( nullable:true, blank:true )
         providerId( nullable:true, blank:true )
     }

@@ -73,24 +73,13 @@ class TmdbMovieDataProvider implements MovieDataProvider {
             genreNames:genres(data),
             actorNames:actors(data),
             posterUrl:poster(data),
-            rating:rating(data),
+            rating:MpaaRating.fromLabel(data.certification),
             runtime:data.runtime,
             sites:sites(data)
         )
     }
 
     String getProviderId() { PROVIDER_ID }
-
-    private MpaaRating rating( entry ){
-        def rat = entry.certification
-        if( rat == 'G' ) return MpaaRating.G
-        else if( rat == 'PG') return MpaaRating.PG
-        else if( rat == 'PG-13') return MpaaRating.PG_13
-        else if( rat == 'R') return MpaaRating.R
-        else if( rat == 'NC-17') return MpaaRating.NC_17
-        else if( rat.equalsIgnoreCase('unrated')) return MpaaRating.UNRATED
-        else return MpaaRating.UNKNOWN
-    }
 
     private int released( entry ){
         entry.isNull('released') ? 0 : entry.released.split('-')[0] as Integer

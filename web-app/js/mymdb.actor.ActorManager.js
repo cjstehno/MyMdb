@@ -13,6 +13,9 @@ mymdb.actor.ActorManagerDialog = Ext.extend( Ext.Window ,{
     autoScroll:true,
     initComponent: function(){
         Ext.apply(this, {
+            buttons:[
+                { text:'Close', scope:this, handler:function(){ this.close(); } }
+            ],
             items:[
                 new mymdb.actor.ActorListView({
                     store:new Ext.data.JsonStore({
@@ -26,20 +29,20 @@ mymdb.actor.ActorManagerDialog = Ext.extend( Ext.Window ,{
                     })
                 })
             ],
-            tbar:[ mymdb.actor.NewActorActionFactory('button') ]
+            tbar:[
+                {
+                    text:'New Actor',
+                    iconCls:'icon-add-actor',
+                    handler:this.showActorDialog
+                }
+            ]
         });
         mymdb.actor.ActorManagerDialog.superclass.initComponent.apply(this, arguments);
+    },
+    showActorDialog:function(){
+        new mymdb.actor.ActorDialog();
     }
 });
-
-mymdb.actor.NewActorActionFactory = function(xt){
-    return {
-        xtype:xt,
-        text:'New Actor',
-        iconCls:'icon-add-actor',
-        handler: function(){ new mymdb.actor.ActorDialog(); }
-    };
-};
 
 mymdb.actor.OpenActorEditDialogHandler = function(dataView,idx){
     var actorId = dataView.getStore().getAt( idx ).data.id;
@@ -84,7 +87,11 @@ mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
                             mymdb.actor.OpenActorEditDialogHandler(dataView,idx);
                         }
                     },
-                    mymdb.actor.NewActorActionFactory('menuitem'),
+                    {
+                        text:'New Actor',
+                        iconCls:'icon-add-actor',
+                        handler: function(){ new mymdb.actor.ActorDialog(); }
+                    },
                     {
                         xtype:'menuitem',
                         text:'Delete',
@@ -98,9 +105,7 @@ mymdb.actor.ActorListView = Ext.extend( Ext.list.ListView, {
                                        method:'POST',
                                        params: { id:itemData.id },
                                        success: function(resp,opts){
-                                           Ext.Msg.alert('Success','Actor successfully deleted.',function(){
-                                               Ext.getCmp('actorListView').getStore().load();
-                                           });
+                                           Ext.getCmp('actorListView').getStore().load();
                                        },
                                        failure: function(resp,opts){
                                            Ext.Msg.alert('Delete Failure','Unable to deleted selected actor.');
@@ -180,11 +185,9 @@ mymdb.actor.ActorFormPanel = Ext.extend( Ext.FormPanel, {
                             url: 'actor/' + ( idValue === null || idValue === '' ? 'save' : 'update'),
                             method:'POST',
                             success: function(form, action) {
-                               Ext.Msg.alert('Success', 'Actor saved successfully', function(){
-                                    var dia = Ext.getCmp('actorFormDialog');
-                                    dia.close();
-                                    dia.onSave();
-                               });
+                                var dia = Ext.getCmp('actorFormDialog');
+                                dia.close();
+                                dia.onSave();
                             },
                             failure: function(form, action) {
                                 switch (action.failureType) {
