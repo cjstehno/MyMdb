@@ -1,6 +1,6 @@
 Ext.QuickTips.init();
 
-Ext.namespace('mymdb','mymdb.actor','mymdb.genre','mymdb.movie', 'mymdb.movie.flow');
+Ext.namespace('mymdb','mymdb.actor','mymdb.genre', 'mymdb.storage','mymdb.movie', 'mymdb.movie.flow');
  
 mymdb.app = function() {
     // do NOT access DOM from here; elements don't exist yet
@@ -44,6 +44,13 @@ mymdb.app = function() {
             handler: function(){ new mymdb.movie.MovieDialog(); }
         }),
 
+        openStorageManagerAction: new Ext.Action({
+            itemId:'openStorageManager',
+            text:'Storage Manager',
+            iconCls:'icon-add-storage',
+            handler: function(){ new mymdb.storage.StorageManagerDialog(); }
+        }),
+
         // public methods
         init: function() {
 			new Ext.Viewport({
@@ -55,7 +62,8 @@ mymdb.app = function() {
 					{ region:'south', xtype:'footerpanel' }
 				]
 			});		
-		
+
+            Ext.getBody().on("contextmenu", Ext.emptyFn, null, {preventDefault: true});
         }
     };
 }();
@@ -68,6 +76,7 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	bbar:[
         mymdb.app.openGenreManagerAction,
         mymdb.app.openActorManagerAction,
+        mymdb.app.openStorageManagerAction,
         { xtype:'tbseparator' },
         mymdb.app.openNewMovieAction,
         { xtype:'tbfill' },

@@ -24,6 +24,11 @@
       .icon-edit-site { background-image: url('${fam.icon(name:'world_edit')}')!important; }
       .icon-delete-site { background-image: url('${fam.icon(name:'world_delete')}')!important; }
 
+      .icon-storage { background-image: url('${fam.icon(name:'brick')}')!important; }
+      .icon-add-storage { background-image: url('${fam.icon(name:'brick_add')}')!important; }
+      .icon-edit-storage { background-image: url('${fam.icon(name:'brick_edit')}')!important; }
+      .icon-delete-storage { background-image: url('${fam.icon(name:'brick_delete')}')!important; }
+
       .icon-right { background-image: url('${fam.icon(name:'arrow_right')}')!important; }
       .icon-left { background-image: url('${fam.icon(name:'arrow_left')}')!important; }
 
@@ -34,6 +39,7 @@
     <g:javascript library="mymdb.Dialogs" />
     <g:javascript library="mymdb.genre.GenreManager" />
     <g:javascript library="mymdb.actor.ActorManager" />
+    <g:javascript library="mymdb.storage.StorageManager" />
     <g:javascript library="mymdb.movie.flow.MovieFlow" />
     <g:javascript library="mymdb.movie.flow.FetchResults" />
     <g:javascript library="mymdb.movie.flow.Details" />

@@ -44,17 +44,6 @@ mymdb.genre.GenreManagerDialog = Ext.extend( Ext.Window ,{
     }
 });
 
-mymdb.genre.NewGenreActionFactory = function(xt){
-    return {
-        xtype:xt,
-        text:'New Genre',
-        iconCls:'icon-add-genre',
-        handler: function(b,e){
-            new mymdb.genre.GenreDialog();
-        }
-    };
-};
-
 mymdb.genre.OpenGenreEditDialogHandler = function(dataView,idx){
     var genreId = dataView.getStore().getAt( idx ).data.id;
     var dialog = new mymdb.genre.GenreDialog({autoShow:false});
