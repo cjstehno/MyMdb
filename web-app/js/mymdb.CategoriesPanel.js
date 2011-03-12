@@ -18,6 +18,7 @@ mymdb.CategoryListView = Ext.extend( Ext.list.ListView, {
 		} );
     }
 });
+Ext.reg('category-listview', mymdb.CategoryListView);
 
 mymdb.CategoryListViewFactory = function(dataUrl,categoryId){
     return new mymdb.CategoryListView({
@@ -70,7 +71,13 @@ mymdb.CategoriesPanel = Ext.extend( Ext.Panel, {
                 },
 				{
                     title:'Storage',
-                    items:[ mymdb.CategoryListViewFactory('browser/storage', 'box_store') ]
+                    items:[
+                        {
+                            xtype:'category-listview',
+                            columns:[ { header:'Title', dataIndex:'name'} ],
+                            store:mymdb.app.storageStore
+                        }
+                    ]
                 },
 				{ title:'Lists', html:'Not supported yet.' }
 			]

@@ -19,15 +19,36 @@ mymdb.storage.StorageManagerDialog = Ext.extend( Ext.Window ,{
                 { xtype:'storage-listview' }
             ],
             tbar:[
-                { text:'New Storage', iconCls:'icon-add-storage', handler:this.showStorageDialog }
+                {
+                    text:'New Storage',
+                    iconCls:'icon-add-storage',
+                    scope:this,
+                    handler:function(){
+                        this.showStorageDialog();
+                    }
+                }
             ]
         });
         mymdb.storage.StorageManagerDialog.superclass.initComponent.apply(this, arguments);
     },
-    showStorageDialog:function(){
-        new mymdb.storage.StorageDialog();
+    showStorageDialog:function( storageId ){
+        var dialog = new mymdb.storage.StorageDialog();
+
+        if( storageId != undefined && storageId != null ){
+            dialog.findByType('form')[0].getForm().load({
+                url:'storage/edit',
+                params:{ id:storageId },
+                method:'GET',
+                failure: function(form, action) {
+                    Ext.Msg.alert('Load Failure', action.result.errorMessage);
+                }
+            });
+        }
+
+        dialog.show();
     }
 });
+Ext.reg('storage-manager', mymdb.storage.StorageManagerDialog);
 
 mymdb.storage.StorageListView = Ext.extend( Ext.list.ListView, {
     emptyText:'No Storage Units',
@@ -35,6 +56,7 @@ mymdb.storage.StorageListView = Ext.extend( Ext.list.ListView, {
     reserveScrollOffset: true,
     hideHeaders:false,
     multiSelect:false,
+    singleSelect:true,
     columns: [
         {header:'Unit', dataIndex:'name'},
         {header:'Indexed', dataIndex:'indexed'},
@@ -47,25 +69,56 @@ mymdb.storage.StorageListView = Ext.extend( Ext.list.ListView, {
             listeners:{
                 dblclick:{
                     scope:this,
-                    fn:function(){
-                        Ext.Msg.alert('edit');
+                    fn:function(dataView,idx,node,evt){
+                        if( this.getSelectionCount() > 0){
+                            var rec = this.getSelectedRecords()[0];
+                            this.findParentByType('storage-manager').showStorageDialog(rec.data.id);
+                        }
                     }
                 },
                 contextmenu:{
                     scope:this,
-                    fn:function(){
-                        Ext.Msg.alert('context');
+                    fn:function( dataView, idx, node, evt ){
+                        new Ext.menu.Menu({
+                            items:[
+                                {
+                                    xtype:'menuitem',
+                                    text:'Edit Unit',
+                                    iconCls:'icon-edit-storage',
+                                    scope:this,
+                                    handler:function(){
+                                        var rec = dataView.getStore().getAt( idx );
+                                        this.findParentByType('storage-manager').showStorageDialog(rec.data.id);
+                                    }
+                                },
+                                {
+                                    text:'New Unit',
+                                    iconCls:'icon-add-storage',
+                                    scope:this,
+                                    handler: function(b,e){
+                                        this.findParentByType('storage-manager').showStorageDialog();
+                                    }
+                                },
+                                {
+                                    xtype:'menuitem',
+                                    text:'Delete Unit',
+                                    iconCls:'icon-delete-storage',
+                                    scope:this,
+                                    handler:function(b,e){
+                                        var rec = dataView.getStore().getAt( idx );
+                                        Ext.MessageBox.confirm('Confirm Deletion','Are you sure you want to delete "' + rec.data.name + '"?', function(sel){
+                                            if( sel == 'yes' ){
+                                                mymdb.app.storageStore.removeAt(idx);
+                                            }
+                                        });
+                                    }
+                                }
+                            ]
+                        }).showAt( evt.getXY() );
                     }
                 }
             },
-            store:new Ext.data.JsonStore({
-                url:'storage/list',
-                autoLoad: true,
-                autoDestroy: true,
-                root: 'items',
-                idProperty: 'id',
-                fields: ['id','name','indexed','capacity','count']
-            })
+            store:mymdb.app.storageStore
         });
         
         mymdb.storage.StorageListView.superclass.initComponent.apply(this, arguments);
@@ -76,78 +129,69 @@ Ext.reg('storage-listview', mymdb.storage.StorageListView);
 mymdb.storage.StorageDialog = Ext.extend( Ext.Window ,{
     title:'Storage',
     iconCls:'icon-storage',
-    autoShow:true,
+    autoShow:false,
     closable:true,
     resizable:false,
     initHidden:false,
     modal:true,
     width:250,
-    height:110,
+    height:160,
     layout:'fit',
     initComponent: function(){
         Ext.apply(this, {
-            items:[ {xtype:'storage-form' } ]
-        });
-        mymdb.genre.GenreDialog.superclass.initComponent.apply(this, arguments);
-    }/*,
-    onSave:function(){
-        Ext.getCmp('genreListView').getStore().load();
-    }*/
-});
-Ext.reg('genre-dialog', mymdb.genre.GenreDialog);
-
-mymdb.genre.GenreFormPanel = Ext.extend( Ext.FormPanel, {
-    labelWidth:50,
-    frame:false,
-    bodyStyle:'padding:5px 5px 0',
-    defaultType: 'textfield',
-    initComponent: function(){
-        var formPanel = this;
-
-        Ext.apply(this, {
-            items: [
-                { name:'id', xtype:'hidden' },
-                { name:'version', xtype:'hidden' },
-                { name: 'name', fieldLabel: 'Name', allowBlank:false, minLength:2, maxLength:40 }
-            ],
-            buttons: [
+            items:[
                 {
-                    text: 'Save',
-                    handler:function(b,e){
-                        var theForm = formPanel.getForm();
-                        var idValue = theForm.findField('id').getValue();
-                        theForm.submit({
-                            clientValidation: true,
-                            url: 'genre/' + ( idValue === null || idValue === '' ? 'save' : 'update'),
-                            method:'POST',
-                            success: function(form, action) {
-                               var dia = formPanel.findParentByType('genre-dialog');
-                               dia.close();
-                               dia.onSave();
-                            },
-                            failure: function(form, action) {
-                                switch (action.failureType) {
-                                    case Ext.form.Action.CLIENT_INVALID:
-                                        Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
-                                        break;
-                                    case Ext.form.Action.CONNECT_FAILURE:
-                                        Ext.Msg.alert('Failure', 'Ajax communication failed');
-                                        break;
-                                    default:
-                                       //Ext.Msg.alert('Failure', action.result.msg);
-                                       break;
-                               }
+                    xtype:'form',
+                    labelWidth:50,
+                    frame:false,
+                    bodyStyle:'padding:5px 5px 0',
+                    items: [
+                        { name:'id', xtype:'hidden' },
+                        { name:'version', xtype:'hidden' },
+                        { name:'name', xtype:'textfield', fieldLabel:'Name', allowBlank:false, minLength:1, maxLength:20 },
+                        { name:'indexed', xtype:'checkbox', fieldLabel:'Indexed' },
+                        { name:'capacity', xtype:'numberfield', fieldLabel:'Capacity', allowBlank:false, minValue:0 }
+                    ],
+                    buttons: [
+                        {
+                            text: 'Save',
+                            scope:this,
+                            handler:function(b,e){
+                                var dialog = this;
+                                var form = this.findByType('form')[0].getForm();
+                                var storageId = form.findField('id').getValue();
+
+                                form.submit({
+                                    url: 'storage/' + ( storageId === null || storageId === '' ? 'save' : 'update'),
+                                    method:'POST',
+                                    success: function(form, action) {
+                                        mymdb.app.storageStore.load();
+                                        dialog.close();
+                                    },
+                                    failure: function(form, action) {
+                                        switch (action.failureType) {
+                                            case Ext.form.Action.CLIENT_INVALID:
+                                                Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
+                                                break;
+                                            case Ext.form.Action.CONNECT_FAILURE:
+                                                Ext.Msg.alert('Failure', 'Ajax communication failed');
+                                                break;
+                                            default:
+                                               break;
+                                       }
+                                    }
+                                });
                             }
-                        });
-                    }
-                },
-                {
-                    text: 'Cancel',
-                    handler:function(b,e){ b.findParentByType('genre-dialog').close(); }
+                        },
+                        {
+                            text: 'Cancel',
+                            scope:this,
+                            handler:function(){ this.close(); }
+                        }
+                    ]
                 }
             ]
         });
-        mymdb.genre.GenreFormPanel.superclass.initComponent.apply(this, arguments);
+        mymdb.storage.StorageDialog.superclass.initComponent.apply(this, arguments);
     }
 });
-Ext.reg('genreformpanel', mymdb.genre.GenreFormPanel);

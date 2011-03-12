@@ -16,22 +16,129 @@
 
 package com.stehno.mymdb.controller
 
+import com.stehno.mymdb.domain.StorageUnit
 import grails.converters.JSON
 
-/**
+ /**
  * 
  *
  * @author cjstehno
  */
 class StorageController {
 
-    static allowedMethods = [ list:'GET' ]
+    static allowedMethods = [ list:'GET', edit:'GET', save:'POST', update:'POST', delete:'POST' ]
+
+    def messageSource
 
     def list = {
-        def data = [
-            [ id:1001, name:'A', indexed:false, capacity:120, count:106 ]
-        ]
+        def data = StorageUnit.list(sort:"name", order:"asc").collect { su->
+            [ id:su.id, name:su.name, indexed:su.indexed, capacity:su.capacity, count:0 ]
+        }
 
         render( [ items:data ] as JSON )
+    }
+
+    def edit = {
+        def outp = [:]
+
+        def storage = StorageUnit.get(params.id as Long)
+        if (!storage){
+            outp.success = false
+            outp.errorMessage = "${message(code: 'default.not.found.message', args: [message(code: 'storageUnit.label', default: 'Storage Unit'), params.id])}"
+
+        } else {
+            outp.success = true
+            outp.data = [ id:storage.id, name:storage.name, version:storage.version, indexed:storage.indexed, capacity:storage.capacity ]
+        }
+
+        render outp as JSON
+    }
+
+    def save = {
+        def storage = new StorageUnit(params)
+        def outp = [:]
+
+        outp.success = storage.save(flush:true) != null
+
+        if(storage.hasErrors()){
+            outp.success = false
+
+            outp.errors = [:]
+            storage.errors.fieldErrors.each {
+                outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+            }
+        }
+
+        render( outp as JSON )
+    }
+
+    def update = {
+        def outp = [:]
+
+        def storage = StorageUnit.get(params.id)
+        if (storage) {
+            if (params.version) {
+                def version = params.version.toLong()
+                if (storage.version > version) {
+                    outp.success = false
+                    outp.errors = ['general':'Another user has updated this Storage Unit while you were editing']
+
+                    render outp as JSON
+                    return
+                }
+            }
+
+            storage.properties = params
+            if( storage.hasErrors() ){
+                outp.success = false
+
+                outp.errors = [:]
+                storage.errors.fieldErrors.each {
+                    outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+                }
+
+            } else {
+                if(storage.save(flush:true)){
+                    outp.success = true
+
+                } else {
+                    outp.success = false
+
+                    outp.errors = [:]
+                    storage.errors.fieldErrors.each {
+                        outp.errors[it.field] = messageSource.getMessage( it, request.locale)
+                    }
+                }
+            }
+            
+        } else {
+            outp.success = false
+            outp.errors = ['general':"${message(code: 'default.not.found.message', args: [message(code: 'storageUnit.label', default: 'Storage Unit'), params.id])}"]
+        }
+
+        render outp as JSON
+    }
+
+    def delete = {
+        def storage = StorageUnit.get(params.items)
+
+        def outp = [:]
+
+        if (storage) {
+            try {
+                storage.delete(flush: true)
+                outp.success = true
+
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                outp.success = false
+                outp.errors = ['general': "${message(code: 'default.not.deleted.message', args: [message(code: 'storageUnit.label', default: 'Storage Unit'), params.id])}"]
+            }
+
+        } else {
+            outp.success = false
+            outp.errors = ['general': "${message(code: 'default.not.found.message', args: [message(code: 'storageUnit.label', default: 'Storage Unit'), params.id])}"]
+        }
+
+        render outp as JSON
     }
 }

@@ -51,6 +51,24 @@ mymdb.app = function() {
             handler: function(){ new mymdb.storage.StorageManagerDialog(); }
         }),
 
+        storageStore:new Ext.data.JsonStore({
+            storeId:'box_store',    // TODO: remove this when category panels refactored
+            proxy:new Ext.data.HttpProxy({
+                api:{
+                    read:{ url:'storage/list', method:'GET' },
+                    destroy:{ url:'storage/delete', method:'POST' }
+                }
+            }),
+            writer:new Ext.data.JsonWriter({
+                encode:true,
+                writeAllFields:true
+            }),
+            autoLoad:true,
+            root: 'items',
+            idProperty: 'id',
+            fields: ['id','name','indexed','capacity','count']
+        }),
+
         // public methods
         init: function() {
 			new Ext.Viewport({
