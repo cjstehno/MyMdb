@@ -27,8 +27,16 @@ class StorageUnit {
     boolean indexed
     int capacity
 
+    static hasMany = [ slots:Storage ]
+
     static constraints = {
         name( nullable:false, blank:false, size:1..20, unique:true )
         capacity( min:0 )
+    }
+
+    static transients = ['full']
+
+    boolean isFull(){
+        capacity ? (slots?.size() == capacity) : false
     }
 }

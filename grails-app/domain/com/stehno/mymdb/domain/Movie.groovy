@@ -29,7 +29,6 @@ class Movie implements Taggable {
     Integer runtime
 
     static hasMany = [genres:Genre, actors:Actor, sites:WebSite]
-    static embedded = ['storage']
 	
     Date dateCreated
     Date lastUpdate

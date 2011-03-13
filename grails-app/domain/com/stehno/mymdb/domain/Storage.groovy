@@ -17,11 +17,11 @@ package com.stehno.mymdb.domain
 
 class Storage {
 
-    String name
-    int index
+    Integer index
+
+    static belongsTo = [storageUnit:StorageUnit]
 	
     static constraints = {
-        name( nullable:false, blank:false, size:1..20 )
-        index( range:1..120 )
+        index( nullable:true, min:1 )
     }
 }
