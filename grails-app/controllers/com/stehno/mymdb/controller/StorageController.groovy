@@ -58,6 +58,13 @@ class StorageController {
         def storage = new StorageUnit(params)
         def outp = [:]
 
+        if( storage.indexed && !storage.capacity ){
+            outp.success = false
+            outp.errors = [ 'capacity':'Indexed storage must have a capacity.' ]
+            render( outp as JSON)
+            return
+        }
+
         outp.success = storage.save(flush:true) != null
 
         if(storage.hasErrors()){

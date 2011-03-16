@@ -16,9 +16,12 @@
 
 package com.stehno.mymdb.controller.movie
 
+import com.stehno.mymdb.domain.StorageUnit
 import com.stehno.mymdb.dto.DetailsDto
+import com.stehno.mymdb.service.StorageUnitService
+import grails.converters.JSON
 
- /**
+/**
  * This controller handles the state for the movie details panel of the
  * movie flow.
  *
@@ -28,6 +31,8 @@ class MovieDetailsController extends MovieFlowControllerBase {
 
     static allowedMethods = [ save:"POST", show:"GET" ]
 
+    StorageUnitService storageUnitService
+    
     def show = {
         def movieId = params.id
         if(movieId){
@@ -38,6 +43,21 @@ class MovieDetailsController extends MovieFlowControllerBase {
         def dto = movieFlowService.retrieve(DetailsDto.class)
 
         renderSuccess( dto as Map )
+    }
+
+    def storage = {
+        def items = storageUnitService.listAvailableSlots().collect { slot->
+            [ id:"${slot.id}${ slot.index ? ':'+slot.index : ''}", label:slot.label ]
+        }
+
+        if(params.movieId){
+            def dto = movieFlowService.retrieve(DetailsDto.class)
+            def sto = convert( dto.storageId )
+            
+            items.add( 0, [ id:dto.storageId, label:"${StorageUnit.get(sto.unit as Long).name}-${sto.index}" ] )
+        }
+
+        render( [items:items] as JSON )
     }
 
     def save = { DetailsDto dto ->
@@ -53,5 +73,16 @@ class MovieDetailsController extends MovieFlowControllerBase {
                 renderSuccess()
             }
         }
+    }
+
+    private convert( storageId ){
+        def storUnit
+        def storIdx
+        if( storageId.contains(':') ){
+            ( storUnit, storIdx ) = storageId.split(':')
+        } else {
+            storUnit = storageId
+        }
+        [unit:storUnit, index:storIdx]
     }
 }

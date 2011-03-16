@@ -16,53 +16,47 @@
 
 package com.stehno.mymdb.service
 
+import com.stehno.mymdb.domain.Format
 import com.stehno.mymdb.domain.Movie
 import com.stehno.mymdb.domain.MpaaRating
 import com.stehno.mymdb.domain.StorageUnit
 import grails.test.GrailsUnitTestCase
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import com.stehno.mymdb.domain.Format
 
 class StorageUnitServiceTests extends GrailsUnitTestCase {
 
-    StorageUnitService service
+    StorageUnitService storageUnitService
 
     private Long indexedLimited
     private Long unindexedLimited
-    private Long indexedUnlimited
     private Long unindexedUnlimited
 
     @Before
     void before(){
-        super.setUp()
 
-        indexedLimited =storageUnit( name:'Indexed:Limited', indexed:true, capacity:3 )
+        indexedLimited = storageUnit( name:'Indexed:Limited', indexed:true, capacity:3 )
         unindexedLimited = storageUnit( name:'Unindexed:Limited', indexed:false, capacity:3 )
-        indexedUnlimited = storageUnit( name:'Indexed:Unlimited', indexed:true, capacity:0 )
         unindexedUnlimited = storageUnit( name:'Unindexed:Unlimited', indexed:false, capacity:0 )
-
-        this.service = new StorageUnitService()
     }
 
     @Test
-    void storeMovie_indexed_limited(){
-        def movieId = movie('Superman')
+    void listAvailableSlots(){
+        def slots = storageUnitService.listAvailableSlots()
 
-        service.storeMovie( indexedLimited, movieId, 2 )
+        assertNotNull slots
+        assertEquals 5, slots.size()
 
-        def mov = Movie.get(movieId)
-        assertEquals 2, mov.storage.index
-        assertEquals 'Indexed:Limited', mov.storage.storageUnit.name
-
-        def unit = StorageUnit.get(indexedLimited)
-        assertEquals 1, unit.slots.size()
+        assertAvailableSlot "$indexedLimited:1", 'Indexed:Limited-1', slots[0]
+        assertAvailableSlot "$indexedLimited:2", 'Indexed:Limited-2', slots[1]
+        assertAvailableSlot "$indexedLimited:3", 'Indexed:Limited-3', slots[2]
+        assertAvailableSlot "$unindexedLimited", 'Unindexed:Limited', slots[3]
+        assertAvailableSlot "$unindexedUnlimited", 'Unindexed:Unlimited', slots[4]
     }
 
-    @After
-    void after(){
-        super.tearDown()
+    private void assertAvailableSlot( id, label, slot ){
+        assertEquals id, slot.id
+        assertEquals label, slot.label  
     }
 
     private Long storageUnit( params ){

@@ -38,6 +38,7 @@ class UrlMappings {
         "/movie/details/$id?"(controller:"movieDetails"){
             action = [GET:"show", POST:"save"]
         }
+        '/movie/details/storage'(controller:'movieDetails', action:'storage')
 
         "/movie/poster"(controller:"moviePoster"){
             action = [GET:"show", POST:"save"]

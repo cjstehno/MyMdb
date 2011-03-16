@@ -57,8 +57,30 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     displayField:'flabel'
                 },
 
-                { xtype:'textfield', fieldLabel:'Storage Name', name:'storageName' },
-                { xtype:'numberfield', fieldLabel:'Storage Index', name:'storageIndex', allowDecimals:false, allowNegative:false, minValue:1, maxValue:120 },
+                {
+                    xtype:'combo',
+                    fieldLabel:'Storage',
+                    name:'storage',
+                    hiddenName:'storage',
+                    mode:'local',
+                    width:250,
+                    editable:false,
+                    forceSelection:true,
+                    allowBlank:false,
+                    typeAhead:false,
+                    lazyInit:false,
+                    triggerAction:'all',
+                    disableKeyFiltering:true,
+                    store:new Ext.data.JsonStore({
+                        url:'movie/details/storage' + this.movieId ? '?movieId=' + this.movieId : '',
+                        autoLoad:true,
+                        root: 'items',
+                        idProperty: 'id',
+                        fields: ['id','label']
+                    }),
+                    valueField:'id',
+                    displayField:'label'
+                },
 
                 { xtype:'htmleditor', fieldLabel:'Description', name:'description', anchor:'100%', height:260, allowBlank:false }
             ]

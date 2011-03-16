@@ -23,8 +23,7 @@ class DetailsDto {
     String title
     String description
     Integer releaseYear
-    String storageName
-    Integer storageIndex
+    String storageId
     MpaaRating mpaaRating = MpaaRating.UNKNOWN
     Integer runtime = 0
     Format format = Format.UNKNOWN
@@ -33,8 +32,7 @@ class DetailsDto {
         title( nullable:false, blank:false, size:1..100 )
         description( nullable:true, blank:true, maxSize:2000)
         releaseYear( nullable:true, range:1900..2100 )
-        storageName( nullable:false, blank:false, size:1..20 )
-        storageIndex( nullable:false, range:1..120 )
+        storageId( nullable:false, blank:false )
         runtime( nullable:true, min:0 )
         mpaaRating( nullable:false )
         format( nullable:false )
@@ -57,8 +55,7 @@ class DetailsDto {
             if(title) map.title = title
             if(description) map.description = description
             if(releaseYear) map.releaseYear = releaseYear
-            if(storageName) map.storageName = storageName
-            if(storageIndex) map.storageIndex = storageIndex
+            map.storageId = storageId
             map.mpaaRating = mpaaRating.name()
             if(runtime) map.runtime = runtime
             map.format = format.name()

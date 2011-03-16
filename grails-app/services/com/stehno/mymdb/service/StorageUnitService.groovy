@@ -62,6 +62,35 @@ class StorageUnitService {
     }
 
     /**
+     * Lists all available (unused) storage slots. Each item will have a label, id, and optional index.
+     *
+     * @return
+     */
+    List listAvailableSlots(){
+        def slots = []
+        StorageUnit.list( sort:'name', order:'ASC' ).each { unit->
+            if( !unit.isFull() ){
+                if( unit.indexed ){
+                    if( unit.capacity ){
+                        def avails = (1..unit.capacity) as List
+                        unit.slots?.each { s->
+                            avails - s.index
+                        }
+                        avails.each { n->
+                            slots << [ id:unit.id, index:n, label:"${unit.name}-$n" ]
+                        }
+                    } else {
+                        // this use case is not allowed -- // FIXME: enforce this in the manager UI
+                    }
+                } else {
+                    slots << [ id:unit.id as String, label:unit.name ]
+                }
+            }
+        }
+        slots
+    }
+
+    /**
      * Verifies that the "indexed" storage rules are met. For indexed storage an index must be specified
      * and it must not already be in use for the selected storage unit.
      * 

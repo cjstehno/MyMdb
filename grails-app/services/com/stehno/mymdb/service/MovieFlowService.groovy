@@ -16,19 +16,15 @@
 package com.stehno.mymdb.service
 
 import com.stehno.mymdb.ServiceValidationException
-import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Poster
-import com.stehno.mymdb.domain.Storage
+import com.stehno.mymdb.domain.*
 import com.stehno.mymdb.dto.*
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.Format
-import com.stehno.mymdb.domain.WebSite
 
 class MovieFlowService {
 
     static scope = "session" // TODO: not entirely happy with this
     static transactional = true
+
+    StorageUnitService storageUnitService
 
     private final flow = [:]
 
@@ -79,8 +75,7 @@ class MovieFlowService {
         store(new DetailsDto(
             title:movie.title,
             releaseYear:movie.releaseYear,
-            storageName:movie.storage.name,
-            storageIndex:movie.storage.index,
+            storageId:"${movie.storage.storageUnit.id}${movie.storage.index ? ':'+movie.storage.index : ''}",
             description:movie.description,
             mpaaRating:movie.mpaaRating,
             runtime:movie.runtime,
@@ -204,11 +199,20 @@ class MovieFlowService {
         def details = retrieve(DetailsDto.class)
         movie.title = details.title
         movie.releaseYear = details.releaseYear
-        movie.storage = new Storage( name:details.storageName?.toUpperCase(), index:details.storageIndex )
         movie.description = details.description
         movie.mpaaRating = details.mpaaRating
         movie.runtime = details.runtime
         movie.format = details.format
+
+        def storUnit
+        def storIdx
+        if( details.storageId.contains(':') ){
+            ( storUnit, storIdx ) = details.storageId.split(':')
+        } else {
+            storUnit = details.storageId
+        }
+
+        storageUnitService.storeMovie( storUnit, movie.id, storIdx )
 
         // set poster
         def poster = retrieve(PosterDto.class)

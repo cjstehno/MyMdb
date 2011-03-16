@@ -73,12 +73,12 @@ class IndexedLimitedStorageUnitServiceTests extends GrailsUnitTestCase {
         assertEquals 0, StorageUnit.get(unitId).slots?.size()
     }
 
-    // FIXME: need to check storage and movie data to ensure no leakage!!
-
     @Test(expected = IllegalArgumentException)
     void storeMovie_zero_index(){
         storageUnitService.storeMovie( unitId, movie('Superman'), 0 )
 
+        assertEquals 0, Storage.count()
+        assertNull Movie.findByTitle('Superman').storage
         assertEquals 0, StorageUnit.get(unitId).slots?.size()
     }
 
@@ -87,7 +87,10 @@ class IndexedLimitedStorageUnitServiceTests extends GrailsUnitTestCase {
         storageUnitService.storeMovie( unitId, movie('Superman'), 2 )
         storageUnitService.storeMovie( unitId, movie('Spiderman'), 2 )
 
-        assertEquals 0, StorageUnit.get(unitId).slots?.size()
+        assertEquals 1, Storage.count()
+        assertNotNull Movie.findByTitle('Superman').storage
+        assertNull Movie.findByTitle('Spiderman').storage
+        assertEquals 1, StorageUnit.get(unitId).slots?.size()
     }
 
     private void assertStorage( unitName, index, movieStorage ){
