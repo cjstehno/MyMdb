@@ -204,16 +204,6 @@ class MovieFlowService {
         movie.runtime = details.runtime
         movie.format = details.format
 
-        def storUnit
-        def storIdx
-        if( details.storageId.contains(':') ){
-            ( storUnit, storIdx ) = details.storageId.split(':')
-        } else {
-            storUnit = details.storageId
-        }
-
-        storageUnitService.storeMovie( storUnit, movie.id, storIdx )
-
         // set poster
         def poster = retrieve(PosterDto.class)
         if( (poster.posterType == PosterType.URL || poster.posterType == PosterType.FILE) && poster.file ){
@@ -254,6 +244,17 @@ class MovieFlowService {
         }
 
         movie.save(flush:true)
+
+        def storUnit
+        def storIdx
+        if( details.storageId.contains(':') ){
+            ( storUnit, storIdx ) = details.storageId.split(':')
+        } else {
+            storUnit = details.storageId
+        }
+
+        storageUnitService.storeMovie( storUnit as Long, movie.id, storIdx as Integer)
+
         if( movie.hasErrors() ){
             // since its been validated along the way this should rarely happen
             throw new ServiceValidationException('Unable to persist movie.', movie.errors)

@@ -32,7 +32,7 @@ class StorageController {
 
     def list = {
         def data = StorageUnit.list(sort:"name", order:"asc").collect { su->
-            [ id:su.id, name:su.name, indexed:su.indexed, capacity:su.capacity, count:0 ]
+            [ id:su.id, name:su.name, indexed:su.indexed, capacity:su.capacity, count:(su.slots ? su.slots.size() : 0) ]
         }
 
         render( [ items:data ] as JSON )

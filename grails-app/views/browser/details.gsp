@@ -4,7 +4,7 @@
     <div style='float:left'><img src='<g:createLink controller="poster" action="show" params="[id:movieInstance.poster?.id]" />' style='margin:10px;border:1px solid gray;' width='160' /></div>
 
     <div>
-        <div style='margin-bottom:8px;'><b>Location:</b> ${movieInstance.storage.name}-${movieInstance.storage.index}</div>
+        <div style='margin-bottom:8px;'><b>Location:</b> ${movieInstance.storageLabel}</div>
 
         <div style='margin-bottom:8px;'><b>Format:</b> ${movieInstance.format}</div>
 

@@ -51,7 +51,7 @@ class Movie implements Taggable {
     static transients = ['storageLabel']
 
     def getStorageLabel(){
-        storage != null ? "${storage.name}-${storage.index}" : 'N/A'
+        storage != null ? "${storage.storageUnit.name}-${storage.index}" : 'N/A'
     }
 }
 

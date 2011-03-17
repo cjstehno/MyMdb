@@ -60,8 +60,8 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                 {
                     xtype:'combo',
                     fieldLabel:'Storage',
-                    name:'storage',
-                    hiddenName:'storage',
+                    name:'storageId',
+                    hiddenName:'storageId',
                     mode:'local',
                     width:250,
                     editable:false,
@@ -72,7 +72,7 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     triggerAction:'all',
                     disableKeyFiltering:true,
                     store:new Ext.data.JsonStore({
-                        url:'movie/details/storage' + this.movieId ? '?movieId=' + this.movieId : '',
+                        url:'movie/details/storage' + (this.movieId ? '?movieId=' + this.movieId : ''),
                         autoLoad:true,
                         root: 'items',
                         idProperty: 'id',
@@ -89,6 +89,8 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
         this.on('activate',function(p){
             this.disableNavButtons( ['prev-btn'] );
             this.setDialogTitle('New Movie: Details');
+
+            this.findByType('combo')[2].getStore().reload();
         },this);
 
         mymdb.movie.flow.DetailsView.superclass.initComponent.apply(this, arguments);

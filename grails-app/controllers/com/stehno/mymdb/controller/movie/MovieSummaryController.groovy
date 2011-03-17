@@ -24,6 +24,7 @@ import com.stehno.mymdb.dto.DetailsDto
 import com.stehno.mymdb.dto.GenreDto
 import grails.converters.JSON
 import com.stehno.mymdb.dto.WebSiteDto
+import com.stehno.mymdb.domain.StorageUnit
 
 /**
  * 
@@ -47,10 +48,9 @@ class MovieSummaryController extends MovieFlowControllerBase {
 
         def sitesDto = movieFlowService.retrieve(WebSiteDto.class)
 
-        [
+        def mod = [
             title:details?.title,
             releaseYear:details?.releaseYear,
-            storage:"${details?.storageName}-${details?.storageIndex}",
             description:details?.description,
             genres:genres,
             actors:actors,
@@ -59,6 +59,13 @@ class MovieSummaryController extends MovieFlowControllerBase {
             format:details.format.name(),
             sites:sitesDto.sites
         ]
+
+        if(details.storageId){
+            def sto = convert( details.storageId )
+            mod.storage = "${StorageUnit.get(sto.unit as Long).name}-${sto.index}"
+        }
+
+        return mod
     }
 
     def save = {
@@ -74,5 +81,16 @@ class MovieSummaryController extends MovieFlowControllerBase {
             }
         }
         render( resp as JSON )
+    }
+
+    private convert( storageId ){
+        def storUnit
+        def storIdx
+        if( storageId.contains(':') ){
+            ( storUnit, storIdx ) = storageId.split(':')
+        } else {
+            storUnit = storageId
+        }
+        [unit:storUnit, index:storIdx]
     }
 }

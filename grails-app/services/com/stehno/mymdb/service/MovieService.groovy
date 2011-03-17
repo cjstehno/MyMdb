@@ -15,9 +15,9 @@
  */
 package com.stehno.mymdb.service
 
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Movie
 import org.springframework.dao.DataRetrievalFailureException
 
 class MovieService {
@@ -72,7 +72,7 @@ class MovieService {
         Movie.executeQuery("select distinct(m.storage.name) from Movie m order by m.storage.name asc")
     }
 
-    def findMoviesForBox( boxName ){
-        Movie.findAll("from Movie m where m.storage.name=? order by m.title asc", [boxName])
+    def findMoviesForBox( unitId ){
+        Movie.findAll("from Movie m where m.storage.storageUnit.id=? order by m.title asc", [unitId])
     }
 }

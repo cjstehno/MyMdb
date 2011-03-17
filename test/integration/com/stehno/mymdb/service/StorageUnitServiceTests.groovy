@@ -47,6 +47,8 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         assertNotNull slots
         assertEquals 5, slots.size()
 
+        need to test when slot taken seems to be broken
+
         assertAvailableSlot "$indexedLimited:1", 'Indexed:Limited-1', slots[0]
         assertAvailableSlot "$indexedLimited:2", 'Indexed:Limited-2', slots[1]
         assertAvailableSlot "$indexedLimited:3", 'Indexed:Limited-3', slots[2]
