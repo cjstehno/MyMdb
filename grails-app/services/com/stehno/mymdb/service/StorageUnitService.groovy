@@ -72,10 +72,12 @@ class StorageUnitService {
             if( !unit.isFull() ){
                 if( unit.indexed ){
                     if( unit.capacity ){
-                        def avails = (1..unit.capacity) as List
-                        unit.slots?.each { s->
-                            avails - s.index
-                        }
+                        def avails = []
+                        avails.addAll( (1..unit.capacity) as List )
+
+                        def unitSlotIds = unit.slots?.collect { s-> s.index }
+                        if( unitSlotIds ) avails.removeAll( unitSlotIds )
+
                         avails.each { n->
                             slots << [ id:unit.id, index:n, label:"${unit.name}-$n" ]
                         }

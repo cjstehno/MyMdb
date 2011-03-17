@@ -16,13 +16,10 @@
 
 package com.stehno.mymdb.service
 
-import com.stehno.mymdb.domain.Format
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.MpaaRating
-import com.stehno.mymdb.domain.StorageUnit
 import grails.test.GrailsUnitTestCase
 import org.junit.Before
 import org.junit.Test
+import com.stehno.mymdb.domain.*
 
 class StorageUnitServiceTests extends GrailsUnitTestCase {
 
@@ -34,7 +31,6 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
 
     @Before
     void before(){
-
         indexedLimited = storageUnit( name:'Indexed:Limited', indexed:true, capacity:3 )
         unindexedLimited = storageUnit( name:'Unindexed:Limited', indexed:false, capacity:3 )
         unindexedUnlimited = storageUnit( name:'Unindexed:Unlimited', indexed:false, capacity:0 )
@@ -47,17 +43,51 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         assertNotNull slots
         assertEquals 5, slots.size()
 
-        need to test when slot taken seems to be broken
-
-        assertAvailableSlot "$indexedLimited:1", 'Indexed:Limited-1', slots[0]
-        assertAvailableSlot "$indexedLimited:2", 'Indexed:Limited-2', slots[1]
-        assertAvailableSlot "$indexedLimited:3", 'Indexed:Limited-3', slots[2]
-        assertAvailableSlot "$unindexedLimited", 'Unindexed:Limited', slots[3]
-        assertAvailableSlot "$unindexedUnlimited", 'Unindexed:Unlimited', slots[4]
+        assertAvailableSlot indexedLimited, 1, 'Indexed:Limited-1', slots[0]
+        assertAvailableSlot indexedLimited, 2, 'Indexed:Limited-2', slots[1]
+        assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[2]
+        assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[3]
+        assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[4]
     }
 
-    private void assertAvailableSlot( id, label, slot ){
-        assertEquals id, slot.id
+    @Test
+    void listAvailableSlots_indexed_with_some_taken(){
+        def movie = movie( 'Something' )
+
+        storageUnitService.storeMovie indexedLimited, movie.id, 1
+
+        def slots = storageUnitService.listAvailableSlots()
+
+        assertNotNull slots
+        assertEquals 4, slots.size()
+
+        assertAvailableSlot indexedLimited, 2, 'Indexed:Limited-2', slots[0]
+        assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[1]
+        assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[2]
+        assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[3]
+    }
+
+    @Test
+    void listAvailableSlots_unindexedlimited_with_some_taken(){
+        def movie = movie( 'Something' )
+
+        storageUnitService.storeMovie unindexedLimited, movie.id
+
+        def slots = storageUnitService.listAvailableSlots()
+
+        assertNotNull slots
+        assertEquals 5, slots.size()
+
+        assertAvailableSlot indexedLimited, 1, 'Indexed:Limited-1', slots[0]
+        assertAvailableSlot indexedLimited, 2, 'Indexed:Limited-2', slots[1]
+        assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[2]
+        assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[3]
+        assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[4]
+    }
+
+    private void assertAvailableSlot( Long id, index, label, slot ){
+        assertEquals id, slot.id as Long
+        assertEquals index, slot.index
         assertEquals label, slot.label  
     }
 
@@ -67,11 +97,11 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         unit.id
     }
 
-    private Long movie( title ){
+    private Movie movie( title ){
         def movie = new Movie( title:title, description:"Something about $title" )
         movie.mpaaRating = MpaaRating.PG
         movie.format = Format.DVD
         movie.save()
-        movie.id
+        movie
     }
 }
