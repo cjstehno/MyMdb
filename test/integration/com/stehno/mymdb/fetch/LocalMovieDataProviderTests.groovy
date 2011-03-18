@@ -83,6 +83,5 @@ class LocalMovieDataProviderTests extends GrailsUnitTestCase {
     @After
     void after(){
         super.tearDown()
-        movieTestFixture.after()
     }
 }

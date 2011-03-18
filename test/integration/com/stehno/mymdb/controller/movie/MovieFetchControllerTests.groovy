@@ -92,6 +92,5 @@ class MovieFetchControllerTests extends MovieFlowIntegrationTestBase {
     @After
     void after(){
         super.tearDown()
-        movieFixture.after()
     }
 }

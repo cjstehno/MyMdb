@@ -28,67 +28,45 @@ class DetailsDtoTests extends GrailsUnitTestCase {
 
 	@Test
     void validation_valid() {
-		assertValid dto( title:'Testing', releaseYear:2000, storageName:'X', storageIndex:12 )
+		assertValid dto( title:'Testing', releaseYear:2000, storageId:'3' )
     }
 
 	@Test
     void validation_title() {
-        def (releaseYear, storageName, storageIndex) = [ 2000, 'X', 42 ]
+        def releaseYear = 2000
 
-		assertInvalid dto(title:null, releaseYear:releaseYear, storageName:storageName, storageIndex:storageIndex ), 'title', 'nullable'
-        assertInvalid dto(title:'', releaseYear:releaseYear, storageName:storageName, storageIndex:storageIndex ), 'title', 'blank'
-        assertValid dto(title:'x', releaseYear:releaseYear, storageName:storageName, storageIndex:storageIndex )
-        assertValid dto(title:str(100), releaseYear:releaseYear, storageName:storageName, storageIndex:storageIndex )
-        assertInvalid dto(title:str(101), releaseYear:releaseYear, storageName:storageName, storageIndex:storageIndex ), 'title', 'size.toobig'
+		assertInvalid dto(title:null, releaseYear:releaseYear, storageId:'3' ), 'title', 'nullable'
+        assertInvalid dto(title:'', releaseYear:releaseYear, storageId:'3' ), 'title', 'blank'
+        assertValid dto(title:'x', releaseYear:releaseYear, storageId:'3' )
+        assertValid dto(title:str(100), releaseYear:releaseYear, storageId:'3' )
+        assertInvalid dto(title:str(101), releaseYear:releaseYear, storageId:'3' ), 'title', 'size.toobig'
     }
 
     @Test
     void validation_releaseYear(){
-        def (title, storageName, storageIndex) = [ 'The Thing', 'X', 42 ]
+        def title = 'The Thing'
 
-        assertValid dto( releaseYear:null, title:title, storageName:storageName, storageIndex:storageIndex )
-        assertInvalid dto( releaseYear:1899, title:title, storageName:storageName, storageIndex:storageIndex ), 'releaseYear', 'range.toosmall'
-        assertValid dto( releaseYear:1900, title:title, storageName:storageName, storageIndex:storageIndex )
-        assertValid dto( releaseYear:2100, title:title, storageName:storageName, storageIndex:storageIndex )
-        assertInvalid dto( releaseYear:2101, title:title, storageName:storageName, storageIndex:storageIndex ), 'releaseYear', 'range.toobig'
+        assertValid dto( releaseYear:null, title:title, storageId:'3' )
+        assertInvalid dto( releaseYear:1899, title:title, storageId:'3' ), 'releaseYear', 'range.toosmall'
+        assertValid dto( releaseYear:1900, title:title, storageId:'3' )
+        assertValid dto( releaseYear:2100, title:title, storageId:'3' )
+        assertInvalid dto( releaseYear:2101, title:title, storageId:'3' ), 'releaseYear', 'range.toobig'
     }
 
     @Test
     void validation_description(){
-        def (title, storageName, storageIndex) = [ 'The Thing', 'X', 42 ]
+        def title = 'The Thing'
 
-        assertValid dto( description:null, title:title, storageName:storageName, storageIndex:storageIndex )
-        assertValid dto( description:'', title:title, storageName:storageName, storageIndex:storageIndex )
-        assertValid dto( description:str(2000), title:title, storageName:storageName, storageIndex:storageIndex )
-        assertInvalid dto( description:str(2001), title:title, storageName:storageName, storageIndex:storageIndex ), 'description', 'maxSize.exceeded'
-    }
-
-    @Test
-    void validation_storageName(){
-        def title = 'Cool!'
-
-        assertInvalid dto(title:title, storageName:null, storageIndex:1 ), 'storageName', 'nullable'
-        assertInvalid dto(title:title, storageName:'', storageIndex:1), 'storageName', 'blank'
-        assertValid dto(title:title, storageName:'x', storageIndex:1)
-        assertValid dto(title:title, storageName:str(20), storageIndex:1)
-        assertInvalid dto(title:title, storageName:str(21), storageIndex:1), 'storageName', 'size.toobig'
-    }
-
-    @Test
-    void validation_storageIndex(){
-        def title = 'Cool!'
-        def year = 2000
-
-        assertInvalid dto(title:title, releaseYear:year, storageName:'X', storageIndex:null), 'storageIndex', 'nullable'
-        assertInvalid dto(title:title, releaseYear:year, storageName:'X',  storageIndex:(-1)), 'storageIndex', 'range.toosmall'
-        assertInvalid dto(title:title, releaseYear:year, storageName:'X', storageIndex:0), 'storageIndex', 'range.toosmall'
-        assertInvalid dto(title:title, releaseYear:year, storageName:'X', storageIndex:1234), 'storageIndex', 'range.toobig'
+        assertValid dto( description:null, title:title, storageId:'3' )
+        assertValid dto( description:'', title:title, storageId:'3' )
+        assertValid dto( description:str(2000), title:title, storageId:'3' )
+        assertInvalid dto( description:str(2001), title:title, storageId:'3' ), 'description', 'maxSize.exceeded'
     }
 
     @Test
     void validation_runtime(){
-        assertValid dto( title:'Foo', runtime:123, storageName:'X', storageIndex:23 )
-        assertInvalid dto( title:'Foo', runtime:-1, storageName:'X', storageIndex:23 ), 'runtime', 'min.notmet'
+        assertValid dto( title:'Foo', runtime:123, storageId:'3' )
+        assertInvalid dto( title:'Foo', runtime:-1, storageId:'3' ), 'runtime', 'min.notmet'
     }
 
     // FIXME: the two enum-based tests fail, they shouldnt

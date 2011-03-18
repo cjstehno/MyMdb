@@ -38,7 +38,7 @@ class MovieTests extends GrailsUnitTestCase {
         this.movie = movie(
             title:'Testing',
             releaseYear:2000,
-            storage:new Storage(name:'A',index:2),
+            storage:new Storage(index:2),
             description:'Something interesting',
             mpaaRating:MpaaRating.UNKNOWN,
             format:Format.UNKNOWN

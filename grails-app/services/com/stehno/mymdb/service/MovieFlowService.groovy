@@ -75,7 +75,7 @@ class MovieFlowService {
         store(new DetailsDto(
             title:movie.title,
             releaseYear:movie.releaseYear,
-            storageId:"${movie.storage.storageUnit.id}${movie.storage.index ? ':'+movie.storage.index : ''}",
+            storageId:"${movie.storage?.storageUnit.id}${movie.storage?.index ? ':'+movie.storage?.index : ''}",
             description:movie.description,
             mpaaRating:movie.mpaaRating,
             runtime:movie.runtime,

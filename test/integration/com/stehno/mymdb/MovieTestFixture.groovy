@@ -27,12 +27,12 @@ class MovieTestFixture {
 
     def movieId
     def posterId
+    def storageUnitId
 
     void before(){
         def movie = new Movie(
             title:'A-Team: Unrated',
             releaseYear:2010,
-            storage:new Storage(name:'A',index:2),
             description:'They were acused of a crime they didnt commit',
             mpaaRating:MpaaRating.UNRATED,
             format:Format.BLUERAY
@@ -64,10 +64,11 @@ class MovieTestFixture {
 
         this.movieId = movie.id
 
-        new Movie( title:'Kung Fu Panda', releaseYear:2000, storage:new Storage(name:'B',index:6), description:'A Panda movie', mpaaRating: MpaaRating.G, format:Format.DVD ).save(flush:true)
-    }
+        new Movie( title:'Kung Fu Panda', releaseYear:2000, description:'A Panda movie', mpaaRating: MpaaRating.G, format:Format.DVD ).save(flush:true)
 
-    void after(){
-        // nothing for now, the db cleanup will clear the tables
+        def storageUnit = new StorageUnit( name:'X', indexed:false, capacity:10 )
+        storageUnit.save(flush:true)
+        
+        this.storageUnitId = storageUnit.id
     }
 }

@@ -22,15 +22,19 @@ import org.junit.Before
 import org.junit.Test
 import com.stehno.mymdb.domain.*
 import com.stehno.mymdb.dto.*
+import com.stehno.mymdb.service.StorageUnitService
+import com.stehno.mymdb.MovieTestFixture
 
 class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
+
+    StorageUnitService storageUnitService
 
     @Before
     void before(){
         super.setUp()
 
         controller = new MovieSummaryController()
-        controller.movieFlowService = new MovieFlowService()
+        controller.movieFlowService = new MovieFlowService( storageUnitService:storageUnitService )
     }
 
     @Test
@@ -42,7 +46,7 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         assertNotNull model
         assertNull model.title
         assertNull model.releaseYear
-        assertEquals 'null-null', model.storage
+        assertNull model.storage
         assertNull model.description
         assertNull model.genres
         assertNull model.actors
@@ -53,13 +57,15 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         def horror = genre( 'Horror' )
         def johnDoe = actor( 'John', 'Q', 'Doe' )
 
+        def storageUnit = new StorageUnit( name:'X', indexed:false, capacity:3 )
+        storageUnit.save(flush:true)
+
         controller.movieFlowService.start()
 
         def details = controller.movieFlowService.retrieve(DetailsDto.class)
         details.title = 'Save Testing'
         details.releaseYear = 2011
-        details.storageName = 'B'
-        details.storageIndex = 23
+        details.storageId = storageUnit.id as String
         details.description = 'This is a test of movie saving.'
         controller.movieFlowService.store(details)
 
@@ -91,8 +97,7 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         assertNotNull movie
         assertEquals 2011, movie.releaseYear
         assertEquals 'This is a test of movie saving.', movie.description
-        assertEquals 'B', movie.storage.name
-        assertEquals 23, movie.storage.index
+        assertNotNull movie.storage
         assertEquals 1, movie.genres.size()
         assertEquals 1, movie.actors.size()
         assertEquals moviePoster.id, movie.poster.id
@@ -103,26 +108,14 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         def horror = genre( 'Horror' )
         def johnDoe = actor( 'John', 'Q', 'Doe' )
 
-        def yellowBeardPoster = new Poster( title:'Yellowbeard', content:'someposterdata'.getBytes() )
-        yellowBeardPoster.save(flush:true)
+        def fixture = new MovieTestFixture()
+        fixture.before()
 
-        def existingMovie = new Movie(
-            title:'Yellowbeard',
-            releaseYear:1984,
-            description:'A pirate movie.',
-            storage:new Storage( name:'A', index:102 ),
-            poster:yellowBeardPoster,
-            mpaaRating:MpaaRating.R,
-            runtime:120,
-            format:Format.DVD
-        )
-        existingMovie.addToGenres horror
-        existingMovie.addToActors johnDoe
-        existingMovie.save(flush:true)
+        storageUnitService.storeMovie( fixture.storageUnitId, fixture.movieId )
 
-        assertEquals 1, Movie.list().size()
+        assertEquals 2, Movie.list().size()
 
-        controller.movieFlowService.start(existingMovie.id)
+        controller.movieFlowService.start(fixture.movieId)
 
         def details = controller.movieFlowService.retrieve(DetailsDto.class)
         details.title = 'Save Testing'

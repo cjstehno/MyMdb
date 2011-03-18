@@ -16,11 +16,9 @@
 
 package com.stehno.mymdb.domain
 
-import com.stehno.mymdb.ValidationTestCategory
 import grails.test.GrailsUnitTestCase
 import org.junit.Test
 
-@Mixin(ValidationTestCategory)
 class StorageUnitTests extends GrailsUnitTestCase {
 
     @Test
@@ -45,4 +43,34 @@ class StorageUnitTests extends GrailsUnitTestCase {
 		mockForConstraintsTests StorageUnit.class, [ sto ]
 		return sto
 	}
+
+    /**
+     * Asserts that the constraints are invalid for the given validatable object.
+     *
+     * @param dom the validatable object
+     * @param fieldName the name of the invalid field
+     * @param code the error code expected
+     */
+	void assertInvalid( dom, fieldName, code ){
+		assertFalse dom.validate()
+		assertLength 1, dom.errors
+        assertEquals code, dom.errors.getFieldError(fieldName).code
+	}
+
+    /**
+     * Creates a string of the specified length.
+     *
+     * @param n length of string
+     * @return a string of length n
+     */
+    String str( n ){ 'x'*n }
+
+    /**
+     * Asserts that the constraints are valid for the given validatable object.
+     *
+     * @param dom
+     */
+    void assertValid( dom ){
+        assertTrue dom.validate()
+    }
 }

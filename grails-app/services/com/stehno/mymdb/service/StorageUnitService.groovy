@@ -107,20 +107,4 @@ class StorageUnitService {
             throw new IllegalArgumentException('Selected index is already in use!') // TODO: make better
         }
     }
-
-    /**
-     * use this service to managed storage unit slots
-     * the integration test will exercise the storageunit and storage interactions
-     */
-
-//    boolean hasSlotsAvailable( unit, index ){}
-//
-//    // gets nonfull units
-//    getAvailableStorageUnits()
-//
-//    getNextAvailableSlot()
-//
-
-//
-//    removeFromStorage( unit, movie, index ){}
 }

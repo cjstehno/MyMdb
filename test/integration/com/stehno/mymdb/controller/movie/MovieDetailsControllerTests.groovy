@@ -24,10 +24,12 @@ import com.stehno.mymdb.domain.*
 import com.stehno.mymdb.dto.*
 import org.junit.Ignore
 import com.stehno.mymdb.MovieTestFixture
+import com.stehno.mymdb.service.StorageUnitService
 
 class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
 
     def fixture = new MovieTestFixture()
+    StorageUnitService storageUnitService
 
     @Before
     void before(){
@@ -52,6 +54,8 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
 
     @Test
     void show_edit(){
+        storageUnitService.storeMovie( fixture.storageUnitId, fixture.movieId )
+
         controller.params.id = fixture.movieId as String
 
         request('GET', "/movie/details")
@@ -64,8 +68,7 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertNotNull jso.data
         assertEquals 'A-Team: Unrated', jso.data.title
         assertEquals 2010, jso.data.releaseYear
-        assertEquals 'A', jso.data.storageName
-        assertEquals 2, jso.data.storageIndex
+        assertEquals fixture.storageUnitId as String, jso.data.storageId
         assertEquals 'They were acused of a crime they didnt commit', jso.data.description
         assertEquals MpaaRating.UNRATED.name(), jso.data.mpaaRating
         assertEquals Format.BLUERAY.name(), jso.data.format
@@ -85,8 +88,7 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         controller.params.title = 'A Cool Title'
         controller.params.releaseYear = '2007'
         controller.params.description = 'Some cool movie!'
-        controller.params.storageName = 'T'
-        controller.params.storageIndex = '23'
+        controller.params.storageId = "${fixture.storageUnitId}:2"
 
         controller.save()
 
@@ -99,8 +101,7 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertEquals 'A Cool Title', dto.title
         assertEquals 2007, dto.releaseYear
         assertEquals 'Some cool movie!', dto.description
-        assertEquals 'T', dto.storageName
-        assertEquals 23, dto.storageIndex
+        assertEquals "${fixture.storageUnitId}:2", dto.storageId
     }
 
     @Test
@@ -114,10 +115,9 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertFalse jso.success
 
         def errors = jso.errors
-        assertEquals 3, errors.size()
+        assertEquals 2, errors.size()
         assertEquals 'Property [title] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.title
-        assertEquals 'Property [storageName] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.storageName
-        assertEquals 'Property [storageIndex] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.storageIndex
+        assertEquals 'Property [storageId] of class [class com.stehno.mymdb.dto.DetailsDto] cannot be null', errors.storageId
 
         assertNull controller.movieFlowService.flow[DetailsDto.class.name]
     }
