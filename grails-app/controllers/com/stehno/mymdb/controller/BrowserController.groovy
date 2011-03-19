@@ -15,12 +15,13 @@
  */
 package com.stehno.mymdb.controller
 
-import grails.converters.JSON
-
-import com.stehno.mymdb.domain.Movie
-import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Movie
+import grails.converters.JSON
+import grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_USER'])
 class BrowserController {
 
     def movieService

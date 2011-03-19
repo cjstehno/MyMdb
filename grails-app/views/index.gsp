@@ -1,3 +1,3 @@
 <html>
-    <head><meta http-equiv="refresh" content="0;url=catalog"></head>
+    <head><meta http-equiv="refresh" content="0;url=browser"></head>
 </html>
