@@ -35,10 +35,6 @@ class BrowserController {
         renderListAsJson movieService.findMovieReleaseYears().collect(identityCollector)
     }
 
-    def storage = {
-        renderListAsJson movieService.findMovieBoxes().collect(identityCollector)
-    }
-
     def genres = {
         renderListAsJson Genre.list( [sort:'name', order:'asc'] ).collect { [id:it.id, label:it.name] }
     }

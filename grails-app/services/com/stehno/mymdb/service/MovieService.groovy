@@ -68,10 +68,6 @@ class MovieService {
         Movie.executeQuery("select distinct(m.releaseYear) from Movie m order by m.releaseYear asc")
     }
 
-    def findMovieBoxes(){
-        Movie.executeQuery("select distinct(m.storage.name) from Movie m order by m.storage.name asc")
-    }
-
     def findMoviesForBox( unitId ){
         Movie.findAll("from Movie m where m.storage.storageUnit.id=? order by m.title asc", [unitId])
     }

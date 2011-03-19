@@ -120,8 +120,7 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         def details = controller.movieFlowService.retrieve(DetailsDto.class)
         details.title = 'Save Testing'
         details.releaseYear = 2011
-        details.storageName = 'B'
-        details.storageIndex = 23
+        details.storageId = "${fixture.storageUnitId}"
         details.description = 'This is a test of movie saving.'
         controller.movieFlowService.store(details)
 
@@ -144,7 +143,7 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         assertNotNull jso
         assertTrue jso.success
 
-        assertEquals 1, Movie.list().size()
+        assertEquals 2, Movie.list().size()
         assertEquals 2, Poster.list().size()
 
         def moviePoster = Poster.list()[1]
@@ -156,8 +155,7 @@ class MovieSummaryControllerTests extends MovieFlowIntegrationTestBase {
         assertNotNull movie
         assertEquals 2011, movie.releaseYear
         assertEquals 'This is a test of movie saving.', movie.description
-        assertEquals 'B', movie.storage.name
-        assertEquals 23, movie.storage.index
+        assertEquals 'X', movie.storage.storageUnit.name
         assertEquals 1, movie.genres.size()
         assertEquals 1, movie.actors.size()
         assertEquals moviePoster.id, movie.poster.id

@@ -49,6 +49,8 @@ class StorageUnitService {
             def oldStorage = movie.storage
             movie.storage = null
 
+            unit.removeFromSlots oldStorage
+
             // remove any existing storage for movie
             oldStorage.delete()
         }

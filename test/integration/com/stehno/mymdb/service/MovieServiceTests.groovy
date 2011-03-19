@@ -1,5 +1,6 @@
 package com.stehno.mymdb.service
 
+import com.stehno.mymdb.MovieTestFixture
 import grails.test.GrailsUnitTestCase
 import org.junit.After
 import org.junit.Before
@@ -10,6 +11,7 @@ import com.stehno.mymdb.domain.*
 class MovieServiceTests extends GrailsUnitTestCase {
 
     def movieService
+    StorageUnitService storageUnitService
     private def horror
     private def johnQPublic
     private def moviePoster
@@ -104,48 +106,17 @@ class MovieServiceTests extends GrailsUnitTestCase {
     }
 
 	@Test
-    void findMovieBoxes(){
-        addMovie'Alpha', {
-            it.releaseYear = 2000
-            it.storage = new Storage( name:'A', index:1 )
-        }
-        addMovie 'Bravo', {
-            it.releaseYear = 2000
-            it.storage = new Storage( name:'B', index:1 )
-        }
-        addMovie 'Charlie', {
-            it.releaseYear = 2000
-            it.storage = new Storage( name:'A', index:2 )
-        }
-
-        def boxes = movieService.findMovieBoxes()
-        assertEquals 2, boxes.size()
-        assertEquals 'A', boxes[0]
-        assertEquals 'B', boxes[1]
-    }
-
-	@Test
     void findMoviesForBox(){
-        addMovie'Zed', {
-            it.releaseYear = 2000
-            it.storage = new Storage( name:'A', index:1 )
-        }
-        addMovie 'Bravo', {
-            it.releaseYear = 2000
-            it.storage = new Storage( name:'B', index:1 )
-        }
-        addMovie 'Charlie', {
-            it.releaseYear = 2000
-            it.storage = new Storage( name:'A', index:2 )
-        }
+        def fixture = new MovieTestFixture()
+        fixture.before()
 
-        def movies = movieService.findMoviesForBox('A')
-        assertEquals 2, movies.size()
-        assertEquals 'Charlie', movies[0].title
-        assertEquals 'Zed', movies[1].title
+        storageUnitService.storeMovie( fixture.storageUnitId, fixture.movieId )
 
-        assertEquals 1, movieService.findMoviesForBox('B').size()
-        assertEquals 0, movieService.findMoviesForBox('C').size()
+        def movies = movieService.findMoviesForBox( fixture.storageUnitId )
+        assertEquals 1, movies.size()
+        assertEquals 'A-Team: Unrated', movies[0].title
+
+        assertEquals 0, movieService.findMoviesForBox(123L).size()
     }
 
 	@After
