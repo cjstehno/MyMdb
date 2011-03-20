@@ -4,6 +4,7 @@ cobertura.ser
 mymdb-config.groovy
 /grails-app/conf/config-properties.properties
 CodeNarcReport.html
+dbsetup.groovy
 
 #.classpath
 #.project

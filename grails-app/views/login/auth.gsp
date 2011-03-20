@@ -16,14 +16,13 @@
                     items:[
                         {
                             xtype:'form',
-                            standardSubmit:true,
-                            url:'${postUrl}',
+                            url:'${request.contextPath}/j_spring_security_check',
                             method:'POST',
                             padding:8,
                             items:[
                                 { xtype:'textfield', fieldLabel:'Username', name:'j_username', allowBlank:false, minLength:5, maxLength:25 },
                                 { xtype:'textfield', inputType:'password', fieldLabel:'Password', name:'j_password', allowBlank:false, minLength:5, maxLength:25 },
-                                { xtype:'checkbox', fieldLabel:'Remember me', name:'${rememberMeParameter}'<g:if test='${hasCookie}'>, checked:true</g:if> }
+                                { xtype:'checkbox', fieldLabel:'Remember me', name:'_spring_security_remember_me'<g:if test='${hasCookie}'>, checked:true</g:if> }
                             ]
                         }
                     ],
@@ -32,7 +31,25 @@
                             text:'Login',
                             scope:this,
                             handler:function(){
-                                this.findByType('form')[0].getForm().submit();
+                                this.findByType('form')[0].getForm().submit({
+                                    success: function(form, action) {
+                                        if(action.result.errors != undefined){
+                                            Ext.Msg.alert('Failure', action.result.errors.global);
+                                        }
+                                    },
+                                    failure: function(form, action) {
+                                        switch (action.failureType) {
+                                            case Ext.form.Action.CLIENT_INVALID:
+                                                Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
+                                                break;
+                                            case Ext.form.Action.CONNECT_FAILURE:
+                                                Ext.Msg.alert('Failure', 'Ajax communication failed');
+                                                break;
+                                            default:
+                                               break;
+                                       }
+                                    }
+                                });
                             }
                         }
                     ]

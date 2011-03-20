@@ -49,6 +49,7 @@ class LoginController {
 	 * Show the login page.
 	 */
 	def auth = {
+        println 'auth method'
 		def config = SpringSecurityUtils.securityConfig
 
 		if (springSecurityService.isLoggedIn()) {
@@ -65,6 +66,7 @@ class LoginController {
 	 * The redirect action for Ajax requests. 
 	 */
 	def authAjax = {
+        println 'authAjax method'
 		response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
 		response.sendError HttpServletResponse.SC_UNAUTHORIZED
 	}
@@ -73,13 +75,11 @@ class LoginController {
 	 * Show denied page.
 	 */
 	def denied = {
+        println 'denied method'
 		if (springSecurityService.isLoggedIn() && authenticationTrustResolver.isRememberMe(SCH.context?.authentication)) {
 			// have cookie but the page is guarded with IS_AUTHENTICATED_FULLY
 			redirect action: full, params: params
 		}
-
-        def config = SpringSecurityUtils.securityConfig
-        [postUrl:"${request.contextPath}${config.apf.filterProcessesUrl}"]
 	}
 
 	/**
@@ -116,9 +116,11 @@ class LoginController {
 		}
 
 		if (springSecurityService.isAjax(request)) {
-			render([error: msg] as JSON)
+            println 'authfail ajax'
+			render([ success:false, errors:[ global:msg ]] as JSON)
 		}
 		else {
+            println 'authfail standard'
 			flash.message = msg
 			redirect action: auth, params: params
 		}
