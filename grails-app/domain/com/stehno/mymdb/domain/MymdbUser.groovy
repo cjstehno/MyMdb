@@ -1,3 +1,4 @@
+package com.stehno.mymdb.domain
 /*
  * Copyright (c) 2011 Christopher J. Stehno (chris@stehno.com)
  *
@@ -14,27 +15,13 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.domain
+class MymdbUser {
+    String username
+    String passwordHash
+    
+    static hasMany = [ roles: MymdbRole, permissions: String ]
 
-class User {
-
-	String username
-	String password
-	boolean enabled
-	boolean accountExpired
-	boolean accountLocked
-	boolean passwordExpired
-
-	static constraints = {
-		username blank: false, unique: true
-		password blank: false
-	}
-
-	static mapping = {
-		password column: '`password`'
-	}
-
-	Set<Role> getAuthorities() {
-		UserRole.findAllByUser(this).collect { it.role } as Set
-	}
+    static constraints = {
+        username(nullable: false, blank: false)
+    }
 }

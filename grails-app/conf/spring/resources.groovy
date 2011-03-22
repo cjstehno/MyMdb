@@ -1,3 +1,4 @@
+
 // Place your Spring DSL code here
 beans = {
 
@@ -11,5 +12,11 @@ beans = {
 
     localMovieDataProvider(com.stehno.mymdb.fetch.LocalMovieDataProvider){
         appName = "${application.metadata['app.name']}"
+    }
+
+    // SECURITY
+    
+    credentialMatcher(org.apache.shiro.authc.credential.Sha512CredentialsMatcher) {
+        storedCredentialsHexEncoded = true
     }
 }

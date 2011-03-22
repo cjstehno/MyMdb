@@ -75,10 +75,3 @@ log4j = {
 
 grails.taggable.preserve.case = true
 
-//
-// Security configuration
-//
-
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.stehno.mymdb.domain.User'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.stehno.mymdb.domain.UserRole'
-grails.plugins.springsecurity.authority.className = 'com.stehno.mymdb.domain.Role'
