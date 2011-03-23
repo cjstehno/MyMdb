@@ -1,6 +1,6 @@
 Ext.QuickTips.init();
 
-Ext.namespace('mymdb','mymdb.actor','mymdb.genre', 'mymdb.storage','mymdb.movie', 'mymdb.movie.flow');
+Ext.namespace('mymdb','mymdb.actor','mymdb.admin','mymdb.genre', 'mymdb.storage','mymdb.movie', 'mymdb.movie.flow');
  
 mymdb.app = function() {
     // do NOT access DOM from here; elements don't exist yet
@@ -51,6 +51,13 @@ mymdb.app = function() {
             handler: function(){ new mymdb.storage.StorageManagerDialog(); }
         }),
 
+        openUserManagerAction: new Ext.Action({
+            itemId:'openUserManager',
+            text:'User Manager',
+            iconCls:'icon-add-user',
+            handler: function(){ new mymdb.admin.UserManagerDialog(); }
+        }),
+
         storageStore:new Ext.data.JsonStore({
             storeId:'box_store',    // TODO: remove this when category panels refactored
             proxy:new Ext.data.HttpProxy({
@@ -92,6 +99,8 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	border: false,
 	margins: '0 0 5 0',
 	bbar:[
+        mymdb.app.openUserManagerAction,
+        { xtype:'tbseparator' },
         mymdb.app.openGenreManagerAction,
         mymdb.app.openActorManagerAction,
         mymdb.app.openStorageManagerAction,

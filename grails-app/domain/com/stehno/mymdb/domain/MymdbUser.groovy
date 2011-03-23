@@ -16,6 +16,7 @@ package com.stehno.mymdb.domain
  */
 
 class MymdbUser {
+
     String username
     String passwordHash
     
