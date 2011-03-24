@@ -19,6 +19,7 @@ package com.stehno.mymdb.controller
 import com.stehno.mymdb.domain.MymdbUser
 import grails.converters.JSON
 import org.apache.shiro.crypto.hash.Sha512Hash
+import com.stehno.mymdb.domain.MymdbRole
 
 /**
  * 
@@ -32,7 +33,7 @@ class UserController {
     def messageSource
 
     def list = {
-        def data = MymdbUser.list(sort:"username", order:"asc").collect { su-> [ id:su.id, username:su.username ] }
+        def data = MymdbUser.list(sort:"username", order:"asc").collect { su-> [ id:su.id, username:su.username, roles:su.roles.collect { r-> r.name }.join(',') ] }
 
         render( [ items:data ] as JSON )
     }
@@ -67,6 +68,7 @@ class UserController {
         }
 
         def user = new MymdbUser(params)
+        user.addToRoles MymdbRole.findByName('User')
 
         outp.success = user.save(flush:true) != null
 

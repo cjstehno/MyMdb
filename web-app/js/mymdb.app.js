@@ -76,6 +76,23 @@ mymdb.app = function() {
             fields: ['id','name','indexed','capacity','count']
         }),
 
+        userStore:new Ext.data.JsonStore({
+            proxy:new Ext.data.HttpProxy({
+                api:{
+                    read:{ url:'user/list', method:'GET' },
+                    destroy:{ url:'user/delete', method:'POST' }
+                }
+            }),
+            writer:new Ext.data.JsonWriter({
+                encode:true,
+                writeAllFields:true
+            }),
+            autoLoad:true,
+            root: 'items',
+            idProperty: 'id',
+            fields: ['id','username', 'roles']
+        }),
+
         // public methods
         init: function() {
 			new Ext.Viewport({

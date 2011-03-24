@@ -74,7 +74,8 @@ mymdb.admin.UserListView = Ext.extend( Ext.list.ListView, {
     multiSelect:false,
     singleSelect:true,
     columns: [
-        {header:'Username', dataIndex:'username'}
+        {header:'Username', dataIndex:'username'},
+        {header:'Roles', dataIndex:'roles' }
     ],
 
     initComponent: function(){
@@ -131,22 +132,7 @@ mymdb.admin.UserListView = Ext.extend( Ext.list.ListView, {
                     }
                 }
             },
-            store:new Ext.data.JsonStore({
-                proxy:new Ext.data.HttpProxy({
-                    api:{
-                        read:{ url:'user/list', method:'GET' },
-                        destroy:{ url:'user/delete', method:'POST' }
-                    }
-                }),
-                writer:new Ext.data.JsonWriter({
-                    encode:true,
-                    writeAllFields:true
-                }),
-                autoLoad:true,
-                root: 'items',
-                idProperty: 'id',
-                fields: ['id','username']
-            })
+            store:mymdb.app.userStore
         });
         
         mymdb.admin.UserListView.superclass.initComponent.apply(this, arguments);
@@ -193,7 +179,7 @@ mymdb.admin.UserDialog = Ext.extend( Ext.Window ,{
                                     url: 'user/' + ( userId === null || userId === '' ? 'save' : 'update'),
                                     method:'POST',
                                     success: function(form, action) {
-                                        // mymdb.app.storageStore.load(); //FIXME: connect to store!
+                                        mymdb.app.userStore.load();
                                         dialog.close();
                                     },
                                     failure: function(form, action) {
