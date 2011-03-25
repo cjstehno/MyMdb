@@ -58,6 +58,18 @@ mymdb.app = function() {
             handler: function(){ new mymdb.admin.UserManagerDialog(); }
         }),
 
+        logoutAction: new Ext.Action({
+            text:'Logout',
+            iconCls:'icon-logout',
+            handler: function(){
+                Ext.MessageBox.confirm('Logout?','Are you sure you want to logout?', function(sel){
+                    if( sel == 'yes' ){
+                        location = 'auth/signOut';
+                    }
+                });
+            }
+        }),
+
         storageStore:new Ext.data.JsonStore({
             storeId:'box_store',    // TODO: remove this when category panels refactored
             proxy:new Ext.data.HttpProxy({
@@ -125,7 +137,8 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
         mymdb.app.openNewMovieAction,
         { xtype:'tbfill' },
         mymdb.app.openAboutAction,
-        mymdb.app.openHelpAction
+        mymdb.app.openHelpAction,
+        mymdb.app.logoutAction
     ]
 });
 Ext.reg('headerpanel', mymdb.HeaderPanel);

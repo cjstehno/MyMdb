@@ -37,6 +37,8 @@
       .icon-right { background-image: url('${fam.icon(name:'arrow_right')}')!important; }
       .icon-left { background-image: url('${fam.icon(name:'arrow_left')}')!important; }
 
+      .icon-logout { background-image: url('${fam.icon(name:'door')}')!important; }
+
       .x-list-selected { background-color:#F5ECC6; border: 1px dashed gray; }
       .x-view-selected { background-color:#F5ECC6; border: 1px dashed gray; }
     </style>
