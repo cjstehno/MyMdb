@@ -22,7 +22,15 @@
                             method:'POST',
                             padding:8,
                             items:[
-                                { xtype:'textfield', fieldLabel:'Username', name:'username', value:'${username}', allowBlank:false, minLength:5, maxLength:25 },
+                                {
+                                    xtype:'textfield',
+                                    fieldLabel:'Username',
+                                    name:'username',
+                                    value:'${username}',
+                                    allowBlank:false,
+                                    minLength:5,
+                                    maxLength:25
+                                },
                                 {
                                     xtype:'textfield',
                                     inputType:'password',

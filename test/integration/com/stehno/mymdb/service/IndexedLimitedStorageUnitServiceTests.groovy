@@ -108,6 +108,7 @@ class IndexedLimitedStorageUnitServiceTests extends GrailsUnitTestCase {
         def movie = new Movie( title:title, description:"Something about $title" )
         movie.mpaaRating = MpaaRating.PG
         movie.format = Format.DVD
+        movie.broadcast = Broadcast.MOVIE
         movie.save()
         movie.id
     }

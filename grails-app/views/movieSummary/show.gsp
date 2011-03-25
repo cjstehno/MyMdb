@@ -12,6 +12,8 @@
 
         <div style='margin-bottom:8px;'><b>Rating:</b> ${rating}</div>
 
+        <div style='margin-bottom:8px;'><b>Broadcast:</b> ${broadcast}</div>
+
         <div><b>Genre:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
             <g:each in="${genres}" var="g">

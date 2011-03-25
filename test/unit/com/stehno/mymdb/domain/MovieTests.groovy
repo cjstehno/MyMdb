@@ -41,7 +41,8 @@ class MovieTests extends GrailsUnitTestCase {
             storage:new Storage(index:2),
             description:'Something interesting',
             mpaaRating:MpaaRating.UNKNOWN,
-            format:Format.UNKNOWN
+            format:Format.UNKNOWN,
+            broadcast:Broadcast.UNKNOWN
         )
     }
 
@@ -149,8 +150,19 @@ class MovieTests extends GrailsUnitTestCase {
         assertEquals Format.VCD, Format.fromLabel('VCD')
         assertEquals Format.DVD, Format.fromLabel('DVD')
         assertEquals Format.DVD_R, Format.fromLabel('DVD-R')
-        assertEquals Format.BLUERAY, Format.fromLabel('BlueRay')
+        assertEquals Format.BLURAY, Format.fromLabel('BluRay')
         assertEquals Format.UNKNOWN, Format.fromLabel('blah')
+    }
+
+    @Test
+    void broadcasts(){
+        assertEquals Broadcast.UNKNOWN, Broadcast.fromLabel('Unknown')
+        assertEquals Broadcast.MOVIE, Broadcast.fromLabel('Movie')
+        assertEquals Broadcast.TV_MOVIE, Broadcast.fromLabel('TV Movie')
+        assertEquals Broadcast.TV_SERIES, Broadcast.fromLabel('TV Series')
+        assertEquals Broadcast.TV_SPECIAL, Broadcast.fromLabel('TV Special')
+        assertEquals Broadcast.OTHER, Broadcast.fromLabel('Other')
+        assertEquals Broadcast.UNKNOWN, Broadcast.fromLabel('blah')
     }
 
     @After

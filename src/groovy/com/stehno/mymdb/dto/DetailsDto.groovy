@@ -17,6 +17,7 @@ package com.stehno.mymdb.dto
 
 import com.stehno.mymdb.domain.MpaaRating
 import com.stehno.mymdb.domain.Format
+import com.stehno.mymdb.domain.Broadcast
 
 class DetailsDto {
 
@@ -27,6 +28,7 @@ class DetailsDto {
     MpaaRating mpaaRating = MpaaRating.UNKNOWN
     Integer runtime = 0
     Format format = Format.UNKNOWN
+    Broadcast broadcast = Broadcast.MOVIE
 
     static constraints = {
         title( nullable:false, blank:false, size:1..100 )
@@ -36,6 +38,7 @@ class DetailsDto {
         runtime( nullable:true, min:0 )
         mpaaRating( nullable:false )
         format( nullable:false )
+        broadcast( nullable:false )
     }
 
     // TODO: see if there is a way to require both storage name and index if one is specified
@@ -59,6 +62,7 @@ class DetailsDto {
             map.mpaaRating = mpaaRating.name()
             if(runtime) map.runtime = runtime
             map.format = format.name()
+            map.broadcast = broadcast.name()
 
             return map
         }

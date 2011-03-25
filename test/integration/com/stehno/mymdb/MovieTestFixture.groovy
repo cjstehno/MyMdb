@@ -35,7 +35,8 @@ class MovieTestFixture {
             releaseYear:2010,
             description:'They were acused of a crime they didnt commit',
             mpaaRating:MpaaRating.UNRATED,
-            format:Format.BLUERAY
+            format:Format.BLURAY,
+            broadcast:Broadcast.MOVIE
         )
         movie.save(flush:true)
 
@@ -64,7 +65,7 @@ class MovieTestFixture {
 
         this.movieId = movie.id
 
-        new Movie( title:'Kung Fu Panda', releaseYear:2000, description:'A Panda movie', mpaaRating: MpaaRating.G, format:Format.DVD ).save(flush:true)
+        new Movie( title:'Kung Fu Panda', releaseYear:2000, description:'A Panda movie', broadcast:Broadcast.MOVIE, mpaaRating: MpaaRating.G, format:Format.DVD ).save(flush:true)
 
         def storageUnit = new StorageUnit( name:'X', indexed:false, capacity:10 )
         storageUnit.save(flush:true)

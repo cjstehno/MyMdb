@@ -57,7 +57,8 @@ class MovieSummaryController extends MovieFlowControllerBase {
             rating:details.mpaaRating.name(),
             runtime:details.runtime,
             format:details.format.name(),
-            sites:sitesDto.sites
+            sites:sitesDto.sites,
+            broadcast:details.broadcast.name()
         ]
 
         if(details.storageId){

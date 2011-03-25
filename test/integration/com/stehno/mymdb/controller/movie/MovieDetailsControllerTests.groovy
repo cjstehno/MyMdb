@@ -71,7 +71,7 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         assertEquals fixture.storageUnitId as String, jso.data.storageId
         assertEquals 'They were acused of a crime they didnt commit', jso.data.description
         assertEquals MpaaRating.UNRATED.name(), jso.data.mpaaRating
-        assertEquals Format.BLUERAY.name(), jso.data.format
+        assertEquals Format.BLURAY.name(), jso.data.format
 
         assertEquals fixture.movieId, controller.movieFlowService.flow.movieId
         assertNotNull controller.movieFlowService.flow[DetailsDto.class.name]

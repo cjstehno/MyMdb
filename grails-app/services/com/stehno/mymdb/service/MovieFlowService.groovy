@@ -79,7 +79,8 @@ class MovieFlowService {
             description:movie.description,
             mpaaRating:movie.mpaaRating,
             runtime:movie.runtime,
-            format:movie.format
+            format:movie.format,
+            broadcast:movie.broadcast
         ))
 
         if(movie.poster){
@@ -125,7 +126,8 @@ class MovieFlowService {
             description:movieData.description,
             mpaaRating:movieData.rating,
             runtime:movieData.runtime,
-            format:Format.UNKNOWN
+            format:Format.UNKNOWN,
+            broadcast:Broadcast.UNKNOWN
         ))
 
         if(movieData.posterUrl){
@@ -203,6 +205,7 @@ class MovieFlowService {
         movie.mpaaRating = details.mpaaRating
         movie.runtime = details.runtime
         movie.format = details.format
+        movie.broadcast = details.broadcast
 
         // set poster
         def poster = retrieve(PosterDto.class)

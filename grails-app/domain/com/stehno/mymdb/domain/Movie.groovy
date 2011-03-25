@@ -27,6 +27,7 @@ class Movie implements Taggable {
     MpaaRating mpaaRating
     Format format
     Integer runtime
+    Broadcast broadcast
 
     static hasMany = [genres:Genre, actors:Actor, sites:WebSite]
 	
@@ -43,6 +44,7 @@ class Movie implements Taggable {
 
         mpaaRating( inList:MpaaRating.values() as List )
         format( inList:Format.values() as List )
+        broadcast( inList:Broadcast.values() as List )
 
         lastUpdate( nullable:true )
         dateCreated( nullable:true )
@@ -86,7 +88,7 @@ enum Format {
     VCD('VCD'),
     DVD('DVD'),
     DVD_R('DVD-R'),
-    BLUERAY('BlueRay')
+    BLURAY('BluRay')
 
     final String label
 
@@ -98,4 +100,27 @@ enum Format {
         (Format.values().find { it.label == label }) ?: Format.UNKNOWN
     }
 }
+
+/**
+ * Simple enumeration of boradcast types.
+ */
+enum Broadcast {
+    UNKNOWN('Unknown'),
+    MOVIE('Movie'),
+    TV_MOVIE('TV Movie'),
+    TV_SPECIAL('TV Special'),
+    TV_SERIES('TV Series'),
+    OTHER('Other')
+
+    final String label
+
+    private Broadcast( String label ){
+        this.label = label
+    }
+
+    static Broadcast fromLabel( String label ){
+        (Broadcast.values().find { it.label == label }) ?: Broadcast.UNKNOWN
+    }
+}
+
 

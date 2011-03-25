@@ -51,11 +51,34 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     store:new Ext.data.ArrayStore({
                         idIndex:0,
                         fields:[ 'fid', 'flabel' ],
-                        data:[ ['UNKNOWN','Unknown'], ['DVD','DVD'], ['BLUERAY','BlueRay'], ['DVD_R','DVD-R'], ['VCD','VCD'] ]
+                        data:[ ['UNKNOWN','Unknown'], ['DVD','DVD'], ['BLURAY','BluRay'], ['DVD_R','DVD-R'], ['VCD','VCD'] ]
                     }),
                     valueField:'fid',
                     displayField:'flabel'
                 },
+
+                {
+                    xtype:'combo',
+                    fieldLabel:'Broadcast',
+                    name:'broadcast',
+                    hiddenName:'broadcast',
+                    mode:'local',
+                    width:100,
+                    editable:false,
+                    forceSelection:true,
+                    allowBlank:false,
+                    typeAhead:false,
+                    lazyInit:false,
+                    triggerAction:'all',
+                    disableKeyFiltering:true,
+                    store:new Ext.data.ArrayStore({
+                        idIndex:0,
+                        fields:[ 'bid', 'blabel' ],
+                        data:[ ['UNKNOWN','Unknown'], ['MOVIE','Movie'], ['TV_MOVIE','TV Movie'], ['TV_SPECIAL','TV Special'], ['TV_SERIES','TV Series'], ['OTHER','Other'] ]
+                    }),
+                    valueField:'bid',
+                    displayField:'blabel'
+                },                    
 
                 {
                     xtype:'combo',
@@ -90,7 +113,7 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
             this.disableNavButtons( ['prev-btn'] );
             this.setDialogTitle('New Movie: Details');
 
-            this.findByType('combo')[2].getStore().reload();
+            this.find('name','storageId')[0].getStore().reload();
         },this);
 
         mymdb.movie.flow.DetailsView.superclass.initComponent.apply(this, arguments);

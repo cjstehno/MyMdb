@@ -129,6 +129,7 @@ class MovieServiceTests extends GrailsUnitTestCase {
         c.call movie
         movie.mpaaRating = MpaaRating.PG
         movie.format = Format.DVD
+        movie.broadcast = Broadcast.MOVIE
         movie.addToGenres horror
         movie.addToActors johnQPublic
         movie.save()

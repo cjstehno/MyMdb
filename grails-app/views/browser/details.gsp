@@ -6,11 +6,13 @@
     <div>
         <div style='margin-bottom:8px;'><b>Location:</b> ${movieInstance.storageLabel}</div>
 
-        <div style='margin-bottom:8px;'><b>Format:</b> ${movieInstance.format}</div>
+        <div style='margin-bottom:8px;'><b>Format:</b> ${movieInstance.format.label}</div>
 
         <div style='margin-bottom:8px;'><b>Runtime:</b> ${movieInstance.runtime} mins</div>
 
-        <div style='margin-bottom:8px;'><b>Rating:</b> ${movieInstance.mpaaRating}</div>
+        <div style='margin-bottom:8px;'><b>Rating:</b> ${movieInstance.mpaaRating.label}</div>
+
+        <div style='margin-bottom:8px;'><b>Broadcast:</b> ${movieInstance.broadcast.label}</div>
 
         <div><b>Genre:</b></div>
         <div style='margin-bottom:8px;margin-left:8px;'>
