@@ -39,6 +39,10 @@
 
       .icon-logout { background-image: url('${fam.icon(name:'door')}')!important; }
 
+      .icon-favorite { background-image: url('${fam.icon(name:'heart')}')!important; }
+      .icon-mark-favorite { background-image: url('${fam.icon(name:'heart_add')}')!important; }
+      .icon-unmark-favorite { background-image: url('${fam.icon(name:'heart_delete')}')!important; }
+
       .x-list-selected { background-color:#F5ECC6; border: 1px dashed gray; }
       .x-view-selected { background-color:#F5ECC6; border: 1px dashed gray; }
     </style>

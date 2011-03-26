@@ -15,10 +15,9 @@
  */
 package com.stehno.mymdb.controller
 
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Movie
 import grails.converters.JSON
+import org.apache.shiro.SecurityUtils
+import com.stehno.mymdb.domain.*
 
 class BrowserController {
 
@@ -66,9 +65,14 @@ class BrowserController {
                 break
         }
 
+        def user = MymdbUser.findByUsername(SecurityUtils.subject.principal as String)
+
         def movieList = results.collect { m->
             def movieGenres = m.genres.collect { g-> g.name }
-            [mid:m.id, ti:m.title, yr:m.releaseYear, bx:m.storageLabel, ge:movieGenres.sort().join(', ')]
+
+            def favorite = Favorite.findByUserAndMovie(user, m) != null
+
+            [mid:m.id, ti:m.title, yr:m.releaseYear, bx:m.storageLabel, ge:movieGenres.sort().join(', '), fav:favorite]
         }
 
         render( [movies:movieList] as JSON )

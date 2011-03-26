@@ -42,7 +42,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
 		storeId: 'gridData',
 		root: 'movies',
 		idProperty: 'mid',
-		fields: ['mid','ti','yr','bx', 'ge']
+		fields: ['mid','ti','yr','bx', 'ge'/*,'fav'*/]
 	}),
     sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
     viewConfig: {
@@ -54,7 +54,8 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
             {header: 'Title', dataIndex: 'ti'},
             {header: 'Genres', dataIndex: 'ge', sortable:false},
             {header: 'Year', dataIndex: 'yr'},
-            {header: 'Storage', dataIndex: 'bx'}
+            {header: 'Storage', dataIndex: 'bx'}/*,
+            {header:'Favorite', dataIndex:'fav' }*/
         ]
     }),
 
@@ -78,10 +79,26 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
         });        
     }
 });
+Ext.reg('movie-grid', mymdb.MovieGridPanel);
 
 mymdb.MovieListContextPopupFactory = function( grid, idx ){
+//    var fav = grid.getStore().getAt( idx ).data.fav
     return new Ext.menu.Menu({
         items:[
+//            {
+//                xtype:'menuitem',
+//                text:( fav ? 'Unmark Favorite' : 'Mark Favorite'),
+//                iconCls:( fav ? 'icon-unmark-favorite' : 'icon-mark-favorite'),
+//                handler:function(){
+//                    Ext.Ajax.request({
+//                        url:'foo.php',
+//                        method:'POST',
+//                        params: { foo: 'bar' },
+//                        success: function(){},
+//                        failure: function(){}
+//                    });
+//                }
+//            },
             mymdb.app.openNewMovieAction,
             {
                 xtype:'menuitem',
@@ -128,23 +145,25 @@ mymdb.ContentPanel = Ext.extend( Ext.TabPanel, {
     autoHeight:true,
 
     initComponent: function(){
-        var movieGrid = new mymdb.MovieGridPanel();
-        var movieGridTab = new Ext.Panel({
-            title:'Movies',
-            closable:false,
-            autoHeight:true,
-            items:[movieGrid]
-        });
-
         Ext.apply(this, {
-			items: [ movieGridTab ]
+			items: [
+                {
+                    xtype:'panel',
+                    title:'Movies',
+                    closable:false,
+                    autoHeight:true,
+                    items:[
+                        { xtype:'movie-grid' }
+                    ]
+                }
+            ]
         });
 
         mymdb.ContentPanel.superclass.initComponent.apply(this, arguments);
 
         this.on('resize',function( comp, adjWidth, adjHeight, rawWidth, rawHeight){
-            movieGrid.setSize( rawWidth, rawHeight-25 );
-        });
+            this.findByType('movie-grid')[0].setSize( rawWidth, rawHeight-25 );
+        },this);
     }
 });
 Ext.reg('contentpanel', mymdb.ContentPanel);
