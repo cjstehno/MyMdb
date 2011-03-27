@@ -75,3 +75,6 @@ log4j = {
 
 grails.taggable.preserve.case = true
 
+springMobile {
+	deviceResolver="wurfl"
+}

@@ -1,10 +1,11 @@
 package com.stehno.mymdb.controller
 
+import grails.converters.JSON
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
-import grails.converters.JSON
+import org.springframework.mobile.device.DeviceUtils
 
 class AuthController {
     def shiroSecurityManager
@@ -12,10 +13,17 @@ class AuthController {
     def index = { redirect(action: "login", params: params) }
 
     def login = {
-        return [ username: params.username, rememberMe: (params.rememberMe != null), targetUri: params.targetUri ]
+        def model = [ username:params.username, rememberMe:(params.rememberMe != null), targetUri:params.targetUri ]
+
+        if( DeviceUtils.getCurrentDevice( request ).isMobile() ){
+            render( view:'mobilelogin', model:model )
+        } else {
+            render( view:'login', model:model )
+        }
     }
 
     def signIn = {
+        println "SignIn: ${params.username}"
         def authToken = new UsernamePasswordToken(params.username, params.password as String)
 
         // Support for "remember me"
@@ -40,13 +48,21 @@ class AuthController {
 
             log.info "Redirecting to '${targetUri}'."
 
-            render( [success:true] as JSON )
+            if( DeviceUtils.getCurrentDevice( request ).isMobile() ){
+                redirect( controller:'mobile' )
+            } else {
+                render( [success:true] as JSON )
+            }
 
         } catch (AuthenticationException ex){
             // Authentication failed, so display the appropriate message on the login page.
             log.info "Authentication failure for user '${params.username}'."
-            
-            render( [success:false, errors:['general':message(code:'login.failed')]] as JSON )
+
+            if( DeviceUtils.getCurrentDevice( request ).isMobile() ){
+                render( view:'mobilelogin', model:['general':message(code:'login.failed')] )   
+            } else {
+                render( [success:false, errors:['general':message(code:'login.failed')]] as JSON )
+            }
         }
     }
 

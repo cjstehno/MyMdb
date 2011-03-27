@@ -1,19 +1,40 @@
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="layout" content="mobile" />
-  </head>
-  <body>
-    <h1>${categoryName?:'Categories'}</h1>
+    <head>
+        <meta name="layout" content="mobile" />
+        <style type="text/css">
+            a {
+                color:white;
+                text-decoration:none;
+            }
+            body {
+                margin-top: 0px;
+                margin-bottom: 0px;
+                margin-left: 0px;
+                margin-right: 0px;
+            }
+            div {
+                width:100%;
+                font-size:50pt;
+                padding: 4px
+            }
 
-    <g:each var="item" in="${listItems}">
-      <g:if test="${item.id}">
-           <div><g:link controller="mobile" action="${item.category}" params="[id:item.id]">${item.label}</g:link></div>
-      </g:if>
-      <g:else>
-           <div><g:link controller="mobile" action="${item.category}">${item.label}</g:link></div>
-      </g:else>
-    </g:each>
+            .item {
+                border-bottom: 1px dashed gray;
+            }
 
-  </body>
+        </style>
+
+        <g:javascript library="mymdb.mobile.app" />
+    </head>
+    <body>
+
+        <div>
+            <div style="background-color:blue;color:white"><a href='index'>Catgories:</a> ${ categoryName ?: ''}</div>
+            <g:each in="${listItems}" var="category">
+                <div class="item" onclick="openCategory('${category.category}')">${category.label}</div>
+            </g:each>
+
+        </div>
+
+    </body>
 </html>
