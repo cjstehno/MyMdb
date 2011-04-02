@@ -2,6 +2,27 @@
     <head>
     <meta name='layout' content='security' />
     <title>Login</title>
+    <style type="text/css">
+        img.bg {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width:100%;
+            height:100%;
+            z-index:0;
+        }
+
+        div.title {
+            position:absolute;
+            top:100px;
+            left:0px;
+            text-align:center;
+            width:100%;
+            z-index:1000;
+            font-family:sans-serif;
+            font-size:30pt;
+        }
+    </style>
     <script type="text/javascript">
         Ext.QuickTips.init();
         Ext.ns('mymdb.security');
@@ -98,6 +119,6 @@
         });
     </script>
 </head>
-<body></body>
+<body><img src="${request.contextPath}/images/loginbg.png" class="bg" /><div class="title">My Movie Database</div></body>
 </html>
 
