@@ -157,20 +157,23 @@ class MovieFlowService {
         }
 
         if(movieData.actorNames){
-            store(new ActorDto(
-                actors:movieData.actorNames.collect { actorName->
-                    def aname = parseName(actorName as String)
-                    def act = Actor.findWhere( firstName:aname.first, middleName:aname.middle, lastName:aname.last )
-                    if(act){
-                        return act.id
-                    } else {
-                        // TODO: would like to make creation conditional based on save of movie
-                        act = new Actor( firstName:aname.first, middleName:aname.middle, lastName:aname.last )
-                        act.save(flush:true)
-                        return act.id
-                    }
+            def actorDto = new ActorDto(actors:[])
+
+            def actors = Actor.list()
+
+            movieData.actorNames.each { name->
+                def found = actors.find { a-> a.fullName == name }
+                if( found ){
+                    actorDto.actors << found.id 
+                } else {
+                    def aname = parseName(name)
+                    def act = new Actor( firstName:aname.first, middleName:aname.middle, lastName:aname.last )
+                    act.save(flush:true)
+                    actorDto.actors << act.id
                 }
-            ))
+            }
+
+            store(actorDto)
         }
 
         if(movieData.sites){

@@ -5,18 +5,9 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
     previousId:3,
     initComponent: function(){
         Ext.apply(this, {
-            listeners:{
-                loaded:{
-                    scope:this,
-                    fn:function(action){
-                        var actors = action.result.data.actors;
-                        this.findByType('movieflow-itemselector')[0].setSelectedItems(actors);
-                    }
-                }
-            },
             items:[
                 { xtype:'label', text:'Select actors for movie:' },
-                { xtype:'movieflow-itemselector', availableUrl:'actor/list' },
+                { xtype:'movieflow-itemselector', url:'movie/actors/list' },
                 {
                     xtype:'button',
                     text:'New Actor',
@@ -25,7 +16,7 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     handler: function(b,e){
                         new mymdb.actor.ActorDialog({
                             onSave:function(){
-                                (b.findParentByType('movieflow-actor').find('itemId', 'selector-available')[0]).getStore().load();
+                                b.findParentByType('movieflow-actor').findByType('movieflow-itemselector')[0].store.reload();
                             }
                         });
                     }
@@ -37,7 +28,7 @@ mymdb.movie.flow.ActorsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
             this.disableNavButtons( [] );
             this.setDialogTitle('New Movie: Actors');
 
-            this.find('itemId','selector-available')[0].getStore().reload();
+            this.findByType('movieflow-itemselector')[0].store.reload();
         },this);
 
         mymdb.movie.flow.ActorsView.superclass.initComponent.apply(this, arguments);

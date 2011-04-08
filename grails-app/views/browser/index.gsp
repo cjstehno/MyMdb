@@ -52,6 +52,7 @@
     <g:javascript library="mymdb.actor.ActorManager" />
     <g:javascript library="mymdb.storage.StorageManager" />
     <g:javascript library="mymdb.admin.UserManager" />
+    <g:javascript library="mymdb.Selector" />
     <g:javascript library="mymdb.movie.flow.MovieFlow" />
     <g:javascript library="mymdb.movie.flow.FetchResults" />
     <g:javascript library="mymdb.movie.flow.Details" />

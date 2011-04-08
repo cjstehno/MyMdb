@@ -16,9 +16,11 @@
 
 package com.stehno.mymdb.controller.movie
 
+import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.dto.ActorDto
+import grails.converters.JSON
 
- /**
+/**
  * 
  *
  * @author cjstehno
@@ -29,6 +31,16 @@ class MovieActorsController extends MovieFlowControllerBase {
 
     def show = {
         renderSuccess( movieFlowService.retrieve(ActorDto.class) )
+    }
+
+    def list = {
+        def dto = movieFlowService.retrieve(ActorDto.class)
+
+        def items = Actor.list( sort:'lastName', order:'asc' ).collect { a->
+            [ id:a.id, label:a.displayName, selected:( a.id in dto.actors ) ]
+        }
+
+        render( [ items:items ] as JSON)
     }
 
     def save = { ActorDto dto ->
