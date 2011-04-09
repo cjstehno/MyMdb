@@ -78,7 +78,7 @@ class MovieDetailsController extends MovieFlowControllerBase {
     private convert( storageId ){
         def storUnit
         def storIdx
-        if( storageId.contains(':') ){
+        if( storageId?.contains(':') ){
             ( storUnit, storIdx ) = storageId.split(':')
         } else {
             storUnit = storageId

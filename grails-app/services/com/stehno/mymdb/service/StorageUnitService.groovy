@@ -39,9 +39,9 @@ class StorageUnitService {
     void storeMovie( Long storageUnitId, Long movieId, Integer index = null ){
         def unit = StorageUnit.get(storageUnitId)
 
-        if( unit.isFull() ) throw new IllegalArgumentException('StorageUnit is full!') // TODO: make better
+        if( unit.isFull() ) throw new IllegalArgumentException('StorageUnit is full!')
 
-        if( unit.indexed ) verifyForIndexed( unit, index )
+        if( unit.indexed && !index ) throw new IllegalArgumentException('Index must be specified for indexed storage')
 
         def movie = Movie.get(movieId)
 
@@ -75,16 +75,18 @@ class StorageUnitService {
                 if( unit.indexed ){
                     if( unit.capacity ){
                         def avails = []
+
                         avails.addAll( (1..unit.capacity) as List )
 
-                        def unitSlotIds = unit.slots?.collect { s-> s.index }
-                        if( unitSlotIds ) avails.removeAll( unitSlotIds )
-
                         avails.each { n->
-                            slots << [ id:unit.id, index:n, label:"${unit.name}-$n" ]
+                            def count = unit.slots?.findAll { s-> s.index == n }?.size()
+                            def countStr = count ? " ($count)" : ''
+
+                            slots << [ id:unit.id, index:n, label:"${unit.name}-$n$countStr" ]
                         }
                     } else {
-                        // this use case is not allowed -- // FIXME: enforce this in the manager UI
+                        // this use case is not allowed
+                        // FIXME: enforce this in the manager UI
                     }
                 } else {
                     slots << [ id:unit.id as String, label:unit.name ]
@@ -92,21 +94,5 @@ class StorageUnitService {
             }
         }
         slots
-    }
-
-    /**
-     * Verifies that the "indexed" storage rules are met. For indexed storage an index must be specified
-     * and it must not already be in use for the selected storage unit.
-     * 
-     * @param storageUnit
-     * @param index
-     */
-    private void verifyForIndexed( StorageUnit storageUnit, Integer index ){
-        if( !index ) throw new IllegalArgumentException('Index must be specified for indexed storage') // TODO: make better
-
-        // is the index already in use?
-        if( storageUnit.slots?.find { s-> s.index == index } ){
-            throw new IllegalArgumentException('Selected index is already in use!') // TODO: make better
-        }
     }
 }

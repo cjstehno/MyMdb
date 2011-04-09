@@ -59,12 +59,30 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         def slots = storageUnitService.listAvailableSlots()
 
         assertNotNull slots
-        assertEquals 4, slots.size()
+        assertEquals 5, slots.size()
 
-        assertAvailableSlot indexedLimited, 2, 'Indexed:Limited-2', slots[0]
-        assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[1]
-        assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[2]
-        assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[3]
+        assertAvailableSlot indexedLimited, 1, 'Indexed:Limited-1 (1)', slots[0]
+        assertAvailableSlot indexedLimited, 2, 'Indexed:Limited-2', slots[1]
+        assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[2]
+        assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[3]
+        assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[4]
+    }
+
+    @Test
+    void listAvailableSlots_indexed_with_multiple(){
+        storageUnitService.storeMovie indexedLimited, movie( 'Something' ).id, 1
+        storageUnitService.storeMovie indexedLimited, movie( 'Other' ).id, 1
+
+        def slots = storageUnitService.listAvailableSlots()
+
+        assertNotNull slots
+        assertEquals 5, slots.size()
+
+        assertAvailableSlot indexedLimited, 1, 'Indexed:Limited-1 (2)', slots[0]
+        assertAvailableSlot indexedLimited, 2, 'Indexed:Limited-2', slots[1]
+        assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[2]
+        assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[3]
+        assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[4]
     }
 
     @Test

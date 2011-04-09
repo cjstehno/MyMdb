@@ -82,15 +82,15 @@ class IndexedLimitedStorageUnitServiceTests extends GrailsUnitTestCase {
         assertEquals 0, StorageUnit.get(unitId).slots?.size()
     }
 
-    @Test(expected = IllegalArgumentException)
+    @Test
     void storeMovie_slot_in_use(){
         storageUnitService.storeMovie( unitId, movie('Superman'), 2 )
         storageUnitService.storeMovie( unitId, movie('Spiderman'), 2 )
 
-        assertEquals 1, Storage.count()
+        assertEquals 2, Storage.count()
         assertNotNull Movie.findByTitle('Superman').storage
-        assertNull Movie.findByTitle('Spiderman').storage
-        assertEquals 1, StorageUnit.get(unitId).slots?.size()
+        assertNotNull Movie.findByTitle('Spiderman').storage
+        assertEquals 2, StorageUnit.get(unitId).slots?.size()
     }
 
     private void assertStorage( unitName, index, movieStorage ){
