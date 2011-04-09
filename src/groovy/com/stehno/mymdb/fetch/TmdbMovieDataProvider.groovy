@@ -79,12 +79,16 @@ class TmdbMovieDataProvider implements MovieDataProvider {
             actorNames:actors(data),
             posterUrl:poster(data),
             rating:MpaaRating.fromLabel(data.certification),
-            runtime:data.runtime,
+            runtime:runtime(data),
             sites:sites(data)
         )
     }
 
     String getProviderId() { PROVIDER_ID }
+
+    private int runtime( entry ){
+        entry.isNull('runtime') ? 0 : entry.runtime as Integer
+    }
 
     private int released( entry ){
         entry.isNull('released') ? 0 : entry.released.split('-')[0] as Integer

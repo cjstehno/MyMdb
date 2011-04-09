@@ -132,7 +132,7 @@ class TmdbMovieDataProviderTests extends GroovyTestCase {
                         genres:[ [name:'Comedy'] ],
                         cast:[ [job:'Actor', name:'Richard Pryor'] ],
                         url:'http://tmdb.url',
-                        isNull:{ it != 'url' && it != 'released' }, getString:{'http://tmdb.url'}
+                        isNull:{ it != 'url' && it != 'released' && it != 'runtime' }, getString:{'http://tmdb.url'}
                     ]
                 ]
             } else {
