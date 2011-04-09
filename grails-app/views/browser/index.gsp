@@ -39,6 +39,8 @@
 
       .icon-logout { background-image: url('${fam.icon(name:'door')}')!important; }
 
+      .icon-settings { background-image: url('${fam.icon(name:'wrench')}')!important; }
+
       .icon-favorite { background-image: url('${fam.icon(name:'heart')}')!important; }
       .icon-mark-favorite { background-image: url('${fam.icon(name:'heart_add')}')!important; }
       .icon-unmark-favorite { background-image: url('${fam.icon(name:'heart_delete')}')!important; }
@@ -52,6 +54,7 @@
     <g:javascript library="mymdb.actor.ActorManager" />
     <g:javascript library="mymdb.storage.StorageManager" />
     <g:javascript library="mymdb.admin.UserManager" />
+    <g:javascript library="mymdb.admin.Settings" />
     <g:javascript library="mymdb.Selector" />
     <g:javascript library="mymdb.movie.flow.MovieFlow" />
     <g:javascript library="mymdb.movie.flow.FetchResults" />

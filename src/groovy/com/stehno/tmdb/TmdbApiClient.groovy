@@ -40,6 +40,10 @@ class TmdbApiClient {
         call buildUrl( 'Movie.search', title )
     }
 
+    boolean isAvailable(){
+        mymdbConfigService.getTmdbApiKey() != null
+    }
+
     /**
      * Retrieve the movie information for the movie with the specified id.
      *

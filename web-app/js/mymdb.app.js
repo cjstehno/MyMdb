@@ -70,6 +70,12 @@ mymdb.app = function() {
             }
         }),
 
+        settingsAction: new Ext.Action({
+            text:'Settings',
+            iconCls:'icon-settings',
+            handler: function(){ new mymdb.admin.SettingsDialog(); }
+        }),
+
         storageStore:new Ext.data.JsonStore({
             storeId:'box_store',    // TODO: remove this when category panels refactored
             proxy:new Ext.data.HttpProxy({
@@ -129,6 +135,7 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	margins: '0 0 5 0',
 	bbar:[
         mymdb.app.openUserManagerAction,
+        mymdb.app.settingsAction,
         { xtype:'tbseparator' },
         mymdb.app.openGenreManagerAction,
         mymdb.app.openActorManagerAction,

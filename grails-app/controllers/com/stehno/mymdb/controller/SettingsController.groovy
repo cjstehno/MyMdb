@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.service
+package com.stehno.mymdb.controller
 
-import com.stehno.plugins.config.domain.ConfigPropertyType
+import com.stehno.mymdb.service.MymdbConfigService
+import grails.converters.JSON
 
-/**
- * Local fascade for accessing persistent configuration properties.
+ /**
+ * 
  *
  * @author cjstehno
  */
-class MymdbConfigService {
+class SettingsController {
 
-    def configPropertyService
+    MymdbConfigService mymdbConfigService
 
-    private static final String API_KEY_CONFIG = 'tmdb.ApiKey'
+    def show = {
+        def tmdbApiKey = mymdbConfigService.getTmdbApiKey()
 
-    /**
-     * Retrieves the TMDB API Key from the persistent configuration properties.
-     * 
-     * @return
-     */
-    String getTmdbApiKey(){
-        configPropertyService.getProperty(API_KEY_CONFIG)
+        render( [ success:true, data:[ tmdbApiKey:tmdbApiKey ] ] as JSON )
     }
 
-    void setTmdbApiKey( String key ){
-        configPropertyService.putProperty( API_KEY_CONFIG, key, ConfigPropertyType.STRING )
+    def save = {
+        def tmdbApiKey = params.tmdbApiKey
+
+        mymdbConfigService.setTmdbApiKey(tmdbApiKey)
+
+        render( [success:true] as JSON )
     }
 }

@@ -19,6 +19,7 @@ package com.stehno.mymdb.fetch
 import com.stehno.mymdb.domain.MpaaRating
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.WordUtils
+import com.stehno.tmdb.TmdbApiClient
 
 /**
  * Implements a MovieDataProvider for http://themoviedb.org using their
@@ -28,7 +29,7 @@ import org.apache.commons.lang.WordUtils
  */
 class TmdbMovieDataProvider implements MovieDataProvider {
 
-    def api
+    TmdbApiClient api
 
     private static final String PROVIDER_ID = 'TMDB'
 
@@ -39,6 +40,8 @@ class TmdbMovieDataProvider implements MovieDataProvider {
      * @return
      */
     MovieSearchResult[] searchFor( String movieTitle ){
+        if( !api.isAvailable() ) return []
+        
         def results = api.movieSearch( movieTitle )
         if( results[0] instanceof String ){
             return []
@@ -63,6 +66,8 @@ class TmdbMovieDataProvider implements MovieDataProvider {
      * @return
      */
     MovieData fetch( movieId ){
+        if( !api.isAvailable() ) return null
+
         def data = api.movieGetInfo( movieId )[0]
 
         new MovieData(
