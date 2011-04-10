@@ -67,7 +67,7 @@ class UrlMappings {
         }
 
         "/api/categories/$filter"(controller:'api', action:'categories')
-        "/api/list/$filter"(controller:'api', action:'list')
+        "/api/list/$category/$filter"(controller:'api', action:'list')
         "/api/fetch/$id"(controller:'api', action:'fetch')
 	}
 }

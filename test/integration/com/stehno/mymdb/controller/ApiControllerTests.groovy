@@ -20,7 +20,7 @@ import com.stehno.mymdb.MovieTestFixture
 import org.junit.Before
 import org.junit.Test
 
-/**
+ /**
  * 
  *
  * @author cjstehno
@@ -41,8 +41,7 @@ class ApiControllerTests extends ControllerTestCase {
         controller.categories()
 
         def jso = parseJsonResponse()
-        assertNotNull jso
-        assertEquals 5, jso.size()
+        assertJsonCount 5, jso
 
         assertItem 'titles','Titles',jso[0]
         assertItem 'genres','Genres',jso[1]
@@ -57,8 +56,7 @@ class ApiControllerTests extends ControllerTestCase {
         controller.categories()
 
         def jso = parseJsonResponse()
-        assertNotNull jso
-        assertEquals 2, jso.size()
+        assertJsonCount 2, jso
 
         assertItem 'A','A', jso[0]
         assertItem 'K','K', jso[1]
@@ -70,10 +68,9 @@ class ApiControllerTests extends ControllerTestCase {
         controller.categories()
 
         def jso = parseJsonResponse()
-        assertNotNull jso
-        assertEquals 1, jso.size()
+        assertJsonCount 1, jso
 
-        assertItem 3,'Action', jso[0]
+        assertItem fixture.genreId,'Action', jso[0]
     }
 
     @Test
@@ -82,11 +79,9 @@ class ApiControllerTests extends ControllerTestCase {
         controller.categories()
 
         def jso = parseJsonResponse()
-        assertNotNull jso
-        assertEquals 2, jso.size()
+        assertJsonCount 2, jso
 
-        assertItem 8,'Fox, Michael J', jso[0]
-        assertItem 7,'Neason, Liam', jso[1]
+        assertItem fixture.actorId,'Neason, Liam', jso[1]
     }
 
     @Test
@@ -95,8 +90,7 @@ class ApiControllerTests extends ControllerTestCase {
         controller.categories()
 
         def jso = parseJsonResponse()
-        assertNotNull jso
-        assertEquals 2, jso.size()
+        assertJsonCount 2, jso
 
         assertItem 2000,2000, jso[0]
         assertItem 2010,2010, jso[1]
@@ -108,10 +102,88 @@ class ApiControllerTests extends ControllerTestCase {
         controller.categories()
 
         def jso = parseJsonResponse()
-        assertNotNull jso
-        assertEquals 1, jso.size()
+        assertJsonCount 1, jso
 
         assertItem fixture.storageUnitId,'X', jso[0]
+    }
+
+    @Test
+    void list_nothing(){
+        controller.list()
+
+        def jso = parseJsonResponse()
+        assertJsonCount 0, jso
+    }
+
+    @Test
+    void list_titles(){
+        controller.params.category = 'titles'
+        controller.params.filter = 'A'
+        controller.list()
+
+        def jso = parseJsonResponse()
+        assertJsonCount 1, jso
+    }
+
+    @Test
+    void list_genres(){
+        controller.params.category = 'genres'
+        controller.params.filter = fixture.genreId as String
+        controller.list()
+
+        def jso = parseJsonResponse()
+        assertJsonCount 1, jso
+    }
+
+    @Test
+    void list_actors(){
+        controller.params.category = 'actors'
+        controller.params.filter = fixture.actorId as String
+        controller.list()
+
+        def jso = parseJsonResponse()
+        assertJsonCount 1, jso
+    }
+
+    @Test
+    void list_years(){
+        controller.params.category = 'years'
+        controller.params.filter = '2010'
+        controller.list()
+
+        def jso = parseJsonResponse()
+        assertJsonCount 1, jso
+    }
+
+    @Test
+    void list_units(){
+        controller.params.category = 'units'
+        controller.params.filter = fixture.storageUnitId as String
+        controller.list()
+
+        def jso = parseJsonResponse()
+        assertJsonCount 0, jso
+    }
+
+    @Test
+    void fetch(){
+        controller.params.id = fixture.movieId
+        controller.fetch()
+
+        def jso = parseJsonResponse()
+        assertNotNull jso
+
+        assertEquals 'A-Team: Unrated', jso.title
+        assertEquals 'They were acused of a crime they didnt commit', jso.description
+        assertEquals 2010, jso.releaseYear
+        assertEquals 'Unrated', jso.rating
+        assertEquals 'BluRay', jso.format
+        assertEquals 'Movie', jso.broadcast
+    }
+
+    private void assertJsonCount( expected, jso ){
+        assertNotNull jso
+        assertEquals expected, jso.size()
     }
 
     private void assertItem( expectedId, expectedLabel, item ){

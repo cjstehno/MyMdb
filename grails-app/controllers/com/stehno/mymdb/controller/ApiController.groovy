@@ -21,6 +21,7 @@ import com.stehno.mymdb.service.MovieService
 import grails.converters.JSON
 import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.StorageUnit
+import com.stehno.mymdb.domain.Movie
 
 /**
  * 
@@ -79,7 +80,28 @@ class ApiController {
     }
 
     def list = {
+        def category = params.category
+        def filter = params.filter
 
+        def movies = []
+
+        if( category == 'titles'){
+            movies = movieService.findMoviesTitleStartingWith( filter ).collect( movieTransformer )
+
+        } else if( category == 'genres'){
+            movies = movieService.findMoviesByGenre( filter as Long ).collect( movieTransformer )
+            
+        } else if( category == 'actors'){
+            movies = movieService.findMoviesByActor( filter as Long ).collect( movieTransformer )
+
+        } else if( category == 'years'){
+            movies = Movie.findAllWhere( releaseYear: filter as Integer ).collect( movieTransformer )
+            
+        } else if( category == 'units'){
+            movies = movieService.findMoviesForBox( filter as Long ).collect( movieTransformer )
+        }
+
+        render( movies as JSON )
     }
 
     /**
@@ -87,6 +109,25 @@ class ApiController {
      */
     def fetch = {
         def id = params.id
-        
+
+        def movie = Movie.get( id as Long )
+
+        def dto = [
+            title:movie.title,
+            releaseYear:movie.releaseYear,
+            description:movie.description,
+            genres:movie.genres?.collect { g-> },
+            actors:movie.actors?.collect { a-> },
+            rating:movie.mpaaRating?.label,
+            runtime:movie.runtime,
+            format:movie.format?.label,
+            sites:movie.sites?.collect { s-> [ label:s.label, url:s.url ] },
+            broadcast:movie.broadcast?.label,
+            poster:movie.poster?.id
+        ]
+
+        render( dto as JSON )
     }
+
+    private movieTransformer = { movie -> [ id:movie.id, label:movie.title ] }
 }

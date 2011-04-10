@@ -28,6 +28,8 @@ class MovieTestFixture {
     def movieId
     def posterId
     def storageUnitId
+    def genreId
+    def actorId
 
     void before(){
         def movie = new Movie(
@@ -48,10 +50,13 @@ class MovieTestFixture {
         def actor = new Actor( firstName:'Liam', middleName:'', lastName:'Neason' )
         actor.save(flush:true)
 
+        this.actorId = actor.id
+
         new Actor( firstName:'Michael', middleName:'J', lastName:'Fox' ).save(flush:true)
 
         def genre = new Genre( name:'Action' )
         genre.save(flush:true)
+        this.genreId = genre.id
 
         def web = new WebSite( label:'TMDB', url:'http://tmdb.com')
         web.save(flush:true)
