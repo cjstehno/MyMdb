@@ -146,14 +146,15 @@ class ApiController {
             title:movie.title,
             releaseYear:movie.releaseYear,
             description:movie.description,
-            genres:movie.genres?.collect { g-> },
-            actors:movie.actors?.collect { a-> },
+            genres:movie.genres?.collect { g-> [ id:g.id, name:g.name ] },
+            actors:movie.actors?.collect { a-> [ id:a.id, name:a.fullName ] },
             rating:movie.mpaaRating?.label,
             runtime:movie.runtime,
             format:movie.format?.label,
             sites:movie.sites?.collect { s-> [ label:s.label, url:s.url ] },
             broadcast:movie.broadcast?.label,
-            poster:movie.poster?.id
+            poster:movie.poster?.id,
+            storage:movie?.storageLabel
         ]
 
         render( dto as JSON )
