@@ -16,12 +16,17 @@
 
 package com.stehno.mymdb.controller
 
+import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Genre
+import com.stehno.mymdb.domain.Movie
+import com.stehno.mymdb.domain.StorageUnit
 import com.stehno.mymdb.service.MovieService
 import grails.converters.JSON
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.StorageUnit
-import com.stehno.mymdb.domain.Movie
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
+import org.apache.shiro.SecurityUtils
+import org.apache.shiro.authc.AuthenticationException
+import org.apache.shiro.authc.UsernamePasswordToken
 
 /**
  * 
@@ -30,8 +35,9 @@ import com.stehno.mymdb.domain.Movie
  */
 class ApiController {
 
-    static allowedMethods = [ categories:'GET', fetch:"GET", list:'GET' ]
+    static allowedMethods = [ categories:'GET', fetch:"GET", list:'GET', login:'POST' ]
 
+    private static final Log log = LogFactory.getLog(ApiController.class)
     MovieService movieService
 
     private static final CATEGORIES = [
@@ -42,12 +48,32 @@ class ApiController {
         [ id:'units', label:'Storage Units' ]
     ]
 
+    def login = {
+        if(log.isDebugEnabled()) log.debug "login-attempt: ${params.username}"
+
+        def authToken = new UsernamePasswordToken(params.username, params.password as String)
+        try {
+            SecurityUtils.subject.login(authToken)
+
+            if(log.isDebugEnabled()) log.debug "login-success: ${params.username}"
+
+            render( [success:true] as JSON )
+
+        } catch (AuthenticationException ex){
+            if(log.isInfoEnabled()) log.info "login-failed: ${params.username}"
+            
+            render( [success:false, errors:['general':message(code:'login.failed')]] as JSON )
+        }
+    }
+
     /**
      * With no filer, lists all available categories.
      * With a filter, lists the available sub-categories for that filter
      */
     def categories = {
         def filter = params.filter
+
+        if(log.isDebugEnabled()) log.debug "categories: $filter"
 
         def categories = []
 
@@ -83,6 +109,8 @@ class ApiController {
         def category = params.category
         def filter = params.filter
 
+        if(log.isDebugEnabled()) log.debug "list: $category $filter"
+
         def movies = []
 
         if( category == 'titles'){
@@ -109,6 +137,8 @@ class ApiController {
      */
     def fetch = {
         def id = params.id
+
+        if(log.isDebugEnabled()) log.debug "fetch: $id"
 
         def movie = Movie.get( id as Long )
 

@@ -8,6 +8,8 @@ class BootStrap {
 
         // bootstrap initial user on installation
         if( MymdbUser.count() == 0 ){
+            if(log.isWarnEnabled()) log.warn 'Creating roles and default user - change password!'
+            
             def adminRole = new MymdbRole(name:"Administrator")
             adminRole.addToPermissions("*:*")
             adminRole.addToPermissions("admin")
@@ -22,7 +24,7 @@ class BootStrap {
             user.addToRoles(adminRole)
             user.save(flush:true)
         }
-        
+
     }
 
     def destroy = {}

@@ -15,7 +15,7 @@ beans = {
     }
 
     // SECURITY
-    
+
     credentialMatcher(org.apache.shiro.authc.credential.Sha512CredentialsMatcher) {
         storedCredentialsHexEncoded = true
     }
