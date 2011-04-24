@@ -66,6 +66,12 @@ class ApiController {
         }
     }
 
+    def logout = {
+        SecurityUtils.subject?.logout()
+
+        render( [success:true] as JSON )
+    }
+
     /**
      * With no filer, lists all available categories.
      * With a filter, lists the available sub-categories for that filter
