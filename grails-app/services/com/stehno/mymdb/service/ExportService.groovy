@@ -1,68 +1,78 @@
 package com.stehno.mymdb.service
 
-import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Genre
-import com.stehno.mymdb.domain.Movie
-
-import groovy.xml.MarkupBuilder
-import groovy.util.XmlParser
+import com.stehno.mymdb.domain.Actor
+import com.stehno.mymdb.domain.StorageUnit
 
 class ExportService {
 
-    boolean transactional = true
+    static transactional = false
 
-    def exportData(writer){
-		def xml = new MarkupBuilder(writer)
-		
-		xml.catalog(){
-			actors(){
-				export_collection xml, Actor.list(), export_actor
-			}
-			genres(){
-				export_collection xml, Genre.list(), export_genre
-			}
-			movies(){
-				export_collection xml, Movie.list(), export_movie
-			}
-		}
-	}
-	
-	private export_collection(builder,coll,exporter){
-		coll.each {
-			exporter(builder,it)
-		}
-	}
-	
-	private export_actor = { builder,actor ->
-		builder.actor(aid:actor.id){ 
-			builder.firstName(actor.firstName)
-			builder.middleName(actor.middleName)
-			builder.lastName(actor.lastName)
-		}
-	}
-	
-	private export_genre = { builder,genre ->
-		builder.genre(gid:genre.id){ 
-			builder.name(genre.name)
-		}
-	}
-	
-	private export_movie = { builder,movie ->
-		builder.movie(mid:movie.id, releaseYear:movie.releaseYear){
-			builder.title(movie.title)
-			builder.description(movie.description)
-			builder.storage(name:movie.storage.name, index:movie.storage.index)
-			builder.genres(){
-				movie.genres.each { mg ->
-					builder.genre(ref:mg.id)
-				}
-			}
-			builder.actors(){
-				movie.actors.each { ma -> 
-					builder.actor(ref:ma.id)
-				}
-			}
-			builder.poster(movie.poster?.encodeBase64(true))
-		}
-	}
+    private static final byte FORMAT_VERSION = 1
+
+    /**
+     * Exports all collection data, basically everything except security data to the given OutputSteam.
+     * 
+     * @param outputStream
+     */
+    void exportCollection( OutputStream outputStream ){
+        if(log.isInfoEnabled()) log.info 'Exporting collection...'
+
+        new DataOutputStream(outputStream).withStream { out->
+            out.writeByte FORMAT_VERSION
+
+            genres out
+            actors out
+            storageUnits out
+        }
+
+        if(log.isInfoEnabled()) log.info 'Done exporting collection.'
+    }
+
+    private void genres( DataOutputStream out ){
+        def genreList = Genre.list()
+        def count = genreList.size()
+
+        if(log.isInfoEnabled()) log.info "--> Exporting $count genres..."
+
+        out.writeInt count
+
+        genreList.each { genre->
+            out.writeLong genre.id
+            writeUTF out, genre.name
+        }
+    }
+
+    private void actors( DataOutputStream out ){
+        def actorList = Actor.list()
+        def count = actorList.size()
+
+        if(log.isInfoEnabled()) log.info "--> Exporting $count actors..."
+
+        out.writeInt count
+
+        actorList.each { actor->
+            out.writeLong actor.id
+            writeUTF out, actor.firstName
+            writeUTF out, actor.middleName
+            writeUTF out, actor.lastName
+        }
+    }
+
+    private void storageUnits( DataOutputStream out ){
+        def units = StorageUnit.list()
+
+        out.writeInt units.size()
+
+        units.each { unit->
+            out.writeLong unit.id
+            writeUTF out, unit.name
+            out.writeBoolean unit.indexed
+            out.writeInt unit.capacity
+        }
+    }
+
+    private void writeUTF( DataOutputStream out, String str ){
+        out.writeUTF( str ?: '' )
+    }
 }

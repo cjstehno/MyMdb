@@ -17,6 +17,7 @@
 package com.stehno.mymdb
 
 import com.stehno.mymdb.domain.*
+import static org.junit.Assert.assertEquals
 
  /**
  * Movie creation has gotten complex enough that I need a good solid set of movie fixture data.
@@ -76,5 +77,24 @@ class MovieTestFixture {
         storageUnit.save(flush:true)
         
         this.storageUnitId = storageUnit.id
+    }
+
+    void clean(){
+        Movie.list().each deleteAll
+        Genre.list().each deleteAll
+        Actor.list().each deleteAll
+        StorageUnit.list().each deleteAll
+        Poster.list().each deleteAll
+
+        assertEquals 0,Movie.count()
+        assertEquals 0,Genre.count()
+        assertEquals 0,Actor.count()
+        assertEquals 0,StorageUnit.count()
+        assertEquals 0,Movie.count()
+        assertEquals 0,Poster.count()
+    }
+
+    private deleteAll = { x->
+        x.delete(flush:true)
     }
 }
