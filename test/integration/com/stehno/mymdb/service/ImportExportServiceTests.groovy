@@ -17,12 +17,10 @@
 package com.stehno.mymdb.service
 
 import com.stehno.mymdb.MovieTestFixture
-import com.stehno.mymdb.domain.Actor
-import com.stehno.mymdb.domain.Genre
 import grails.test.GrailsUnitTestCase
 import org.junit.Before
 import org.junit.Test
-import com.stehno.mymdb.domain.StorageUnit
+import com.stehno.mymdb.domain.*
 
 /**
  * 
@@ -48,12 +46,33 @@ class ImportExportServiceTests extends GrailsUnitTestCase {
         
         exportService.exportCollection stream
 
-        fixture.clean()
-
         importService.importCollection( new ByteArrayInputStream(stream.toByteArray()) )
 
         assertEquals 1, Genre.count()
         assertEquals 2, Actor.count()
-        assertEquals 2, StorageUnit.count()
+        assertEquals 1, StorageUnit.count()
+        assertEquals 1, Poster.count()
+        assertEquals 1, WebSite.count()
+        assertEquals 2, Movie.count()
+
+        def movie = Movie.findByTitle('A-Team: Unrated')
+        assertEquals 2010, movie.releaseYear
+        assertEquals 'They were acused of a crime they didnt commit', movie.description
+        assertEquals MpaaRating.UNRATED, movie.mpaaRating
+        assertEquals Format.BLURAY, movie.format
+        assertEquals Broadcast.MOVIE, movie.broadcast
+
+        assertEquals 'A-Team', movie.poster.title
+        assertEquals 'fakedata'.getBytes(), movie.poster.content
+
+        assertEquals 1, movie.genres.size()
+        assertEquals 1, movie.sites.size()
+        assertEquals 1, movie.actors.size()
+        assertEquals 1, movie.storage.index
+        assertEquals 'X', movie.storage.storageUnit.name
+
+        def unit = StorageUnit.findByName('X')
+        assertFalse unit.indexed
+        assertEquals 10, unit.capacity
     }
 }

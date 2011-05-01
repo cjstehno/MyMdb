@@ -41,6 +41,9 @@
 
       .icon-settings { background-image: url('${fam.icon(name:'wrench')}')!important; }
 
+      .icon-export { background-image: url('${fam.icon(name:'drive_disk')}')!important; }
+      .icon-import { background-image: url('${fam.icon(name:'drive_go')}')!important; }
+
       .icon-favorite { background-image: url('${fam.icon(name:'heart')}')!important; }
       .icon-mark-favorite { background-image: url('${fam.icon(name:'heart_add')}')!important; }
       .icon-unmark-favorite { background-image: url('${fam.icon(name:'heart_delete')}')!important; }

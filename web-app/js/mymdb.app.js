@@ -76,6 +76,20 @@ mymdb.app = function() {
             handler: function(){ new mymdb.admin.SettingsDialog(); }
         }),
 
+        exportAction: new Ext.Action({
+            text:'Export',
+            iconCls:'icon-export',
+            handler: function(){
+                window.location = 'transfer/exportCollection';
+            }
+        }),
+
+        importAction: new Ext.Action({
+            text:'Import',
+            iconCls:'icon-import',
+            handler: function(){  }
+        }),
+
         storageStore:new Ext.data.JsonStore({
             storeId:'box_store',    // TODO: remove this when category panels refactored
             proxy:new Ext.data.HttpProxy({
@@ -136,6 +150,9 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 	bbar:[
         mymdb.app.openUserManagerAction,
         mymdb.app.settingsAction,
+        { xtype:'tbseparator' },
+        mymdb.app.exportAction,
+        mymdb.app.importAction,
         { xtype:'tbseparator' },
         mymdb.app.openGenreManagerAction,
         mymdb.app.openActorManagerAction,

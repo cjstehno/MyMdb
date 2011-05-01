@@ -38,7 +38,7 @@ class Movie implements Taggable {
         title( blank:false, size:1..100 )
         description( nullable:true, blank:true, maxSize:2000)
         releaseYear( nullable:true, range:1900..2100 )
-        storage( nullable:true )  // TODO: make this required when I do the storage refactoring
+        storage( nullable:true )
         poster( nullable:true )
         runtime( nullable:true, min:0 )
 
