@@ -162,7 +162,7 @@ class ApiControllerTests extends ControllerTestCase {
         controller.list()
 
         def jso = parseJsonResponse()
-        assertJsonCount 0, jso
+        assertJsonCount 1, jso
     }
 
     @Test
