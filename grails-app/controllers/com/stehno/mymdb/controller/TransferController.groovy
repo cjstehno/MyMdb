@@ -18,8 +18,9 @@ package com.stehno.mymdb.controller
 
 import com.stehno.mymdb.service.ExportService
 import com.stehno.mymdb.service.ImportService
+import grails.converters.JSON
 
- /**
+/**
  * This controller handles the import and export functions.
  *
  * @author cjstehno
@@ -35,6 +36,18 @@ class TransferController {
     }
 
     def importCollection = {
-        
+        def confirm = params.confirm
+
+        def data = [:]
+        if( confirm ){
+            def file = params.file
+            importService.importCollection file.inputStream
+            
+        } else {
+            data.success = false
+            data.errors = ['confirm':'You must confirm collection replacement.']
+        }
+
+        render( contentType:'text/html', text:(data as JSON).toString(false) )
     }
 }

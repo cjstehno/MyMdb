@@ -80,14 +80,20 @@ mymdb.app = function() {
             text:'Export',
             iconCls:'icon-export',
             handler: function(){
-                window.location = 'transfer/exportCollection';
+                Ext.MessageBox.confirm('Export Confirmation','Are you sure you want to export the entire collection?',function(answer){
+                    if(answer=='yes'){
+                        window.location = 'transfer/exportCollection';
+                    }
+                });
             }
         }),
 
         importAction: new Ext.Action({
             text:'Import',
             iconCls:'icon-import',
-            handler: function(){  }
+            handler: function(){
+                new mymdb.ImportDialog().show();
+            }
         }),
 
         storageStore:new Ext.data.JsonStore({
@@ -168,9 +174,72 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
 Ext.reg('headerpanel', mymdb.HeaderPanel);
 
 mymdb.FooterPanel = Ext.extend( Ext.Panel, {
-	html: '<div style="text-align:center;font-size:small;">Copyright &copy; 2010 Christopher J. Stehno</div>',
+	html: '<div style="text-align:center;font-size:small;">Copyright &copy; 2011 Christopher J. Stehno</div>',
 	autoHeight: true,
 	border: false,
 	margins: '0 0 5 0'
 });
 Ext.reg('footerpanel', mymdb.FooterPanel);
+
+mymdb.ImportDialog = Ext.extend(Ext.Window, {
+    title:'Import Collection',
+    iconCls:'icon-import',
+    width:400,
+    height:130,
+    modal:true,
+    resizable:false,
+    layout:'fit',
+    initComponent: function(){
+        Ext.apply(this, {
+            items:[
+                {
+                    xtype:'form',
+                    fileUpload:true,
+                    frame:false,
+                    monitorValid:true,
+                    bodyStyle:'padding:5px 5px 0',
+                    labelWidth:50,
+                    items:[
+                        {
+                            xtype:'textfield',
+                            fieldLabel:'File',
+                            inputType:'file',
+                            name:'file',
+                            allowBlank:false
+                        },
+                        {
+                            xtype:'checkbox',
+                            fieldLabel:'Confirm',
+                            name:'confirm',
+                            boxLabel:'You will be deleting all existing content.'
+                        }
+                    ],
+                    buttons:[
+                        { text:'Cancel', scope:this, handler:function(){ this.close(); } },
+                        {
+                            text:'Ok',
+                            scope:this,
+                            formBind:true,
+                            handler:function(){
+                                var dia = this;
+                                this.findByType('form')[0].getForm().submit({
+                                    url:'transfer/importCollection',
+                                    method:'POST',
+                                    success:function(){
+                                        dia.close();
+                                    },
+                                    failure:function(){
+                                        Ext.MessageBox.alert('Error','Unable to import');
+                                    }
+                                });
+                            }
+                        }
+                    ]
+                }
+            ]
+        });
+
+        mymdb.ImportDialog.superclass.initComponent.apply(this, arguments);
+    }
+});
+Ext.reg('import-dialog',mymdb.ImportDialog);
