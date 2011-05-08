@@ -2,11 +2,11 @@
 
 ## Description ##
 
-A simple movie (DVD) indexing database project for my personal use. Developed using Grails and ExtJs.
+A simple movie (DVD/BluRay/VCD) indexing database project for my personal use. Developed using Grails and ExtJs. Basic management and search (by filter) functionalities are mostly in place; however, there are more "fun" and social features being developed.
 
 ## Installation ##
 
-The only way to build this project right now is to download the Grails project and run "grails war".
+Official installtion instructions are in the works; however, right now they still mostly consist of building everythign yourself.
 
 ## Getting Help ##
 

@@ -47,14 +47,24 @@ class StorageUnitService {
 
         if( movie.storage ){
             def oldStorage = movie.storage
-            movie.storage = null
 
-            unit.removeFromSlots oldStorage
+            // if the old storage is not the same as new storage, remove it
+            if( oldStorage.storageUnit.id != unit.id || oldStorage.index != index ){
+                movie.storage = null
 
-            // remove any existing storage for movie
-            oldStorage.delete()
+                unit.removeFromSlots oldStorage
+
+                // remove any existing storage for movie
+                oldStorage.delete()
+
+                createAndSaveStorage movie, unit, index
+            }
+        } else {
+            createAndSaveStorage movie, unit, index
         }
+    }
 
+    private void createAndSaveStorage( Movie movie, StorageUnit unit, Integer index = null ){
         def newStorage = new Storage( storageUnit:unit, index:index )
         unit.addToSlots newStorage
         unit.save()

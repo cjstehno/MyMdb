@@ -65,6 +65,10 @@ class BrowserController {
                 break
         }
 
+        def total = results.size()
+
+        results = paginate( results, params.start as Integer ?: 0, params.limit as Integer ?: 60 )
+
         def user = MymdbUser.findByUsername(SecurityUtils.subject.principal as String)
 
         def movieList = results.collect { m->
@@ -75,7 +79,7 @@ class BrowserController {
             [mid:m.id, ti:m.title, yr:m.releaseYear, bx:m.storageLabel, ge:movieGenres.sort().join(', '), fav:favorite]
         }
 
-        render( [movies:movieList] as JSON )
+        render( [movies:movieList, total:total ] as JSON )
     }
 
     def about = { /* just routes to view */ }
@@ -94,5 +98,16 @@ class BrowserController {
 
     private def renderListAsJson( list ){
         render ([items:list] as JSON)
+    }
+
+    private paginate( list, int start, int limit ){
+        def page = []
+        if(list){
+            def end = Math.min( list.size(), start+limit ) -1
+            if(start <= end){
+                page = list[start..end]
+            }
+        }
+        return page
     }
 }

@@ -36,7 +36,7 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
     loadMask:true,
     frame: true,
     store: new Ext.data.JsonStore({
-		autoLoad: true,
+		autoLoad:{ params:{ start:0, limit:60} },
 		autoDestroy: true,
 		url: 'browser/list',
 		storeId: 'gridData',
@@ -61,6 +61,12 @@ mymdb.MovieGridPanel = Ext.extend( Ext.grid.GridPanel, {
 
     initComponent: function(){
         Ext.apply(this, {
+            bbar:new Ext.PagingToolbar({
+                store: this.getStore(),
+                displayInfo: true,
+                pageSize: 60,
+                totalProperty:'total'
+            })
         });
 
         mymdb.MovieGridPanel.superclass.initComponent.apply(this, arguments);

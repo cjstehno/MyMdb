@@ -138,8 +138,7 @@ mymdb.app = function() {
 				items: [ 
 					{ region:'north', xtype:'headerpanel' },
 					{ region:'center', xtype:'contentpanel'},
-					{ region:'west', xtype:'categoriespanel', collapsible:true },
-					{ region:'south', xtype:'footerpanel' }
+					{ region:'west', xtype:'categoriespanel', collapsible:true }
 				]
 			});		
 
@@ -172,14 +171,6 @@ mymdb.HeaderPanel = Ext.extend( Ext.Panel, {
     ]
 });
 Ext.reg('headerpanel', mymdb.HeaderPanel);
-
-mymdb.FooterPanel = Ext.extend( Ext.Panel, {
-	html: '<div style="text-align:center;font-size:small;">Copyright &copy; 2011 Christopher J. Stehno</div>',
-	autoHeight: true,
-	border: false,
-	margins: '0 0 5 0'
-});
-Ext.reg('footerpanel', mymdb.FooterPanel);
 
 mymdb.ImportDialog = Ext.extend(Ext.Window, {
     title:'Import Collection',

@@ -131,11 +131,21 @@ class MovieFlowService {
         ))
 
         if(movieData.posterUrl){
-            store(new PosterDto(
-                posterType:PosterType.URL,
-                url:movieData.posterUrl,
-                posterName:movieData.title
-            ))
+            if(movieData.posterUrl.startsWith('http')){
+                store(new PosterDto(
+                    posterType:PosterType.URL,
+                    url:movieData.posterUrl,
+                    posterName:movieData.title
+                ))
+            } else {
+                // its local
+                store(new PosterDto(
+                    posterType:PosterType.EXISTING,
+                    posterId:movieData.posterUrl as Long,
+                    posterName:movieData.title
+                ))
+            }
+
         } else {
             store(new PosterDto( posterType:PosterType.NONE ))
         }
