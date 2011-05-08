@@ -53,3 +53,26 @@ mymdb.AboutDialog = Ext.extend( Ext.Window ,{
         mymdb.AboutDialog.superclass.initComponent.apply(this, arguments);
     }
 });
+
+/**
+ * Self-closing message box useful for non-actionable success messages.
+ *
+ * Pass in a "data" array where the first element will be used as the message content.
+ */
+mymdb.Message = Ext.extend(Ext.Window, {
+    width:300,
+    height:50,
+    closable:false,
+    resizable:false,
+    bodyBorder:false,
+    y:50,
+    tpl:"<div style='text-align:center;padding:6px;font-weight:bold;color:green;'>{0}</div>",
+    listeners:{
+        show:function(win){
+            new Ext.util.DelayedTask(function(){
+                win.close();
+            }).delay(2500);
+        }
+    }
+});
+Ext.reg('mymdb-message',mymdb.Message);
