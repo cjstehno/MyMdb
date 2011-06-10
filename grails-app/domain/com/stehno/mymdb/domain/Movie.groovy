@@ -22,7 +22,6 @@ class Movie implements Taggable {
     String title
     String description
     Integer releaseYear
-    Storage storage
     Poster poster
     MpaaRating mpaaRating
     Format format
@@ -38,7 +37,6 @@ class Movie implements Taggable {
         title( blank:false, size:1..100 )
         description( nullable:true, blank:true, maxSize:2000)
         releaseYear( nullable:true, range:1900..2100 )
-        storage( nullable:true )
         poster( nullable:true )
         runtime( nullable:true, min:0 )
 
@@ -48,12 +46,6 @@ class Movie implements Taggable {
 
         lastUpdate( nullable:true )
         dateCreated( nullable:true )
-    }
-
-    static transients = ['storageLabel']
-
-    def getStorageLabel(){
-        storage != null ? "${storage.storageUnit.name}-${storage.index}" : 'N/A'
     }
 }
 

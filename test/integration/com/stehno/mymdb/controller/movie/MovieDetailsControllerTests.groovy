@@ -37,7 +37,7 @@ class MovieDetailsControllerTests extends MovieFlowIntegrationTestBase {
         fixture.before()
 
         controller = new MovieDetailsController()
-        controller.movieFlowService = new MovieFlowService()
+        controller.movieFlowService = new MovieFlowService( storageUnitService:storageUnitService )
     }
 
     @Test

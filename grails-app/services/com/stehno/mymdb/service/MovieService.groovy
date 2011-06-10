@@ -19,10 +19,13 @@ import com.stehno.mymdb.domain.Actor
 import com.stehno.mymdb.domain.Genre
 import com.stehno.mymdb.domain.Movie
 import org.springframework.dao.DataRetrievalFailureException
+import com.stehno.mymdb.domain.StorageUnit
 
 class MovieService {
 
     static transactional = true
+
+    StorageUnitService storageUnitService
 
     private static def titleComparator = { a,b -> a.title <=> b.title } as Comparator
 
@@ -36,6 +39,7 @@ class MovieService {
     def deleteMovie( movieId ){
         def movie = Movie.get(movieId)
         if(movie){
+            storageUnitService.unstoreMovie movie
             movie.delete(flush:true)
         } else {
             throw new DataRetrievalFailureException('No movie with id found!')
@@ -69,6 +73,13 @@ class MovieService {
     }
 
     def findMoviesForBox( unitId ){
-        Movie.findAll("from Movie m where m.storage.storageUnit.id=? order by m.title asc", [unitId])
+        def movies = []
+
+        def storageUnit = StorageUnit.get(unitId)
+        storageUnit?.slots?.each { slot->
+            movies.addAll slot.movies
+        }
+
+        movies.sort { it.title }
     }
 }

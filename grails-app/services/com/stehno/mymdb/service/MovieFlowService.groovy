@@ -71,11 +71,13 @@ class MovieFlowService {
         def movie = Movie.get(movieId)
 
         flow.movieId = movieId
-        
+
+        def movieStorage = storageUnitService.findStorageForMovie(movieId)
+
         store(new DetailsDto(
             title:movie.title,
             releaseYear:movie.releaseYear,
-            storageId:"${movie.storage?.storageUnit.id}${movie.storage?.index ? ':'+movie.storage?.index : ''}",
+            storageId:movieStorage ? "${movieStorage.unit.id}${movieStorage.index ? ':'+movieStorage.index : ''}" : null,
             description:movie.description,
             mpaaRating:movie.mpaaRating,
             runtime:movie.runtime,

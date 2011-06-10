@@ -1,12 +1,15 @@
 package com.stehno.mymdb.service
 
+import com.stehno.mymdb.transfer.Exporter
 import com.stehno.mymdb.domain.*
+import com.stehno.mymdb.transfer.BinaryExporter
 
 class ExportService {
 
     static transactional = false
 
-    private static final byte FORMAT_VERSION = 1
+    private static final byte FORMAT_VERSION = (byte)1
+    @Delegate private Exporter<? extends OutputStream> exporter = new BinaryExporter()
 
     /**
      * Exports all collection data, basically everything except security data to the given OutputSteam.
@@ -17,7 +20,7 @@ class ExportService {
         if(log.isInfoEnabled()) log.info 'Exporting collection...'
 
         new DataOutputStream(outputStream).withStream { out->
-            out.writeByte FORMAT_VERSION
+            writeByte out, FORMAT_VERSION
 
             genres out
             actors out
@@ -30,109 +33,126 @@ class ExportService {
         if(log.isInfoEnabled()) log.info 'Done exporting collection.'
     }
 
-    private void genres( DataOutputStream out ){
+    private void genres( OutputStream out ){
         def genreList = Genre.list()
         def count = genreList.size()
 
         if(log.isInfoEnabled()) log.info "--> Exporting $count genres..."
 
-        out.writeInt count
+        writeInt out, count
 
         genreList.each { genre->
-            out.writeLong genre.id
+            writeLong out, genre.id
             writeUTF out, genre.name
         }
     }
 
-    private void actors( DataOutputStream out ){
-        def actorList = Actor.list()
+    private void actors( OutputStream out ){
+        def actorList = Actor.list( order:'lastName' )
         def count = actorList.size()
 
         if(log.isInfoEnabled()) log.info "--> Exporting $count actors..."
 
-        out.writeInt count
+        writeInt out, count
 
         actorList.each { actor->
-            out.writeLong actor.id
+            writeLong out, actor.id
             writeUTF out, actor.firstName
             writeUTF out, actor.middleName
             writeUTF out, actor.lastName
         }
     }
 
-    private void storageUnits( DataOutputStream out ){
+    private void storageUnits( OutputStream out ){
         def units = StorageUnit.list()
         def count = units.size()
 
         if(log.isInfoEnabled()) log.info "--> Exporting $count storage units..."
 
-        out.writeInt count
+        writeInt out, count
 
         units.each { unit->
-            out.writeLong unit.id
+            writeLong out, unit.id
             writeUTF out, unit.name
-            out.writeBoolean unit.indexed
-            out.writeInt unit.capacity
+            writeBoolean out, unit.indexed
+            writeInt out, unit.capacity
+
+            def slotCount = unit.slots ? unit.slots.size() : 0
+
+            writeInt out, slotCount
+
+            if(log.isInfoEnabled()) log.info "-----> Exporting $slotCount storage unit slots..."
+
+            unit.slots?.each { slot->
+                writeInt out, slot.index
+
+                def slotMovieCount = slot.movies ? slot.movies.size() : 0
+
+                writeInt out, slotMovieCount
+
+                if(log.isInfoEnabled()) log.info "--------> Exporting $slotMovieCount movies references in slot..."
+
+                slot.movies?.each { mov->
+                    writeLong out, mov.id
+                }
+            }
         }
     }
 
-    private void webSites( DataOutputStream out ){
+    private void webSites( OutputStream out ){
         def sites = WebSite.list()
         def count = sites.size()
 
         if(log.isInfoEnabled()) log.info "--> Exporting $count web sites..."
 
-        out.writeInt count
+        writeInt out, count
 
         sites.each { site->
-            out.writeLong site.id
-            out.writeUTF site.label
-            out.writeUTF site.url
+            writeLong out, site.id
+            writeUTF out, site.label
+            writeUTF out, site.url
         }
     }
 
-    private void posters( DataOutputStream out ){
+    private void posters( OutputStream out ){
         def posters = Poster.list()
         def count = posters.size()
 
         if(log.isInfoEnabled()) log.info "--> Exporting $count posters..."
 
-        out.writeInt count
+        writeInt out, count
 
         posters.each { poster->
-            out.writeLong poster.id
+            writeLong out, poster.id
             writeUTF out, poster.title
-            out.writeInt poster.content.size()
-            out.write( poster.content, 0, poster.content.size() )
+            writeInt out, poster.content.size()
+            writeBytes out, poster.content
         }
     }
 
-    private void movies( DataOutputStream out ){
+    private void movies( OutputStream out ){
         def movies = Movie.list()
         def count = movies.size()
 
         if(log.isInfoEnabled()) log.info "--> Exporting $count movies..."
 
-        out.writeInt count
+        writeInt out, count
 
         movies.each { movie->
-            out.writeLong movie.id
+            writeLong out, movie.id
             writeUTF out, movie.title
             writeUTF out, movie.description
             writeInt out, movie.releaseYear
             writeInt out, movie.runtime
 
-            out.writeInt movie.mpaaRating.ordinal()
-            out.writeInt movie.format.ordinal()
-            out.writeInt movie.broadcast.ordinal()
+            writeInt out, movie.mpaaRating.ordinal()
+            writeInt out, movie.format.ordinal()
+            writeInt out, movie.broadcast.ordinal()
 
             writeLong out, movie.dateCreated?.getTime()
             writeLong out, movie.lastUpdate?.getTime()
 
             writeLong out, movie.poster?.id
-
-            writeInt out, movie.storage?.index
-            writeLong out, movie.storage?.storageUnit?.id
 
             writeItems out, movie.genres
             writeItems out, movie.actors
@@ -140,25 +160,13 @@ class ExportService {
         }
     }
 
-    private void writeItems( DataOutputStream out, items ){
+    private void writeItems( OutputStream out, items ){
         def count = items?.size() ?: 0
 
-        out.writeInt count
+        writeInt out, count
 
         items.each {
-            out.writeLong it.id
+            writeLong out, it.id
         }
-    }
-
-    private void writeUTF( DataOutputStream out, String str ){
-        out.writeUTF( str ?: '' )
-    }
-
-    private void writeInt( DataOutputStream out, Integer i ){
-        out.writeInt( i ?: 0 )
-    }
-
-    private void writeLong( DataOutputStream out, Long i ){
-        out.writeLong( i ?: 0 )
     }
 }

@@ -21,7 +21,7 @@ import com.stehno.mymdb.domain.Storage
 import com.stehno.mymdb.domain.StorageUnit
 
 /**
- *  Service used to manage the StorageUnit and Movie interactions. This is the recommended
+ * Service used to manage the StorageUnit and Movie interactions. This is the recommended
  * means of managing movie storage since there are constraints implied by the business logic,
  * rather than simply the database.
  */
@@ -45,32 +45,39 @@ class StorageUnitService {
 
         def movie = Movie.get(movieId)
 
-        if( movie.storage ){
-            def oldStorage = movie.storage
+        // if movie is already stored somewhere - clear it
+        unstoreMovie movie
 
-            // if the old storage is not the same as new storage, remove it
-            if( oldStorage.storageUnit.id != unit.id || oldStorage.index != index ){
-                movie.storage = null
+        def storage = unit.slots?.find { s-> s.index == index }
+        if( !storage ){
+            storage = new Storage( index:index )
+            unit.addToSlots storage
+        }
 
-                unit.removeFromSlots oldStorage
+        storage.addToMovies movie
 
-                // remove any existing storage for movie
-                oldStorage.delete()
+        unit.save(flush:true)
+    }
 
-                createAndSaveStorage movie, unit, index
+    Storage findStorageForMovie( long movieId ){
+        // FIXME: there has got to be a better way to do this
+        Storage.list().find { storage->
+            def found = null
+            if(storage.movies){
+                def foundMovie = storage.movies.find { m-> m.id == movieId }
+                if(foundMovie){
+                    found = storage
+                }
             }
-        } else {
-            createAndSaveStorage movie, unit, index
+            return found
         }
     }
 
-    private void createAndSaveStorage( Movie movie, StorageUnit unit, Integer index = null ){
-        def newStorage = new Storage( storageUnit:unit, index:index )
-        unit.addToSlots newStorage
-        unit.save()
-
-        movie.storage = newStorage
-        movie.save()
+    void unstoreMovie( Movie movie ){
+        def storage = findStorageForMovie(movie.id)
+        if(storage){
+            storage.removeFromMovies movie
+        }
     }
 
     /**
@@ -84,12 +91,8 @@ class StorageUnitService {
             if( !unit.isFull() ){
                 if( unit.indexed ){
                     if( unit.capacity ){
-                        def avails = []
-
-                        avails.addAll( (1..unit.capacity) as List )
-
-                        avails.each { n->
-                            def count = unit.slots?.findAll { s-> s.index == n }?.size()
+                        (1..unit.capacity).each { n->
+                            def count = unit.slots?.find { s-> s.index == n }?.movies?.size() ?: 0
                             def countStr = count ? " ($count)" : ''
 
                             slots << [ id:unit.id, index:n, label:"${unit.name}-$n$countStr" ]

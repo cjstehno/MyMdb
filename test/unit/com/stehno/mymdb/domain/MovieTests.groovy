@@ -38,7 +38,6 @@ class MovieTests extends GrailsUnitTestCase {
         this.movie = movie(
             title:'Testing',
             releaseYear:2000,
-            storage:new Storage(index:2),
             description:'Something interesting',
             mpaaRating:MpaaRating.UNKNOWN,
             format:Format.UNKNOWN,
@@ -93,12 +92,6 @@ class MovieTests extends GrailsUnitTestCase {
     @Test
     void validation_sites(){
         movie.sites = [ new WebSite( label:'Foo', url:'http://foo.com') ]
-        assertValid movie
-    }
-
-    @Test
-    void validation_storage(){
-        movie.storage = null
         assertValid movie
     }
 

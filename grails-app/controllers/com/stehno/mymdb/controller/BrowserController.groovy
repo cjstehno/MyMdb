@@ -18,10 +18,13 @@ package com.stehno.mymdb.controller
 import grails.converters.JSON
 import org.apache.shiro.SecurityUtils
 import com.stehno.mymdb.domain.*
+import com.stehno.mymdb.service.StorageUnitService
+import com.stehno.mymdb.service.MovieService
 
 class BrowserController {
 
-    def movieService
+    MovieService movieService
+    StorageUnitService storageUnitService
 
     def index = { /* just routes to view */ }
 	
@@ -74,9 +77,11 @@ class BrowserController {
         def movieList = results.collect { m->
             def movieGenres = m.genres.collect { g-> g.name }
 
-            def favorite = Favorite.findByUserAndMovie(user, m) != null
+            def favorite = /*Favorite.findByUserAndMovie(user, m) !=*/ null
 
-            [mid:m.id, ti:m.title, yr:m.releaseYear, bx:m.storageLabel, ge:movieGenres.sort().join(', '), fav:favorite]
+            def storageSlot = storageUnitService.findStorageForMovie( m.id )
+
+            [mid:m.id, ti:m.title, yr:m.releaseYear, bx:storageSlot?.storageLabel ?: '-', ge:movieGenres.sort().join(', '), fav:favorite]
         }
 
         render( [movies:movieList, total:total ] as JSON )
@@ -85,7 +90,7 @@ class BrowserController {
     def about = { /* just routes to view */ }
 
     def details = {
-        [ movieInstance:Movie.get( params.mid )]
+        [ movieInstance:Movie.get( params.mid ), box:storageUnitService.findStorageForMovie(params.mid as long)]
     }
 
     /**

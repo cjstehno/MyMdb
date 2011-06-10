@@ -15,13 +15,23 @@
  */
 package com.stehno.mymdb.domain
 
+/**
+ * Represents a single location in a storage unit.
+ */
 class Storage {
 
     Integer index
 
-    static belongsTo = [storageUnit:StorageUnit]
+    static belongsTo = [ unit:StorageUnit ]
+    static hasMany = [ movies:Movie ]
 	
     static constraints = {
         index( nullable:true, min:1 )
+    }
+
+    static transients = ['storageLabel']
+
+    String getStorageLabel(){
+        "${unit.name}-$index"
     }
 }

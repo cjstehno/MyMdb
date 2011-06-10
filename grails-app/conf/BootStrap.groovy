@@ -17,6 +17,11 @@ class BootStrap {
 
             def userRole = new MymdbRole(name:"User")
             userRole.addToPermissions("browser:*")
+            userRole.addToPermissions("actor:list")
+            userRole.addToPermissions("genre:list")
+            userRole.addToPermissions("storage:list")
+            userRole.addToPermissions("poster:show")
+            userRole.addToPermissions("api:*")
             userRole.save(flush:true)
 
             def user = new MymdbUser(username:'admin', passwordHash:new Sha512Hash('admin').toHex())

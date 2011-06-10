@@ -69,6 +69,27 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
     }
 
     @Test
+    void fullness(){
+        def movieA = movie('Movie-A')
+        def movieB = movie('Movie-B')
+        def movieC = movie('Movie-C')
+
+        storageUnitService.storeMovie indexedLimited, movieA.id, 1
+        storageUnitService.storeMovie indexedLimited, movieB.id, 1
+        storageUnitService.storeMovie indexedLimited, movieC.id, 2
+
+        def unit = StorageUnit.get(indexedLimited)
+        assertEquals 2, unit.slots.size()
+        assertFalse unit.isFull()
+
+        storageUnitService.storeMovie indexedLimited, movie('Movie-D').id, 3
+
+        unit = StorageUnit.get(indexedLimited)
+        assertEquals 3, unit.slots.size()
+        assertTrue unit.isFull()
+    }
+
+    @Test
     void listAvailableSlots_indexed_with_multiple(){
         storageUnitService.storeMovie indexedLimited, movie( 'Something' ).id, 1
         storageUnitService.storeMovie indexedLimited, movie( 'Other' ).id, 1
@@ -85,7 +106,7 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[4]
     }
 
-    @Test
+    @Test 
     void listAvailableSlots_unindexedlimited_with_some_taken(){
         def movie = movie( 'Something' )
 
@@ -101,6 +122,74 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         assertAvailableSlot indexedLimited, 3, 'Indexed:Limited-3', slots[2]
         assertAvailableSlot unindexedLimited, null, 'Unindexed:Limited', slots[3]
         assertAvailableSlot unindexedUnlimited, null, 'Unindexed:Unlimited', slots[4]
+    }
+
+
+
+    @Test
+    void storeMovie(){
+        def movie = movie('Superman')
+        def movieId = movie.id
+
+        storageUnitService.storeMovie( indexedLimited, movieId, 2 )
+
+        assertStorage 'Indexed:Limited', 2, storageUnitService.findStorageForMovie(movie.id)
+
+        def unit = StorageUnit.get(indexedLimited)
+        assertEquals 1, unit.slots.size()
+    }
+
+    @Test
+    void storeMovie_two_movies(){
+        def theMovie = movie('Superman')
+        def movieId = theMovie.id
+
+        storageUnitService.storeMovie( indexedLimited, movieId, 2 )
+
+        assertEquals 1, StorageUnit.get(indexedLimited).slots.size()
+        assertStorage 'Indexed:Limited', 2, storageUnitService.findStorageForMovie(theMovie.id)
+
+        theMovie = movie('Spiderman')
+        movieId = theMovie.id
+
+        storageUnitService.storeMovie( indexedLimited, movieId, 3 )
+
+        assertEquals 2, StorageUnit.get(indexedLimited).slots.size()
+//        assertStorage 'Indexed:Limited', 3, storageUnitService.findStorageForMovie(theMovie.id)
+    }
+
+    @Test(expected = IllegalArgumentException)
+    void storeMovie_no_index(){
+        storageUnitService.storeMovie( indexedLimited, movie('Superman').id )
+
+        assertEquals 0, Storage.count()
+        assertNull storageUnitService.findStorageForMovie(Movie.findByTitle('Superman').id)
+        assertEquals 0, StorageUnit.get(indexedLimited).slots?.size()
+    }
+
+    @Test(expected = IllegalArgumentException)
+    void storeMovie_zero_index(){
+        storageUnitService.storeMovie( indexedLimited, movie('Superman').id, 0 )
+
+        assertEquals 0, Storage.count()
+        assertNull storageUnitService.findStorageForMovie(Movie.findByTitle('Superman').id)
+        assertEquals 0, StorageUnit.get(indexedLimited).slots?.size()
+    }
+
+    @Test
+    void storeMovie_slot_in_use(){
+        storageUnitService.storeMovie( indexedLimited, movie('Superman').id, 2 )
+        storageUnitService.storeMovie( indexedLimited, movie('Spiderman').id, 2 )
+
+        assertEquals 1, Storage.count()
+        assertEquals 1, StorageUnit.get(indexedLimited).slots?.size()
+        assertNotNull storageUnitService.findStorageForMovie(Movie.findByTitle('Superman').id)
+        assertNotNull storageUnitService.findStorageForMovie(Movie.findByTitle('Spiderman').id)
+    }
+
+    private void assertStorage( unitName, index, movieStorage ){
+        assertEquals index, movieStorage.index
+        assertEquals unitName, movieStorage.unit.name
     }
 
     private void assertAvailableSlot( Long id, index, label, slot ){
@@ -120,7 +209,7 @@ class StorageUnitServiceTests extends GrailsUnitTestCase {
         movie.mpaaRating = MpaaRating.PG
         movie.format = Format.DVD
         movie.broadcast = Broadcast.MOVIE
-        movie.save()
+        movie.save(flush:true)
         movie
     }
 }

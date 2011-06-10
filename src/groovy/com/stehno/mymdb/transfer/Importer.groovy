@@ -14,29 +14,24 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.domain
+package com.stehno.mymdb.transfer
 
 /**
- * Represents a physical location where movies are stored.
+ * 
  *
  * @author cjstehno
  */
-class StorageUnit {
+public interface Importer<T extends InputStream> {
 
-    String name
-    boolean indexed
-    int capacity
+    byte readByte( T ins )
 
-    static hasMany = [ slots:Storage ]
+    String readUTF( T ins )
 
-    static constraints = {
-        name( nullable:false, blank:false, size:1..20, unique:true )
-        capacity( min:0 )
-    }
+    boolean readBoolean( T ins )
 
-    static transients = ['full']
+    Integer readInt( T ins, Integer defaultValue )
 
-    boolean isFull(){
-        capacity && ( (slots?.size() ?: 0 ) >= capacity )
-    }
+    Long readLong( T ins, Long defaultValue )
+
+    byte[] readBytes( T ins, int size )
 }

@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.UsernamePasswordToken
+import com.stehno.mymdb.service.StorageUnitService
 
 /**
  * 
@@ -39,6 +40,7 @@ class ApiController {
 
     private static final Log log = LogFactory.getLog(ApiController.class)
     MovieService movieService
+    StorageUnitService storageUnitService
 
     private static final CATEGORIES = [
         [ id:'titles', label:'Titles' ],
@@ -147,6 +149,7 @@ class ApiController {
         if(log.isDebugEnabled()) log.debug "fetch: $id"
 
         def movie = Movie.get( id as Long )
+        def storage = storageUnitService.findStorageForMovie( movie.id )
 
         def dto = [
             title:movie.title,
@@ -160,7 +163,7 @@ class ApiController {
             sites:movie.sites?.collect { s-> [ label:s.label, url:s.url ] },
             broadcast:movie.broadcast?.label,
             poster:movie.poster?.id,
-            storage:movie?.storageLabel
+            storage:storage.storageLabel
         ]
 
         render( dto as JSON )

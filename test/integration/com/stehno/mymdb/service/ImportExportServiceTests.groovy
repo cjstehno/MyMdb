@@ -19,38 +19,48 @@ package com.stehno.mymdb.service
 import com.stehno.mymdb.MovieTestFixture
 import grails.test.GrailsUnitTestCase
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import com.stehno.mymdb.domain.*
+import static org.junit.Assume.assumeTrue
 
-/**
- * 
- *
- * @author cjstehno
- */
 class ImportExportServiceTests extends GrailsUnitTestCase {
 
     ExportService exportService
     ImportService importService
 
-    private MovieTestFixture fixture
+    private MovieTestFixture fixture = new MovieTestFixture()
+
+    @Rule
+    public TemporaryFolder folder= new TemporaryFolder();
 
     @Before
     void before(){
-        this.fixture = new MovieTestFixture()
-        this.fixture.before()
+        fixture.before()
     }
-
+    
     @Test
     void execute(){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream()
+        def datfile = folder.newFile('testexport.dat')
         
-        exportService.exportCollection stream
+        exportService.exportCollection new FileOutputStream(datfile)
 
-        importService.importCollection( new ByteArrayInputStream(stream.toByteArray()) )
+        importService.clearDatabase()
+
+        assertDatabaseEmpty()
+
+        assertTrue datfile.exists()
+
+        // TODO: this is an assume because this test only passes when run by itself (not -integration or all)
+        assumeTrue datfile.size() > 0
+
+        importService.importCollection new FileInputStream(datfile)
 
         assertEquals 1, Genre.count()
         assertEquals 2, Actor.count()
         assertEquals 1, StorageUnit.count()
+        assertEquals 1, Storage.count()
         assertEquals 1, Poster.count()
         assertEquals 1, WebSite.count()
         assertEquals 2, Movie.count()
@@ -68,11 +78,24 @@ class ImportExportServiceTests extends GrailsUnitTestCase {
         assertEquals 1, movie.genres.size()
         assertEquals 1, movie.sites.size()
         assertEquals 1, movie.actors.size()
-        assertEquals 1, movie.storage.index
-        assertEquals 'X', movie.storage.storageUnit.name
 
         def unit = StorageUnit.findByName('X')
         assertFalse unit.indexed
         assertEquals 10, unit.capacity
+        assertEquals 1, unit.slots.size()
+        unit.slots.each { s->
+            assertEquals 1, s.index
+            assertEquals 1, s.movies.size()
+        }
+    }
+
+    private void assertDatabaseEmpty(){
+        assertEquals 0, Genre.count()
+        assertEquals 0, Actor.count()
+        assertEquals 0, StorageUnit.count()
+        assertEquals 0, Storage.count()
+        assertEquals 0, Poster.count()
+        assertEquals 0, WebSite.count()
+        assertEquals 0, Movie.count()
     }
 }

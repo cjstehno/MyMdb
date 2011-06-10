@@ -108,6 +108,7 @@ class MovieServiceTests extends GrailsUnitTestCase {
 	@Test
     void findMoviesForBox(){
         def fixture = new MovieTestFixture()
+        fixture.clearDatabase()
         fixture.before()
 
         storageUnitService.storeMovie( fixture.storageUnitId, fixture.movieId )

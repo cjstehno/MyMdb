@@ -29,6 +29,9 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         runtime 'com.h2database:h2:1.3.149'
+
+        test 'org.gmock:gmock:0.8.1'
+        test 'org.hamcrest:hamcrest-library:1.1' // Optionally, you can use hamcrest matchers
     }
 
 }

@@ -34,8 +34,7 @@ class LocalMovieDataProvider implements MovieDataProvider {
 
     MovieSearchResult[] searchFor(String movieTitle) {
 //        Movie.findByTitleILike("%$movieTitle%").collect { mov-> TODO: may file bug about this ILike should work
-        // FIXME: this method appears to be deprecated
-        Movie.find('from Movie as m where upper(m.title) like ?',"%${movieTitle.toUpperCase()}%").collect { mov->
+        Movie.find('from Movie as m where upper(m.title) like :title',[title:"%${movieTitle.toUpperCase()}%"]).collect { mov->
             new MovieSearchResult(
                 providerId:PROVIDER_ID,
                 id:mov.id,

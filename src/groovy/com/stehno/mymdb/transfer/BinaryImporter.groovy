@@ -14,29 +14,38 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.domain
+package com.stehno.mymdb.transfer
 
 /**
- * Represents a physical location where movies are stored.
+ * 
  *
  * @author cjstehno
  */
-class StorageUnit {
+class BinaryImporter implements Importer<DataInputStream> {
 
-    String name
-    boolean indexed
-    int capacity
-
-    static hasMany = [ slots:Storage ]
-
-    static constraints = {
-        name( nullable:false, blank:false, size:1..20, unique:true )
-        capacity( min:0 )
+    Integer readInt(DataInputStream ins, Integer defaultValue=0) {
+        ins.readInt() ?: defaultValue
     }
 
-    static transients = ['full']
+    Long readLong(DataInputStream ins, Long defaultValue=0) {
+        ins.readLong() ?: defaultValue
+    }
 
-    boolean isFull(){
-        capacity && ( (slots?.size() ?: 0 ) >= capacity )
+    byte[] readBytes( DataInputStream ins, int size ){
+        def content = new byte[size]
+        ins.readFully(content)
+        content
+    }
+
+    byte readByte(DataInputStream ins) {
+        ins.readByte()
+    }
+
+    String readUTF(DataInputStream ins) {
+        ins.readUTF()
+    }
+
+    boolean readBoolean(DataInputStream ins) {
+        ins.readBoolean()
     }
 }

@@ -14,29 +14,36 @@
  * limitations under the License.
  */
 
-package com.stehno.mymdb.domain
+package com.stehno.mymdb.transfer
 
 /**
- * Represents a physical location where movies are stored.
+ * 
  *
  * @author cjstehno
  */
-class StorageUnit {
+class BinaryExporter implements Exporter<DataOutputStream> {
 
-    String name
-    boolean indexed
-    int capacity
-
-    static hasMany = [ slots:Storage ]
-
-    static constraints = {
-        name( nullable:false, blank:false, size:1..20, unique:true )
-        capacity( min:0 )
+    void writeByte( DataOutputStream out, byte byt ){
+        out.writeByte byt
     }
 
-    static transients = ['full']
+    void writeUTF( DataOutputStream out, String str ){
+        out.writeUTF( str ?: '' )
+    }
 
-    boolean isFull(){
-        capacity && ( (slots?.size() ?: 0 ) >= capacity )
+    void writeInt( DataOutputStream out, Integer i ){
+        out.writeInt( i ?: 0 )
+    }
+
+    void writeLong( DataOutputStream out, Long i ){
+        out.writeLong( i ?: 0 )
+    }
+
+    void writeBoolean( DataOutputStream out, boolean bool){
+        out.writeBoolean bool
+    }
+
+    void writeBytes( DataOutputStream out, byte[] data){
+        out.write( data, 0, data.size() )
     }
 }
