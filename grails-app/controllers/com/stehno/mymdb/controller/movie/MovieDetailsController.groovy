@@ -16,7 +16,6 @@
 
 package com.stehno.mymdb.controller.movie
 
-import com.stehno.mymdb.domain.StorageUnit
 import com.stehno.mymdb.dto.DetailsDto
 import com.stehno.mymdb.service.StorageUnitService
 import grails.converters.JSON
@@ -48,13 +47,6 @@ class MovieDetailsController extends MovieFlowControllerBase {
     def storage = {
         def items = storageUnitService.listAvailableSlots().collect { slot->
             [ id:"${slot.id}${ slot.index ? ':'+slot.index : ''}", label:slot.label ]
-        }
-
-        if(params.movieId){
-            def dto = movieFlowService.retrieve(DetailsDto.class)
-            def sto = convert( dto.storageId )
-            
-            items.add( 0, [ id:dto.storageId, label:"${StorageUnit.get(sto.unit as Long).name}-${sto.index}" ] )
         }
 
         render( [items:items] as JSON )

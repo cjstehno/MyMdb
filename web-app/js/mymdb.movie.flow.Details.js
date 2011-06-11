@@ -96,7 +96,7 @@ mymdb.movie.flow.DetailsView = Ext.extend(mymdb.movie.flow.ViewPanel, {
                     disableKeyFiltering:true,
                     store:new Ext.data.JsonStore({
                         url:'movie/details/storage' + (this.movieId ? '?movieId=' + this.movieId : ''),
-                        autoLoad:true,
+                        autoLoad:false,
                         root: 'items',
                         idProperty: 'id',
                         fields: ['id','label']

@@ -88,22 +88,20 @@ class StorageUnitService {
     List listAvailableSlots(){
         def slots = []
         StorageUnit.list( sort:'name', order:'ASC' ).each { unit->
-            if( !unit.isFull() ){
-                if( unit.indexed ){
-                    if( unit.capacity ){
-                        (1..unit.capacity).each { n->
-                            def count = unit.slots?.find { s-> s.index == n }?.movies?.size() ?: 0
-                            def countStr = count ? " ($count)" : ''
+            if( unit.indexed ){
+                if( unit.capacity ){
+                    (1..unit.capacity).each { n->
+                        def count = unit.slots?.find { s-> s.index == n }?.movies?.size() ?: 0
+                        def countStr = count ? " ($count)" : ''
 
-                            slots << [ id:unit.id, index:n, label:"${unit.name}-$n$countStr" ]
-                        }
-                    } else {
-                        // this use case is not allowed
-                        // FIXME: enforce this in the manager UI
+                        slots << [ id:unit.id, index:n, label:"${unit.name}-$n$countStr" ]
                     }
                 } else {
-                    slots << [ id:unit.id as String, label:unit.name ]
+                    // this use case is not allowed
+                    // FIXME: enforce this in the manager UI
                 }
+            } else {
+                slots << [ id:unit.id as String, label:unit.name ]
             }
         }
         slots
