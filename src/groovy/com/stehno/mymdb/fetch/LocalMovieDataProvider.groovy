@@ -74,7 +74,7 @@ class LocalMovieDataProvider implements MovieDataProvider {
     String getProviderId() { PROVIDER_ID }
 
     private poster( movie ){
-        "${movie.poster.id}"
+        movie.poster?.id as String
     }
 
     private String description( str ){

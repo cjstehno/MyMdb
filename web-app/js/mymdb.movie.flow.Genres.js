@@ -73,10 +73,9 @@ mymdb.movie.flow.GenresView = Ext.extend(mymdb.movie.flow.ViewPanel, {
             clientValidation: true,
             method:'POST',
             success:function(form,action){
-               Ext.Msg.alert('Success', 'Movie saved successfully', function(){
-                   thePanel.findParentByType('window').close();
-                   Ext.StoreMgr.lookup('gridData').load();
-               });
+                new mymdb.Message({data:['Movie saved successfully']}).show();
+                thePanel.findParentByType('window').close();
+                Ext.StoreMgr.lookup('gridData').load();
             },
             failure:function(form,action){
                 Ext.Msg.alert('Failure', action.result.msg);
