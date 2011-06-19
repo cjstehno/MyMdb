@@ -16,35 +16,51 @@
 
 package com.stehno.mymdb.service
 
- /**
+import com.stehno.mymdb.fetch.MovieDataProvider
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+
+/**
  * This service gathers movie data from the available MovieDataProviders and aggregates the results for the controller.
+ *
+ * Any bean with the MovieDataProvider interface will be registered.
  *
  * @author cjstehno
  */
-class MovieFetchService {
-    // TODO: make this easier to add new providers without rebuilding
+class MovieFetchService implements InitializingBean, ApplicationContextAware {
 
     static transactional = false
 
-    def tmdbMovieDataProvider
-    def localMovieDataProvider
+    private ApplicationContext applicationContext
+    private final Map<String,MovieDataProvider> providers = [:]
 
     def search( String title ){
         def results = []
 
-        results.addAll( localMovieDataProvider.searchFor(title) )
-        results.addAll( tmdbMovieDataProvider.searchFor(title) )
+        // FIXME: http://github.com/cjstehno/MyMdb/issues/76
+        providers.each { name, provider->
+            results.addAll( provider.searchFor( title ) )
+        }
 
-        return results
+        return results.sort { it.providerId }
     }
 
     def fetch( String providerId, movieId ){
-        if( localMovieDataProvider.getProviderId() == providerId ){
-            return localMovieDataProvider.fetch(movieId)
-        } else if(tmdbMovieDataProvider.getProviderId() == providerId){
-            return tmdbMovieDataProvider.fetch(movieId)
-        } else {
-            throw new IllegalArgumentException('ProviderId not found!')
+        def provider = providers[providerId]
+        if( provider ){
+            return provider.fetch(movieId)
+        }
+        throw new IllegalArgumentException('ProviderId not found!')
+    }
+
+    void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext
+    }
+
+    void afterPropertiesSet() {
+        applicationContext.getBeansOfType(MovieDataProvider.class).each { beanName, provider->
+            providers[provider.getProviderId()] = provider
         }
     }
 }

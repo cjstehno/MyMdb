@@ -94,9 +94,9 @@ mymdb.movie.flow.ResultsView = Ext.extend( Ext.list.ListView, {
     singleSelect:true,
     columns:[
         {header:'Title', dataIndex:'title', width:0.3 },
-        {header:'Year', dataIndex:'releaseYear', width:0.08 },
-        {header:'Provider', dataIndex:'providerId', width:0.12 },
-        {header:'Description', dataIndex:'description', width:0.50 }
+        {header:'Year', dataIndex:'releaseYear', width:0.07 },
+        {header:'Provider', dataIndex:'providerId', width:0.15 },
+        {header:'Description', dataIndex:'description', width:0.48 }
     ],
     initComponent: function(){
         Ext.apply(this, {

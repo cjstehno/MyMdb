@@ -6,8 +6,16 @@ beans = {
         mymdbConfigService = ref('mymdbConfigService')
     }
 
+    rottenApi(com.stehno.rotten.RottenTomatoesApiClient){
+        mymdbConfigService = ref('mymdbConfigService')
+    }
+
     tmdbMovieDataProvider(com.stehno.mymdb.fetch.TmdbMovieDataProvider){
         api = ref('tmdbApi')
+    }
+
+    rottenTomatoesMovieDataProvider(com.stehno.mymdb.fetch.RottenTomatoesMovieDataProvider){
+        api = ref('rottenApi')
     }
 
     localMovieDataProvider(com.stehno.mymdb.fetch.LocalMovieDataProvider){

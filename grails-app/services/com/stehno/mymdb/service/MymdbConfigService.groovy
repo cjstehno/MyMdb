@@ -27,7 +27,8 @@ class MymdbConfigService {
 
     def configPropertyService
 
-    private static final String API_KEY_CONFIG = 'tmdb.ApiKey'
+    private static final String TMDB_API_KEY_CONFIG = 'tmdb.ApiKey'
+    private static final String ROTTEN_API_KEY_CONFIG = 'rotten.ApiKey'
 
     /**
      * Retrieves the TMDB API Key from the persistent configuration properties.
@@ -35,10 +36,18 @@ class MymdbConfigService {
      * @return
      */
     String getTmdbApiKey(){
-        configPropertyService.getProperty(API_KEY_CONFIG)
+        configPropertyService.getProperty(TMDB_API_KEY_CONFIG)
     }
 
     void setTmdbApiKey( String key ){
-        configPropertyService.putProperty( API_KEY_CONFIG, key, ConfigPropertyType.STRING )
+        configPropertyService.putProperty( TMDB_API_KEY_CONFIG, key, ConfigPropertyType.STRING )
+    }
+
+    String getRottenTomatoesApiKey(){
+        configPropertyService.getProperty(ROTTEN_API_KEY_CONFIG)
+    }
+
+    void setRottenTomatoesApiKey( String key ){
+        configPropertyService.putProperty( ROTTEN_API_KEY_CONFIG, key, ConfigPropertyType.STRING )
     }
 }

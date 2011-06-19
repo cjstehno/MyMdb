@@ -30,11 +30,12 @@ mymdb.admin.SettingsDialog = Ext.extend( Ext.Window ,{
             items:[
                 {
                     xtype:'form',
-                    labelWidth:85,
+                    labelWidth:120,
                     frame:false,
                     bodyStyle:'padding:5px 5px 0',
                     items:[
-                        { xtype:'textfield', fieldLabel:'TMDB API Key', name:'tmdbApiKey', width:260 }
+                        { xtype:'textfield', fieldLabel:'TMDB Key', name:'tmdbApiKey', anchor:'100%' },
+                        { xtype:'textfield', fieldLabel:'Rotten Tomatoes Key', name:'rottenApiKey', anchor:'100%' }
                     ],
                     listeners:{
                         render:{

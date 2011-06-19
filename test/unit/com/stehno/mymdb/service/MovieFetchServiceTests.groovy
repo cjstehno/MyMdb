@@ -16,25 +16,24 @@
 
 package com.stehno.mymdb.service
 
+import com.stehno.mymdb.fetch.MovieData
+import com.stehno.mymdb.fetch.MovieDataProvider
+import com.stehno.mymdb.fetch.MovieSearchResult
 import grails.test.GrailsUnitTestCase
 import org.junit.Before
 import org.junit.Test
-import com.stehno.mymdb.fetch.MovieDataProvider
-import com.stehno.mymdb.fetch.MovieSearchResult
-import com.stehno.mymdb.fetch.MovieData
 
 class MovieFetchServiceTests extends GrailsUnitTestCase {
 
-    def service
+    MovieFetchService service
 
     @Before
     void before(){
         super.setUp()
 
         this.service = new MovieFetchService()
-
-        this.service.tmdbMovieDataProvider = [
-            'getProviderId':{'TMDB'},
+        this.service.providers['Fake'] = [
+            'getProviderId':{'Fake'},
             'searchFor':{
                 if( it == 'Some Movie' ){
                     [ new MovieSearchResult( providerId:'TMDB', title:'Some Movie') ] as MovieSearchResult[]
@@ -44,29 +43,17 @@ class MovieFetchServiceTests extends GrailsUnitTestCase {
             },
             'fetch':{ new MovieData( title:'Some Movie' ) }
         ] as MovieDataProvider
-
-        this.service.localMovieDataProvider = [
-            'getProviderId':{'Local'},
-            'searchFor':{
-                if( it.startsWith('Some Movie') ){
-                    [ new MovieSearchResult( providerId:'Local', title:'Some Movie: Special Features') ]  as MovieSearchResult[]
-                } else {
-                    return [] as MovieSearchResult[]
-                }
-            },
-            'fetch':{ new MovieData( title:'Some Movie: Special Features' ) }
-        ] as MovieDataProvider
     }
 
     @Test
     void search(){
         def results = service.search('Some Movie')
         assertNotNull results
-        assertEquals 2, results.size()
+        assertEquals 1, results.size()
 
         results = service.search('Some Movie: Special Features')
         assertNotNull results
-        assertEquals 1, results.size()
+        assertEquals 0, results.size()
     }
 
     @Test
@@ -82,14 +69,8 @@ class MovieFetchServiceTests extends GrailsUnitTestCase {
     }
 
     @Test
-    void fetch_Local(){
-        def mov = service.fetch('Local', 123)
-        assertEquals 'Some Movie: Special Features', mov.title
-    }
-
-    @Test
-    void fetch_tmdb(){
-        def mov = service.fetch('TMDB', 213)
+    void fetch(){
+        def mov = service.fetch('Fake', 123)
         assertEquals 'Some Movie', mov.title
     }
 }

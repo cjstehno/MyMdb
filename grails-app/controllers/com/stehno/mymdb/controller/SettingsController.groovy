@@ -30,14 +30,17 @@ class SettingsController {
 
     def show = {
         def tmdbApiKey = mymdbConfigService.getTmdbApiKey()
+        def rottenApiKey = mymdbConfigService.getRottenTomatoesApiKey()
 
-        render( [ success:true, data:[ tmdbApiKey:tmdbApiKey ] ] as JSON )
+        render( [ success:true, data:[ tmdbApiKey:tmdbApiKey, rottenApiKey:rottenApiKey ] ] as JSON )
     }
 
     def save = {
         def tmdbApiKey = params.tmdbApiKey
+        def rottenApiKey = params.rottenApiKey
 
         mymdbConfigService.setTmdbApiKey(tmdbApiKey)
+        mymdbConfigService.setRottenTomatoesApiKey(rottenApiKey)
 
         render( [success:true] as JSON )
     }
